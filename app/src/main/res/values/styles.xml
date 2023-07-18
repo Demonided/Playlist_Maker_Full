@@ -59,8 +59,6 @@
     </style>
 
     <style name="ColorEditTextSearch">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
         <item name="android:background">@color/light_grey</item>
         <item name="android:hint">@string/search_playlist</item>
         <item name="android:textColor">@color/black</item>
@@ -68,8 +66,6 @@
     </style>
 
     <style name="ImageViewSearch">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">10dp</item>
         <item name="android:maxLines">1</item>
         <item name="android:inputType">text</item>
