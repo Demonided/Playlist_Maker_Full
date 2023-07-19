@@ -50,11 +50,11 @@
 
             <EditText
                 android:id="@+id/search_edit_text"
+                style="@style/ColorEditTextSearch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                style="@style/ColorEditTextSearch"
                 android:layout_weight="100"
-                tools:ignore="TouchTargetSizeCheck" />
+                tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
             <ImageView
                 android:id="@+id/search_clear_button"

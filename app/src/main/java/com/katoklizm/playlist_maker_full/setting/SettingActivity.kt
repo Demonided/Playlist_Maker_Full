@@ -14,6 +14,10 @@ class SettingActivity : AppCompatActivity() {
         binding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.settingsShareAppText
+        binding.settingsTermUseText
+        binding.settingsWriteSupportText
+
         binding.settingBack.setOnClickListener {
             finish()
         }
