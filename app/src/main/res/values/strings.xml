@@ -6,6 +6,8 @@
 
     <string name="setting_night_subject">Темная тема</string>
     <string name="setting_share_app">Поделиться приложением</string>
+    <string name="setting_link_yandex_practicum">https://practicum.yandex.ru/profile/android-developer/</string>
+
     <string name="setting_write_to_support">Написать в поддержку</string>
     <string name="setting_terms_of_use">Пользовательское соглашение</string>
 </resources>

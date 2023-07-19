@@ -57,7 +57,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/settings_share_app_text"
             style="@style/StyleSettingText"
             android:text="@string/setting_share_app" />
 
@@ -76,7 +76,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/settings_write_support_text"
             style="@style/StyleSettingText"
             android:text="@string/setting_write_to_support" />
 
@@ -95,7 +95,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/settings_term_use_text"
             style="@style/StyleSettingText"
             android:text="@string/setting_terms_of_use" />
 
