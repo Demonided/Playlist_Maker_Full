@@ -2,6 +2,7 @@ package com.katoklizm.playlist_maker_full.search
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -39,6 +40,31 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.searchEditText.addTextChangedListener(simpleTextWatcher)
+
+
+    }
+
+    companion object {
+        const val USER_TEXT = "USER_TEXT"
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(USER_TEXT, binding.searchEditText.toString())
+    }
+
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.activity_main)
+//        if (savedInstanceState != null) {
+//            binding.searchEditText.textAlignment = savedInstanceState.getInt(USER_TEXT,0)
+//        }
+//    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // Вторым параметром мы передаём значение по умолчанию
+        binding.searchEditText.textAlignment = savedInstanceState.getInt(USER_TEXT,0)
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -49,3 +75,4 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 }
+
