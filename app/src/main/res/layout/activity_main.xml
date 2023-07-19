@@ -15,6 +15,7 @@
         android:text="@string/app_name"
         />
 
+
     <Button
         android:id="@+id/search_playlist_maker"
         style="@style/ButtonStyle"
