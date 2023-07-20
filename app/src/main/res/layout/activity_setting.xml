@@ -58,12 +58,21 @@
 
         <TextView
             android:id="@+id/settings_share_app_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="15"
+            android:layout_marginHorizontal="10dp"
+            android:layout_margin="10dp"
             style="@style/StyleSettingText"
             android:text="@string/setting_share_app" />
 
         <ImageView
-            style="@style/StyleSettingVector"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginHorizontal="10dp"
+            android:layout_margin="10dp"
+            style="@style/StyleSettingVector"
             android:background="@drawable/share_app" />
     </LinearLayout>
 
@@ -77,12 +86,21 @@
 
         <TextView
             android:id="@+id/settings_write_support_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="15"
+            android:layout_marginHorizontal="10dp"
+            android:layout_margin="10dp"
             style="@style/StyleSettingText"
             android:text="@string/setting_write_to_support" />
 
         <ImageView
-            style="@style/StyleSettingVector"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginHorizontal="10dp"
+            android:layout_margin="10dp"
+            style="@style/StyleSettingVector"
             android:background="@drawable/support_agent" />
     </LinearLayout>
 
@@ -96,12 +114,21 @@
 
         <TextView
             android:id="@+id/settings_term_use_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="15"
+            android:layout_marginHorizontal="10dp"
+            android:layout_margin="10dp"
             style="@style/StyleSettingText"
             android:text="@string/setting_terms_of_use" />
 
         <ImageView
-            style="@style/StyleSettingVector"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginHorizontal="10dp"
+            android:layout_margin="10dp"
+            style="@style/StyleSettingVector"
             android:background="@drawable/next_open_window" />
     </LinearLayout>
 

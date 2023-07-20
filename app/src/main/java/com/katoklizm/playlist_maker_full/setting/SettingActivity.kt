@@ -27,26 +27,26 @@ class SettingActivity : AppCompatActivity() {
         }
 
         binding.settingsShareApp.setOnClickListener {
-            val url = Uri.parse("https://practicum.yandex.ru/profile/android-developer/")
+            val url = getString(R.string.setting_link_yandex_practicum)
             val intent = Intent(Intent.ACTION_SEND)
-            intent.setType("text/plain")
+            intent.type = "text/plain"
             intent.putExtra(Intent.EXTRA_TEXT, url)
             startActivity(intent)
         }
 
         binding.settingsWriteSupport.setOnClickListener {
-            val message = "Спасибо разработчикам и разработчицам за крутое приложение!"
-            val subject = "Сообщение разработчикам и разработчицам приложения Playlist Maker"
+            val message = getString(R.string.setting_message_text_email)
+            val subject = getString(R.string.setting_subject_text_email)
             val shareIntent = Intent(Intent.ACTION_SENDTO)
             shareIntent.data = Uri.parse("mailto:")
-            shareIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("Makss.impeks@gmail.com"))
+            shareIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.setting_application_developers_mail)))
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
             shareIntent.putExtra(Intent.EXTRA_TEXT, message)
             startActivity(shareIntent)
         }
 
         binding.settingsTermUse.setOnClickListener {
-            val url = Uri.parse("https://yandex.ru/legal/practicum_offer/")
+            val url = Uri.parse(getString(R.string.setting_link_offer))
             val intent = Intent(Intent.ACTION_VIEW, url)
             startActivity(intent)
         }

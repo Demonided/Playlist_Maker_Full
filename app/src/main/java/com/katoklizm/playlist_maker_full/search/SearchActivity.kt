@@ -2,12 +2,11 @@ package com.katoklizm.playlist_maker_full.search
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import com.katoklizm.playlist_maker_full.R
-import com.katoklizm.playlist_maker_full.databinding.ActivityMediaLibraryBinding
+import android.view.inputmethod.InputMethodManager
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {
@@ -22,7 +21,8 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.searchClearButton.setOnClickListener {
-            binding.searchEditText.setText("")
+            binding.searchEditText.text.clear()
+            hideSoftKeyboard()
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -35,31 +35,23 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
+
                 // empty
             }
         }
 
         binding.searchEditText.addTextChangedListener(simpleTextWatcher)
-
-
     }
 
-    companion object {
-        const val USER_TEXT = "USER_TEXT"
+    private fun hideSoftKeyboard() {
+        val hide = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        hide.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(USER_TEXT, binding.searchEditText.toString())
     }
-
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_main)
-//        if (savedInstanceState != null) {
-//            binding.searchEditText.textAlignment = savedInstanceState.getInt(USER_TEXT,0)
-//        }
-//    }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
@@ -69,10 +61,14 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
-            View.GONE
+            View.INVISIBLE
         } else {
             View.VISIBLE
         }
+    }
+
+    private companion object {
+        const val USER_TEXT = "USER_TEXT"
     }
 }
 
