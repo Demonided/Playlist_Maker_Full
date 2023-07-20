@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Состояние кнопки при нажатии или в фокусе -->
+    <item android:state_pressed="true" android:state_focused="false">
+        <color android:color="?android:colorControlHighlight"/> <!-- Цвет подсветки кнопки при нажатии -->
+    </item>
+
+    <!-- Состояние кнопки при получении фокуса -->
+    <item android:state_pressed="false" android:state_focused="true">
+        <color android:color="?android:colorControlHighlight"/> <!-- Цвет подсветки кнопки при фокусе -->
+    </item>
+</selector>
