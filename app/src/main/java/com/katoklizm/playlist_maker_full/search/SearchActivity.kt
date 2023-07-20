@@ -48,10 +48,6 @@ class SearchActivity : AppCompatActivity() {
         hide.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
     }
 
-    companion object {
-        const val USER_TEXT = "USER_TEXT"
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(USER_TEXT, binding.searchEditText.toString())
@@ -69,6 +65,10 @@ class SearchActivity : AppCompatActivity() {
         } else {
             View.VISIBLE
         }
+    }
+
+    private companion object {
+        const val USER_TEXT = "USER_TEXT"
     }
 }
 
