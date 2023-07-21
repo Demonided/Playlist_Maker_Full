@@ -11,6 +11,8 @@ import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
+    private var enteredText: String? = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
@@ -40,23 +42,30 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        binding.searchEditText.addTextChangedListener(simpleTextWatcher)
-    }
+        if (savedInstanceState != null) {
+            enteredText = savedInstanceState.getString(USER_TEXT)
+            binding.searchEditText.setText(enteredText)
+        }
 
-    private fun hideSoftKeyboard() {
-        val hide = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        hide.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
+        binding.searchEditText.addTextChangedListener(simpleTextWatcher)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(USER_TEXT, binding.searchEditText.toString())
+        enteredText = binding.searchEditText.text.toString()
+        outState.putString(USER_TEXT, enteredText)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         // Вторым параметром мы передаём значение по умолчанию
-        binding.searchEditText.textAlignment = savedInstanceState.getInt(USER_TEXT,0)
+        enteredText = savedInstanceState.getString(USER_TEXT)
+        binding.searchEditText.setText(enteredText)
+    }
+
+    private fun hideSoftKeyboard() {
+        val hide = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        hide.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
