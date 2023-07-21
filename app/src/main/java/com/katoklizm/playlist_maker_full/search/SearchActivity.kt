@@ -37,7 +37,6 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-
                 // empty
             }
         }
@@ -58,7 +57,6 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        // Вторым параметром мы передаём значение по умолчанию
         enteredText = savedInstanceState.getString(USER_TEXT)
         binding.searchEditText.setText(enteredText)
     }

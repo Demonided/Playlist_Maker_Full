@@ -39,7 +39,10 @@ class SettingActivity : AppCompatActivity() {
             val subject = getString(R.string.setting_subject_text_email)
             val shareIntent = Intent(Intent.ACTION_SENDTO)
             shareIntent.data = Uri.parse("mailto:")
-            shareIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.setting_application_developers_mail)))
+            shareIntent.putExtra(
+                Intent.EXTRA_EMAIL,
+                arrayOf(getString(R.string.setting_application_developers_mail))
+            )
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
             shareIntent.putExtra(Intent.EXTRA_TEXT, message)
             startActivity(shareIntent)
