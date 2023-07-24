@@ -9,40 +9,39 @@
     tools:context=".MainActivity">
 
     <TextView
+        style="@style/TextStyleMainMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/TextStyleMainMenu"
-        android:text="@string/app_name"
-        />
+        android:text="@string/app_name" />
 
 
     <Button
         android:id="@+id/search_playlist_maker"
+        style="@style/ButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="10dp"
-        style="@style/ButtonStyle"
         android:text="@string/search_playlist"
         app:icon="@drawable/search_playlist" />
 
     <Button
         android:id="@+id/media_library_playlist_maker"
+        style="@style/ButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="10dp"
-        style="@style/ButtonStyle"
         android:text="@string/media_library_playlist"
         app:icon="@drawable/media_library_playlist" />
 
     <Button
         android:id="@+id/setting_playlist_maker"
+        style="@style/ButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="10dp"
-        style="@style/ButtonStyle"
         android:text="@string/setting_playlist"
         app:icon="@drawable/settings_playlist" />
 
