@@ -9,10 +9,11 @@
         android:id="@+id/track_image"
         android:layout_width="45dp"
         android:layout_height="45dp"
+        style="@style/SearchTrackColorBackground"
         android:layout_marginVertical="8dp"
         android:layout_marginStart="13dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/search_dot_music_track"/>
+        android:background="@drawable/media_library_playlist"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,9 +26,9 @@
             android:id="@+id/track_name_song"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:hint="name song"/>
+            style="@style/SearchTextTrackTop"
+            android:singleLine="true"
+            android:text="name song"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -36,27 +37,26 @@
 
             <TextView
                 android:id="@+id/track_name_musician"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="11sp"
-                android:textColor="@color/grey"
-                android:hint="gruppa"/>
+                style="@style/SearchTextTrackBottom"
+                android:singleLine="true"
+                android:text="gruppa"/>
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="5dp"
-                android:backgroundTint="@color/grey"
+                style="@style/SearchTrackColorBackground"
                 android:background="@drawable/search_dot_music_track"/>
 
             <TextView
                 android:id="@+id/track_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="11sp"
-                android:textColor="@color/grey"
-                android:hint="time"/>
+                style="@style/SearchTextTrackBottom"
+                android:text="time"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
-            android:backgroundTint="@color/grey"
+            style="@style/SearchTrackColorBackground"
             android:background="@drawable/next_open_window" />
     </LinearLayout>
 </LinearLayout>
