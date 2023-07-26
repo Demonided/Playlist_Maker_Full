@@ -1,6 +1,5 @@
 package com.katoklizm.playlist_maker_full.search.track
 
-import android.view.RoundedCorner
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -25,7 +24,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         Glide.with(itemView)
             .load(imageUrl)
-            .transform(RoundedCorners(10))
+            .transform(RoundedCorners(ConstTrack.ROUNDED_CORNERS_RADIUS))
             .placeholder(R.drawable.media_library_playlist)
             .into(artworkUrl100)
     }

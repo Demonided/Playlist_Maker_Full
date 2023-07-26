@@ -6,10 +6,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
 import com.katoklizm.playlist_maker_full.search.track.Track
@@ -94,7 +92,7 @@ class SearchActivity : AppCompatActivity() {
         )
 
         val recyclerView = findViewById<RecyclerView>(R.id.search_recycler_music_track)
-        val newAdapterTrack = TrackAdapter(news = List(100) {
+        val newAdapterTrack = TrackAdapter(tracks = List(100) {
             newListTrack.random()
         })
         recyclerView.adapter = newAdapterTrack
