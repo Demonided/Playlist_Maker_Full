@@ -17,7 +17,7 @@
             android:id="@+id/setting_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/btnBack"
+            style="@style/BtnBack"
             android:background="@drawable/arrow_back"
             />
 
