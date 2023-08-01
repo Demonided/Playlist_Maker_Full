@@ -14,4 +14,7 @@
     <string name="setting_subject_text_email">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="setting_link_offer">https://yandex.ru/legal/practicum_offer/</string>
     <string name="setting_application_developers_mail">Makss.impeks@gmail.com</string>
+
+    <string name="search_nothing_found">Ничего не нашлось</string>
+    <string name="search_communication_problem">Проблемы со связью\n\nЗагрузка не удалась. Проверьте \nподключение к интернету</string>
 </resources>

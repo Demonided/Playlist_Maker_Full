@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,10 +13,28 @@ import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
 import com.katoklizm.playlist_maker_full.search.track.Track
 import com.katoklizm.playlist_maker_full.search.track.TrackAdapter
+import com.katoklizm.playlist_maker_full.search.track.iTunesSearchApi
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private var enteredText: String? = ""
+
+    private val imdbBaseUrl = "https://itunes.apple.com"
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(imdbBaseUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    private val iTunesServise = retrofit.create(iTunesSearchApi::class.java)
+
+    private lateinit var recyclerView: RecyclerView
+
+    private val searchInput = ""
+    private val trackList = ArrayList<Track>()
+    private val trackAdapter = TrackAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,12 +110,20 @@ class SearchActivity : AppCompatActivity() {
             )
         )
 
-        val recyclerView = findViewById<RecyclerView>(R.id.search_recycler_music_track)
-        val newAdapterTrack = TrackAdapter(tracks = List(100) {
-            newListTrack.random()
-        })
-        recyclerView.adapter = newAdapterTrack
+        binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                true
+            }
+            false
+        }
+
+        recyclerView = findViewById(R.id.search_recycler_music_track)
+//        val newAdapterTrack = TrackAdapter(tracks = List(100) {
+//            newListTrack.random()
+//        })
+        recyclerView.adapter = trackAdapter
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        trackAdapter.tracks = trackList
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
