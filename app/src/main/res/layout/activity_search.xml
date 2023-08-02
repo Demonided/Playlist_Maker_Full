@@ -48,12 +48,11 @@
 
             <EditText
                 android:id="@+id/search_edit_text"
-                style="@style/ColorEditTextSearch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="100"
-                android:imeOptions="actionDone"
                 android:inputType="text"
+                style="@style/ColorEditTextSearch"
                 tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
             <ImageView
@@ -79,6 +78,7 @@
             android:layout_marginTop="16dp" />
 
         <LinearLayout
+            android:id="@+id/search_error_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -89,61 +89,54 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="2dp"
                 android:layout_gravity="center"
+                android:layout_margin="2dp"
                 android:src="@drawable/internet_error" />
 
             <TextView
+                style="@style/SearchTextErrorMode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_margin="16dp"
-                android:fontFamily="@font/ys_display_medium"
-                android:textSize="19dp"
-                android:textColor="@color/black"
-
+                android:gravity="center"
                 android:text="@string/search_communication_problem"
-
                 />
 
             <Button
+                android:id="@+id/search_update_page"
                 android:layout_width="100dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:fontFamily="@font/ys_display_medium"
-                android:backgroundTint="@color/black"
-                android:textSize="14sp"
-                android:textAllCaps="false"
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp"
-                android:text="Обновить"
-                app:cornerRadius="54dp"
-                />
-
+                android:text="@string/search_button_update"
+                style="@style/SearchButtonUpdateMode"
+                app:cornerRadius="54dp" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/search_nothing_found"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="120dp"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="2dp"
                 android:background="@drawable/nothing_found" />
 
             <TextView
+                style="@style/SearchTextErrorMode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hello" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hello" />
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="@string/search_nothing_found" />
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>
