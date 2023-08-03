@@ -8,10 +8,13 @@
     <string name="setting_share_app">Поделиться приложением</string>
     <string name="setting_write_to_support">Написать в поддержку</string>
     <string name="setting_terms_of_use">Пользовательское соглашение</string>
-
     <string name="setting_link_yandex_practicum">https://practicum.yandex.ru/profile/android-developer/</string>
     <string name="setting_message_text_email">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="setting_subject_text_email">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="setting_link_offer">https://yandex.ru/legal/practicum_offer/</string>
     <string name="setting_application_developers_mail">Makss.impeks@gmail.com</string>
+
+    <string name="search_nothing_found">Ничего не нашлось</string>
+    <string name="search_communication_problem">Проблемы со связью\n\nЗагрузка не удалась. Проверьте \nподключение к интернету</string>
+    <string name="search_button_update">Обновить</string>
 </resources>
