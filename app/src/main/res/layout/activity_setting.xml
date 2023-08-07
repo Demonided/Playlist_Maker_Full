@@ -35,7 +35,7 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
+        <Switch
             android:id="@+id/themeSwitcher"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
