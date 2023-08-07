@@ -1,6 +1,5 @@
 package com.katoklizm.playlist_maker_full.setting
 
-import android.app.AppComponentFactory
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 

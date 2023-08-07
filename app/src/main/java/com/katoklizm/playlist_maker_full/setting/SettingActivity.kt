@@ -55,5 +55,13 @@ class SettingActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW, url)
             startActivity(intent)
         }
+
+        themeSwitch()
+    }
+
+    private fun themeSwitch() {
+        binding.themeSwitcher.setOnCheckedChangeListener { switcher, cheked ->
+            (applicationContext as App).switchTheme(cheked)
+        }
     }
 }
