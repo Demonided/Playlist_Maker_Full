@@ -63,5 +63,8 @@ class SettingActivity : AppCompatActivity() {
         binding.themeSwitcher.setOnCheckedChangeListener { switcher, cheked ->
             (applicationContext as App).switchTheme(cheked)
         }
+
+        binding.themeSwitcher.isChecked = (applicationContext as App).darkTheme
+        // Это для того что бы switch при смене активити сохранял своё состояние
     }
 }
