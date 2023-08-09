@@ -92,6 +92,29 @@ class SearchActivity : AppCompatActivity() {
         recyclerView.adapter = trackAdapter
         trackAdapter.tracks = trackList
 
+        binding.searchRecyclerMusicTrack.visibility = View.VISIBLE
+
+        binding.searchEditText.setOnFocusChangeListener { v, hasFocus ->
+            binding.searchLinerLayoutHistoryTrack.visibility =
+                if (hasFocus && binding.searchEditText.text.isEmpty()) View.VISIBLE else View.GONE
+        }
+
+        binding.searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // empty
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.searchLinerLayoutHistoryTrack.visibility =
+                    if (binding.searchEditText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // empty
+            }
+
+        })
+
     }
 
     private fun updatePageSearch() {
@@ -125,29 +148,6 @@ class SearchActivity : AppCompatActivity() {
                     )
                 }
             })
-
-        binding.searchRecyclerMusicTrack.visibility = View.VISIBLE
-
-        binding.searchEditText.setOnFocusChangeListener { v, hasFocus ->
-            binding.searchLinerLayoutHistoryTrack.visibility =
-                if (hasFocus && binding.searchEditText.text.isEmpty()) View.VISIBLE else View.GONE
-        }
-
-        binding.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // empty
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.searchLinerLayoutHistoryTrack.visibility =
-                    if (binding.searchEditText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // empty
-            }
-
-        })
     }
 
     private fun showMessage(oneLinear: ViewGroup, twoLinear: ViewGroup, toastMakeText: String) {
