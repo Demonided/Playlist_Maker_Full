@@ -9,10 +9,9 @@ import com.katoklizm.playlist_maker_full.search.track.ConstTrack.PREFERENCE_NAME
 class HistoryTrackManager(context: Context) {
     private val prefs = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
     private val gson = Gson()
-    private val maxHistorySize = 10
 
     fun saveHistory(historyList: List<Track>) {
-        val limitedHistory = historyList.take(maxHistorySize)
+        val limitedHistory = historyList
         val json = gson.toJson(limitedHistory)
         prefs.edit()
             .putString(HISTORY_KEY, json)

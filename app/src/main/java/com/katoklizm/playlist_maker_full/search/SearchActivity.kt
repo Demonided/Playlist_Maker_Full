@@ -54,7 +54,12 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         setContentView(binding.root)
 
         historyTrackManager = HistoryTrackManager(this)
+
+        trackAdapter.updateTrackList(trackHistoryList)
+        Toast.makeText(applicationContext, "Size ${trackHistoryList.size}", Toast.LENGTH_LONG).show()
+
         historyTrackManager.getHistory()
+        Toast.makeText(applicationContext, "Size ${trackHistoryList.size}", Toast.LENGTH_LONG).show()
 
         binding.settingBack.setOnClickListener {
             finish()
@@ -73,6 +78,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
         binding.searchClearHistory.setOnClickListener {
             trackHistoryList.clear()
+            trackAdapter.notifyDataSetChanged()
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -116,6 +122,12 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
                 if (binding.searchEditText.text.isEmpty()) {
                     binding.searchNothingFound.visibility = View.GONE
                     binding.searchErrorImage.visibility = View.GONE
+
+                    historyTrackManager.getHistory()
+                    trackAdapter.updateTrackList(trackHistoryList)
+                } else {
+                    historyTrackManager.getHistory()
+                    trackAdapter.updateTrackList(trackList)
                 }
             }
 
@@ -215,7 +227,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
         historyTrackManager.saveHistory(trackHistoryList)
 
-        Toast.makeText(applicationContext, "Мы добавили трек ${track.trackName}", Toast.LENGTH_LONG)
+        Toast.makeText(applicationContext, "Мы добавили трек ${track.trackName} and ${trackHistoryList.size}", Toast.LENGTH_LONG)
             .show()
     }
 }
