@@ -101,6 +101,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
         recyclerView = findViewById(R.id.search_recycler_music_track)
 
+        trackList.addAll(historyTrackManager.getHistory())
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = trackAdapter
         trackAdapter.tracks = trackList
@@ -120,7 +121,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
                     binding.searchErrorImage.visibility = View.GONE
 
                     trackAdapter.updateTrackList(historyTrackManager.getHistory())
-                    updateRecyclerViewData(historyTrackManager.getHistory())
                 } else {
                     trackAdapter.updateTrackList(trackList)
                 }

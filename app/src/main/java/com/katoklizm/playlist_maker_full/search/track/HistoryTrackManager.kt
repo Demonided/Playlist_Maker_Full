@@ -11,8 +11,9 @@ class HistoryTrackManager(context: Context) {
     private val gson = Gson()
 
     fun saveHistory(historyList: ArrayList<Track>) {
-        val limitedHistory = historyList
-        val json = gson.toJson(limitedHistory)
+        val fullHistory = getHistory()
+        fullHistory.addAll(historyList)
+        val json = gson.toJson(fullHistory)
         prefs.edit()
             .putString(HISTORY_KEY, json)
             .apply()
