@@ -1,5 +1,6 @@
 package com.katoklizm.playlist_maker_full.search
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -55,12 +56,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
         historyTrackManager = HistoryTrackManager(this)
 
-        trackAdapter.updateTrackList(trackHistoryList)
-        Toast.makeText(applicationContext, "Size ${trackHistoryList.size}", Toast.LENGTH_LONG).show()
-
-        historyTrackManager.getHistory()
-        Toast.makeText(applicationContext, "Size ${trackHistoryList.size}", Toast.LENGTH_LONG).show()
-
         binding.settingBack.setOnClickListener {
             finish()
         }
@@ -113,6 +108,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         binding.searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // empty
+
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -123,10 +119,9 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
                     binding.searchNothingFound.visibility = View.GONE
                     binding.searchErrorImage.visibility = View.GONE
 
-                    historyTrackManager.getHistory()
-                    trackAdapter.updateTrackList(trackHistoryList)
+                    trackAdapter.updateTrackList(historyTrackManager.getHistory())
+                    updateRecyclerViewData(historyTrackManager.getHistory())
                 } else {
-                    historyTrackManager.getHistory()
                     trackAdapter.updateTrackList(trackList)
                 }
             }
@@ -140,6 +135,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     private fun updatePageSearch() {
         iTunesService.search(binding.searchEditText.text.toString())
             .enqueue(object : Callback<TrackResponse> {
+                @SuppressLint("NotifyDataSetChanged")
                 override fun onResponse(
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
@@ -170,6 +166,14 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
             })
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private fun updateRecyclerViewData(data: ArrayList<Track>) {
+        trackList.clear()
+        trackList.addAll(data)
+        trackAdapter.notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     private fun showMessage(oneLinear: ViewGroup, twoLinear: ViewGroup, toastMakeText: String) {
         oneLinear.visibility = View.VISIBLE
         twoLinear.visibility = View.GONE
