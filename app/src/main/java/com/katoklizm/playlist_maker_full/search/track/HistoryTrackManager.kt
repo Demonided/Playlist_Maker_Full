@@ -10,17 +10,18 @@ class HistoryTrackManager(context: Context) {
     private val prefs = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
     private val gson = Gson()
 
-    fun saveHistory(historyList: List<Track>) {
-        val limitedHistory = historyList
-        val json = gson.toJson(limitedHistory)
+    fun saveHistory(historyList: ArrayList<Track>) {
+        val fullHistory = getHistory()
+        fullHistory.addAll(historyList)
+        val json = gson.toJson(fullHistory)
         prefs.edit()
             .putString(HISTORY_KEY, json)
             .apply()
     }
 
-    fun getHistory(): List<Track> {
+    fun getHistory(): ArrayList<Track> {
         val json = prefs.getString(HISTORY_KEY, "")
         val type = object : TypeToken<List<Track>>() {}.type
-        return gson.fromJson(json, type) ?: emptyList()
+        return gson.fromJson(json, type) ?: arrayListOf()
     }
 }
