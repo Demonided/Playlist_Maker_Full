@@ -73,7 +73,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/search_text_history_track"
@@ -91,6 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@+id/search_clear_history"
                 app:layout_constraintTop_toBottomOf="@+id/search_text_history_track" />
 
             <Button
@@ -109,15 +110,14 @@
                 app:cornerRadius="54dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/search_recycler_music_track" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/search_liner_layout_history_track"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="search_text_history_track, search_clear_history"
-                android:visibility="visible" />
+                android:visibility="visible"
+                app:constraint_referenced_ids="search_text_history_track, search_clear_history" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
