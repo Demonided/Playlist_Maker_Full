@@ -101,13 +101,9 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         binding.searchEditText.addTextChangedListener(simpleTextWatcher)
 
         searchMusicTrack()
+        examinationFocusEditText()
 
         recyclerView = findViewById(R.id.search_recycler_music_track)
-
-        trackHistoryList.addAll(historyTrackManager.getHistory())
-        if (trackHistoryList.size == 0) {
-            binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
-        }
 
         trackAdapter.notifyDataSetChanged()
 
@@ -127,7 +123,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
                 if (binding.searchEditText.text.isEmpty()) {
                     binding.searchNothingFound.visibility = View.GONE
                     binding.searchErrorImage.visibility = View.GONE
-                    trackAdapter.updateTrackList(historyTrackManager.getHistory())
+                    trackAdapter.updateTrackList(trackHistoryList)
                     trackAdapter.notifyDataSetChanged()
                 } else {
                     trackAdapter.updateTrackList(trackList)
@@ -139,6 +135,21 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
                 // empty
             }
         })
+    }
+
+    private fun examinationFocusEditText() {
+        binding.searchEditText.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                if (historyTrackManager.getHistory().size == 0) {
+                    binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
+                } else {
+                    binding.searchLinerLayoutHistoryTrack.visibility = View.VISIBLE
+                    trackHistoryList.addAll(historyTrackManager.getHistory())
+                }
+            } else {
+                binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
+            }
+        }
     }
 
     private fun updatePageSearch() {

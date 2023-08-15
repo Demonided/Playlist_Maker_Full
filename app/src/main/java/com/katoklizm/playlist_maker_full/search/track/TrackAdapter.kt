@@ -30,7 +30,6 @@ class TrackAdapter(val onSaveTrackManagersClickListener: OnSaveTrackManagersClic
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                 return tracks[oldItemPosition] == newTrack[newItemPosition]
             }
-
         })
 
         result.dispatchUpdatesTo(this)
