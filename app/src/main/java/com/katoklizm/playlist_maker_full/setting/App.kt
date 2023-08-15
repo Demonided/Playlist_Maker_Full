@@ -1,7 +1,16 @@
 package com.katoklizm.playlist_maker_full.setting
 
 import android.app.Application
+import android.content.Context
+import android.preference.PreferenceManager
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.katoklizm.playlist_maker_full.search.track.ConstTrack
+import com.katoklizm.playlist_maker_full.search.track.Track
+import com.katoklizm.playlist_maker_full.setting.ConstSetting.SAVE_SUBJECT_KEY
+import com.katoklizm.playlist_maker_full.setting.ConstSetting.SHARED_PREF_SAVE_SUBJECT
 
 class App : Application() {
 
@@ -9,10 +18,15 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        val sharedPreferences = getSharedPreferences(SHARED_PREF_SAVE_SUBJECT, Context.MODE_PRIVATE)
+        darkTheme = sharedPreferences.getBoolean(SAVE_SUBJECT_KEY, false)
+        switchTheme(darkTheme)
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
         darkTheme = darkThemeEnabled
+        saveThemeToPrefs(darkThemeEnabled)
+
         AppCompatDelegate.setDefaultNightMode(
             if (darkThemeEnabled) {
                 AppCompatDelegate.MODE_NIGHT_YES
@@ -21,4 +35,12 @@ class App : Application() {
             }
         )
     }
+
+    private fun saveThemeToPrefs(darkThemeEnabled: Boolean) {
+        val sharedPreferences = getSharedPreferences(SHARED_PREF_SAVE_SUBJECT, Context.MODE_PRIVATE)
+        sharedPreferences.edit()
+            .putBoolean(SAVE_SUBJECT_KEY, darkThemeEnabled)
+            .apply()
+    }
+
 }

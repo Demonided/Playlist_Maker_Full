@@ -45,7 +45,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     private val trackList = ArrayList<Track>()
     private val trackAdapter = TrackAdapter(this)
 
-    private val trackHistoryList = arrayListOf<Track>()
+    private val trackHistoryList = ArrayList<Track>()
 
     lateinit var historyTrackManager: HistoryTrackManager
 
@@ -72,6 +72,9 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         }
 
         binding.searchClearHistory.setOnClickListener {
+            historyTrackManager.prefs.edit().clear().apply()
+            binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
+            trackAdapter.tracks.clear()
             trackHistoryList.clear()
             trackAdapter.notifyDataSetChanged()
         }
@@ -98,31 +101,33 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         binding.searchEditText.addTextChangedListener(simpleTextWatcher)
 
         searchMusicTrack()
+        examinationFocusEditText()
 
         recyclerView = findViewById(R.id.search_recycler_music_track)
 
-        trackList.addAll(historyTrackManager.getHistory())
+        trackAdapter.notifyDataSetChanged()
+
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = trackAdapter
-        trackAdapter.tracks = trackList
+        trackAdapter.tracks = trackHistoryList
 
         binding.searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // empty
-
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.searchLinerLayoutHistoryTrack.visibility =
-                    if (binding.searchEditText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
+                    if (binding.searchEditText.hasFocus() && s?.isEmpty() == true && trackHistoryList.size > 0) View.VISIBLE else View.GONE
 
                 if (binding.searchEditText.text.isEmpty()) {
                     binding.searchNothingFound.visibility = View.GONE
                     binding.searchErrorImage.visibility = View.GONE
-
-                    trackAdapter.updateTrackList(historyTrackManager.getHistory())
+                    trackAdapter.updateTrackList(trackHistoryList)
+                    trackAdapter.notifyDataSetChanged()
                 } else {
                     trackAdapter.updateTrackList(trackList)
+                    trackAdapter.notifyDataSetChanged()
                 }
             }
 
@@ -130,6 +135,21 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
                 // empty
             }
         })
+    }
+
+    private fun examinationFocusEditText() {
+        binding.searchEditText.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                if (historyTrackManager.getHistory().size == 0) {
+                    binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
+                } else {
+                    binding.searchLinerLayoutHistoryTrack.visibility = View.VISIBLE
+                    trackHistoryList.addAll(historyTrackManager.getHistory())
+                }
+            } else {
+                binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
+            }
+        }
     }
 
     private fun updatePageSearch() {
@@ -164,13 +184,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
                     )
                 }
             })
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun updateRecyclerViewData(data: ArrayList<Track>) {
-        trackList.clear()
-        trackList.addAll(data)
-        trackAdapter.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -223,15 +236,16 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     override fun onButtonRecyclerViewSaveTrack(track: Track) {
         Log.d("ButtonRecyclerView", "Мы смогли реализовать нажатие ${track.trackName}")
 
-        trackHistoryList.add(0, track)
+        historyTrackManager.saveHistory(track)
+        trackHistoryList.clear()
+        trackHistoryList.addAll(historyTrackManager.getHistory())
+        trackAdapter.notifyDataSetChanged()
 
-        if (trackHistoryList.size > 10) {
-            trackHistoryList.removeAt(10)
-        }
-
-        historyTrackManager.saveHistory(trackHistoryList)
-
-        Toast.makeText(applicationContext, "Мы добавили трек ${track.trackName} and ${trackHistoryList.size}", Toast.LENGTH_LONG)
+        Toast.makeText(
+            applicationContext,
+            "Мы добавили трек ${track.trackName} and ${historyTrackManager.getHistory().size}",
+            Toast.LENGTH_LONG
+        )
             .show()
     }
 }

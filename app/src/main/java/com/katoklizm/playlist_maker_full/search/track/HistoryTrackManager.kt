@@ -7,15 +7,25 @@ import com.katoklizm.playlist_maker_full.search.track.ConstTrack.HISTORY_KEY
 import com.katoklizm.playlist_maker_full.search.track.ConstTrack.PREFERENCE_NAME
 
 class HistoryTrackManager(context: Context) {
-    private val prefs = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
+    val prefs = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
     private val gson = Gson()
 
-    fun saveHistory(historyList: ArrayList<Track>) {
-        val fullHistory = getHistory()
-        fullHistory.addAll(historyList)
-        val json = gson.toJson(fullHistory)
+    fun saveHistory(track: Track) {
+        val historyTrackList = getHistory()
+        var sizeTrack = historyTrackList.size
+
+        if (sizeTrack < 10 && !historyTrackList.contains(track)) {
+            historyTrackList.add(0, track)
+        } else if (sizeTrack == 10 && !historyTrackList.contains(track)) {
+            historyTrackList.add(0, track)
+            historyTrackList.removeAt(9)
+        } else {
+            historyTrackList.remove(track)
+            historyTrackList.add(0, track)
+        }
+
         prefs.edit()
-            .putString(HISTORY_KEY, json)
+            .putString(HISTORY_KEY, Gson().toJson(historyTrackList))
             .apply()
     }
 

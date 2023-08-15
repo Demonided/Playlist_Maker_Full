@@ -13,26 +13,27 @@ class TrackAdapter(val onSaveTrackManagersClickListener: OnSaveTrackManagersClic
 
     fun updateTrackList(newTrack: ArrayList<Track>) {
         tracks = newTrack
-        notifyDataSetChanged()
 
-//        val result = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-//            override fun getOldListSize(): Int {
-//                TODO("Not yet implemented")
-//            }
-//
-//            override fun getNewListSize(): Int {
-//                TODO("Not yet implemented")
-//            }
-//
-//            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-//                TODO("Not yet implemented")
-//            }
-//
-//            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-//                TODO("Not yet implemented")
-//            }
-//
-//        })
+        val result = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun getOldListSize(): Int {
+                return tracks.size
+            }
+
+            override fun getNewListSize(): Int {
+                return newTrack.size
+            }
+
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return tracks[oldItemPosition].id == newTrack[newItemPosition].id
+            }
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return tracks[oldItemPosition] == newTrack[newItemPosition]
+            }
+        })
+
+        result.dispatchUpdatesTo(this)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
@@ -46,7 +47,6 @@ class TrackAdapter(val onSaveTrackManagersClickListener: OnSaveTrackManagersClic
         val track = tracks[position]
         holder.bind(track)
         holder.setOnSaveTrack { onSaveTrackManagersClickListener.onButtonRecyclerViewSaveTrack(track) }
-
     }
 
     interface OnSaveTrackManagersClickListener {
