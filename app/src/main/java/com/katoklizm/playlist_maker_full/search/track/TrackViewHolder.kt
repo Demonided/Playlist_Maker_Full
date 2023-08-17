@@ -3,14 +3,18 @@ package com.katoklizm.playlist_maker_full.search.track
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.katoklizm.playlist_maker_full.R
+import com.katoklizm.playlist_maker_full.databinding.SearchTrackBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    val binding = SearchTrackBinding.bind(itemView)
 
     private val trackName: TextView = itemView.findViewById(R.id.track_name_song)
     private val artistName: TextView = itemView.findViewById(R.id.track_name_musician)
@@ -27,7 +31,17 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         Glide.with(itemView)
             .load(imageUrl)
             .transform(RoundedCorners(ConstTrack.ROUNDED_CORNERS_RADIUS))
-            .placeholder(R.drawable.media_library_playlist)
+//            .placeholder(R.drawable.media_library_playlist)
             .into(artworkUrl100)
     }
+
+    fun setOnSaveTrack(saveTrack: OnSaveTrackManager) {
+        binding.searchTrackFullButton.setOnClickListener {
+            saveTrack.action()
+        }
+    }
+}
+
+fun interface OnSaveTrackManager {
+    fun action()
 }

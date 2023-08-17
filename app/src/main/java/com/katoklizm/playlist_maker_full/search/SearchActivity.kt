@@ -1,9 +1,11 @@
 package com.katoklizm.playlist_maker_full.search
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
 import com.katoklizm.playlist_maker_full.search.track.ConstTrack.USER_TEXT
+import com.katoklizm.playlist_maker_full.search.track.HistoryTrackManager
 import com.katoklizm.playlist_maker_full.search.track.Track
 import com.katoklizm.playlist_maker_full.search.track.TrackAdapter
 import com.katoklizm.playlist_maker_full.search.track.TrackResponse
@@ -24,7 +27,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClickListener {
     private lateinit var binding: ActivitySearchBinding
     private var enteredText: String? = ""
 
@@ -40,12 +43,18 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
 
     private val trackList = ArrayList<Track>()
-    private val trackAdapter = TrackAdapter()
+    private val trackAdapter = TrackAdapter(this)
+
+    private val trackHistoryList = ArrayList<Track>()
+
+    lateinit var historyTrackManager: HistoryTrackManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        historyTrackManager = HistoryTrackManager(this)
 
         binding.settingBack.setOnClickListener {
             finish()
@@ -54,13 +63,20 @@ class SearchActivity : AppCompatActivity() {
         binding.searchClearButton.setOnClickListener {
             binding.searchEditText.text.clear()
             hideSoftKeyboard()
-
             trackList.clear()
             trackAdapter.notifyDataSetChanged()
         }
 
         binding.searchUpdatePage.setOnClickListener {
             updatePageSearch()
+        }
+
+        binding.searchClearHistory.setOnClickListener {
+            historyTrackManager.prefs.edit().clear().apply()
+            binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
+            trackAdapter.tracks.clear()
+            trackHistoryList.clear()
+            trackAdapter.notifyDataSetChanged()
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -85,18 +101,61 @@ class SearchActivity : AppCompatActivity() {
         binding.searchEditText.addTextChangedListener(simpleTextWatcher)
 
         searchMusicTrack()
+        examinationFocusEditText()
 
         recyclerView = findViewById(R.id.search_recycler_music_track)
 
+        trackAdapter.notifyDataSetChanged()
+
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = trackAdapter
-        trackAdapter.tracks = trackList
+        trackAdapter.tracks = trackHistoryList
 
+        binding.searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // empty
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.searchLinerLayoutHistoryTrack.visibility =
+                    if (binding.searchEditText.hasFocus() && s?.isEmpty() == true && trackHistoryList.size > 0) View.VISIBLE else View.GONE
+
+                if (binding.searchEditText.text.isEmpty()) {
+                    binding.searchNothingFound.visibility = View.GONE
+                    binding.searchErrorImage.visibility = View.GONE
+                    trackAdapter.updateTrackList(trackHistoryList)
+                    trackAdapter.notifyDataSetChanged()
+                } else {
+                    trackAdapter.updateTrackList(trackList)
+                    trackAdapter.notifyDataSetChanged()
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // empty
+            }
+        })
+    }
+
+    private fun examinationFocusEditText() {
+        binding.searchEditText.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                if (historyTrackManager.getHistory().size == 0) {
+                    binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
+                } else {
+                    binding.searchLinerLayoutHistoryTrack.visibility = View.VISIBLE
+                    trackHistoryList.addAll(historyTrackManager.getHistory())
+                }
+            } else {
+                binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
+            }
+        }
     }
 
     private fun updatePageSearch() {
         iTunesService.search(binding.searchEditText.text.toString())
             .enqueue(object : Callback<TrackResponse> {
+                @SuppressLint("NotifyDataSetChanged")
                 override fun onResponse(
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
@@ -127,6 +186,7 @@ class SearchActivity : AppCompatActivity() {
             })
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun showMessage(oneLinear: ViewGroup, twoLinear: ViewGroup, toastMakeText: String) {
         oneLinear.visibility = View.VISIBLE
         twoLinear.visibility = View.GONE
@@ -173,5 +233,20 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    override fun onButtonRecyclerViewSaveTrack(track: Track) {
+        Log.d("ButtonRecyclerView", "Мы смогли реализовать нажатие ${track.trackName}")
+
+        historyTrackManager.saveHistory(track)
+        trackHistoryList.clear()
+        trackHistoryList.addAll(historyTrackManager.getHistory())
+        trackAdapter.notifyDataSetChanged()
+
+        Toast.makeText(
+            applicationContext,
+            "Мы добавили трек ${track.trackName} and ${historyTrackManager.getHistory().size}",
+            Toast.LENGTH_LONG
+        )
+            .show()
+    }
 }
 

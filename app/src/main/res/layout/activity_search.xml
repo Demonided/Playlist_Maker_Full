@@ -48,11 +48,11 @@
 
             <EditText
                 android:id="@+id/search_edit_text"
+                style="@style/ColorEditTextSearch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="100"
                 android:inputType="text"
-                style="@style/ColorEditTextSearch"
                 tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
             <ImageView
@@ -63,7 +63,6 @@
                 android:layout_weight="1"
                 android:background="@drawable/search_close"
                 android:visibility="invisible" />
-
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -71,11 +70,51 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/search_recycler_music_track"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="16dp" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/search_text_history_track"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/SearchTextView"
+                android:gravity="center"
+                android:text="Вы искали"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/search_recycler_music_track"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@+id/search_clear_history"
+                app:layout_constraintTop_toBottomOf="@+id/search_text_history_track" />
+
+            <Button
+                android:id="@+id/search_clear_history"
+                android:layout_width="170dp"
+                android:layout_height="48dp"
+                style="@style/SearchButtonUpdateMode"
+                android:layout_gravity="center"
+                android:layout_margin="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:text="Очистить историю"
+                app:cornerRadius="54dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/search_liner_layout_history_track"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="search_text_history_track, search_clear_history" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:id="@+id/search_error_image"
@@ -94,23 +133,22 @@
                 android:src="@drawable/internet_error" />
 
             <TextView
-                style="@style/SearchTextErrorMode"
+                style="@style/SearchTextTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:gravity="center"
-                android:text="@string/search_communication_problem"
-                />
+                android:text="@string/search_communication_problem" />
 
             <Button
                 android:id="@+id/search_update_page"
+                style="@style/SearchButtonUpdateMode"
                 android:layout_width="100dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp"
                 android:text="@string/search_button_update"
-                style="@style/SearchButtonUpdateMode"
                 app:cornerRadius="54dp" />
         </LinearLayout>
 
@@ -131,7 +169,7 @@
                 android:background="@drawable/nothing_found" />
 
             <TextView
-                style="@style/SearchTextErrorMode"
+                style="@style/SearchTextTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

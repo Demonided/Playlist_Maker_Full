@@ -4,6 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Switch
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.databinding.ActivitySettingBinding
 
@@ -15,8 +17,8 @@ class SettingActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.settingsShareAppText
-        binding.settingsTermUseText
         binding.settingsWriteSupportText
+        binding.settingsTermUseText
 
         binding.settingBack.setOnClickListener {
             finish()
@@ -53,5 +55,16 @@ class SettingActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW, url)
             startActivity(intent)
         }
+
+        themeSwitch()
+    }
+
+    private fun themeSwitch() {
+        binding.themeSwitcher.setOnCheckedChangeListener { switcher, cheked ->
+            (applicationContext as App).switchTheme(cheked)
+        }
+
+        binding.themeSwitcher.isChecked = (applicationContext as App).darkTheme
+        // Это для того что бы switch при смене активити сохранял своё состояние
     }
 }
