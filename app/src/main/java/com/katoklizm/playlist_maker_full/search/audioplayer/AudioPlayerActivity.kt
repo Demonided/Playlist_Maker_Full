@@ -57,12 +57,14 @@ class AudioPlayerActivity : AppCompatActivity() {
         audioPlayerTextViewTimeRead.text = audioPlayerTime.text
 
         val originalImageUrl = selectedTrack.artworkUrl100
-        val imageUrl = originalImageUrl.replace("100x100bb", "512x512bb")
+        fun getCoverArtwork() = originalImageUrl.replaceAfterLast('/',"512x512bb.jpg")
 
         Glide.with(this)
-            .load(imageUrl)
+            .load(getCoverArtwork())
             .transform(RoundedCorners(ConstTrack.ROUNDED_CORNERS_RADIUS))
             .placeholder(R.drawable.vector_plug)
             .into(audioPlayerImageTrack)
+
+
     }
 }
