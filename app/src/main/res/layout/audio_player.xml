@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".search.audioplayer.AudioPlayerActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/left_guideline"
@@ -174,6 +175,7 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:gravity="end"
+        android:singleLine="true"
         app:layout_constraintBaseline_toBaselineOf="@id/audio_player_textView_track_name"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/audio_player_barrier"
@@ -245,6 +247,7 @@
         android:layout_marginBottom="20dp"
         android:padding="5dp"
         android:gravity="end"
+        android:singleLine="true"
         app:layout_constraintBaseline_toBaselineOf="@id/audio_player_textView_country"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/audio_player_barrier"

@@ -1,6 +1,7 @@
 package com.katoklizm.playlist_maker_full.search
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -13,8 +14,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
+import com.katoklizm.playlist_maker_full.search.audioplayer.AudioPlayerActivity
 import com.katoklizm.playlist_maker_full.search.track.ConstTrack.USER_TEXT
 import com.katoklizm.playlist_maker_full.search.track.HistoryTrackManager
 import com.katoklizm.playlist_maker_full.search.track.Track
@@ -135,6 +138,16 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
                 // empty
             }
         })
+
+
+    }
+
+    private fun openAudioPlayer(track: Track) {
+        val gson = Gson()
+        val json = gson.toJson(track)
+        val intent = Intent(this, AudioPlayerActivity::class.java)
+        intent.putExtra("selectedTrack", json)
+        startActivity(intent)
     }
 
     private fun examinationFocusEditText() {
@@ -145,6 +158,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
                 } else {
                     binding.searchLinerLayoutHistoryTrack.visibility = View.VISIBLE
                     trackHistoryList.addAll(historyTrackManager.getHistory())
+
                 }
             } else {
                 binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
@@ -234,19 +248,15 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     }
 
     override fun onButtonRecyclerViewSaveTrack(track: Track) {
-        Log.d("ButtonRecyclerView", "Мы смогли реализовать нажатие ${track.trackName}")
+
+        if (trackHistoryList.contains(track)) {
+            openAudioPlayer(track)
+        }
 
         historyTrackManager.saveHistory(track)
         trackHistoryList.clear()
         trackHistoryList.addAll(historyTrackManager.getHistory())
         trackAdapter.notifyDataSetChanged()
-
-        Toast.makeText(
-            applicationContext,
-            "Мы добавили трек ${track.trackName} and ${historyTrackManager.getHistory().size}",
-            Toast.LENGTH_LONG
-        )
-            .show()
     }
 }
 
