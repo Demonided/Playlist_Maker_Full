@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -83,26 +82,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
             trackAdapter.notifyDataSetChanged()
         }
 
-        val simpleTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // empty
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.searchClearButton.visibility = clearButtonVisibility(s)
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // empty
-            }
-        }
-
         if (savedInstanceState != null) {
             enteredText = savedInstanceState.getString(USER_TEXT)
             binding.searchEditText.setText(enteredText)
         }
-
-        binding.searchEditText.addTextChangedListener(simpleTextWatcher)
 
         searchMusicTrack()
         examinationFocusEditText()
@@ -118,6 +101,11 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         binding.searchEditText.doOnTextChanged { text, start, before, count ->
             binding.searchLinerLayoutHistoryTrack.visibility =
                 if (binding.searchEditText.hasFocus() && text?.isEmpty() == true && trackHistoryList.size > 0) View.VISIBLE else View.GONE
+
+            when (count) {
+                0 -> binding.searchClearButton.visibility = View.GONE
+                else -> binding.searchClearButton.visibility = View.VISIBLE
+            }
 
             if (binding.searchEditText.text.isEmpty()) {
                 binding.searchNothingFound.visibility = View.GONE
