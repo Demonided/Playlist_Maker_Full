@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -114,32 +115,20 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         recyclerView.adapter = trackAdapter
         trackAdapter.tracks = trackHistoryList
 
-        binding.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // empty
+        binding.searchEditText.doOnTextChanged { text, start, before, count ->
+            binding.searchLinerLayoutHistoryTrack.visibility =
+                if (binding.searchEditText.hasFocus() && text?.isEmpty() == true && trackHistoryList.size > 0) View.VISIBLE else View.GONE
+
+            if (binding.searchEditText.text.isEmpty()) {
+                binding.searchNothingFound.visibility = View.GONE
+                binding.searchErrorImage.visibility = View.GONE
+                trackAdapter.updateTrackList(trackHistoryList)
+                trackAdapter.notifyDataSetChanged()
+            } else {
+                trackAdapter.updateTrackList(trackList)
+                trackAdapter.notifyDataSetChanged()
             }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.searchLinerLayoutHistoryTrack.visibility =
-                    if (binding.searchEditText.hasFocus() && s?.isEmpty() == true && trackHistoryList.size > 0) View.VISIBLE else View.GONE
-
-                if (binding.searchEditText.text.isEmpty()) {
-                    binding.searchNothingFound.visibility = View.GONE
-                    binding.searchErrorImage.visibility = View.GONE
-                    trackAdapter.updateTrackList(trackHistoryList)
-                    trackAdapter.notifyDataSetChanged()
-                } else {
-                    trackAdapter.updateTrackList(trackList)
-                    trackAdapter.notifyDataSetChanged()
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // empty
-            }
-        })
-
-
+        }
     }
 
     private fun openAudioPlayer(track: Track) {

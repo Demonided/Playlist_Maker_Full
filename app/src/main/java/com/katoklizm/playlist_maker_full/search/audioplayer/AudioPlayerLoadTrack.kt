@@ -1,9 +1,7 @@
 package com.katoklizm.playlist_maker_full.search.audioplayer
 
-import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.katoklizm.playlist_maker_full.R
