@@ -141,14 +141,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
     private fun examinationFocusEditText() {
         binding.searchEditText.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
-                if (historyTrackManager.getHistory().size == 0) {
-                    binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
-                } else {
-                    binding.searchLinerLayoutHistoryTrack.visibility = View.VISIBLE
-                    trackHistoryList.addAll(historyTrackManager.getHistory())
-
-                }
+            if (hasFocus && historyTrackManager.getHistory().size > 0) {
+                binding.searchLinerLayoutHistoryTrack.visibility = View.VISIBLE
+                trackHistoryList.addAll(historyTrackManager.getHistory())
+                trackAdapter.updateTrackList(trackHistoryList)
             } else {
                 binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
             }
