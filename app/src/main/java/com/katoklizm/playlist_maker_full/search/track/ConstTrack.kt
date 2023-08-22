@@ -6,4 +6,6 @@ object ConstTrack {
 
     const val PREFERENCE_NAME = "history_pref"
     const val HISTORY_KEY = "history_key"
+
+    const val SAVE_TRACK = "save_track"
 }

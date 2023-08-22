@@ -18,6 +18,7 @@ import com.google.gson.Gson
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
 import com.katoklizm.playlist_maker_full.search.audioplayer.AudioPlayerActivity
+import com.katoklizm.playlist_maker_full.search.track.ConstTrack.SAVE_TRACK
 import com.katoklizm.playlist_maker_full.search.track.ConstTrack.USER_TEXT
 import com.katoklizm.playlist_maker_full.search.track.HistoryTrackManager
 import com.katoklizm.playlist_maker_full.search.track.Track
@@ -123,7 +124,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         val gson = Gson()
         val json = gson.toJson(track)
         val intent = Intent(this, AudioPlayerActivity::class.java)
-        intent.putExtra("selectedTrack", json)
+        intent.putExtra(SAVE_TRACK, json)
         startActivity(intent)
     }
 
@@ -210,14 +211,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     private fun hideSoftKeyboard() {
         val hide = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         hide.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
-    }
-
-    private fun clearButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) {
-            View.INVISIBLE
-        } else {
-            View.VISIBLE
-        }
     }
 
     override fun onButtonRecyclerViewSaveTrack(track: Track) {
