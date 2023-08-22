@@ -12,15 +12,15 @@ import java.util.Locale
 
 class AudioPlayerLoadTrack(private val activity: AudioPlayerActivity) {
 
-    val audioPlayerImageTrack: ImageView = activity.findViewById(R.id.audio_player_image_track)
-    val audioPlayerNameSong: TextView = activity.findViewById(R.id.audio_player_name_song)
-    val audioPlayerNameMusician: TextView = activity.findViewById(R.id.audio_player_name_musician)
-    val audioPlayerTime: TextView = activity.findViewById(R.id.audio_player_time)
-    val audioPlayerTextViewTimeRead: TextView = activity.findViewById(R.id.audio_player_textView_time_read)
-    val audioPlayerTextViewTrackNameRead: TextView = activity.findViewById(R.id.audio_player_textView_track_name_read)
-    val audioPlayerTextViewYearRead: TextView = activity.findViewById(R.id.audio_player_textView_year_read)
-    val audioPlayerTextViewGenreRead: TextView = activity.findViewById(R.id.audio_player_textView_genre_read)
-    val audioPlayerTextViewCountryRead: TextView = activity.findViewById(R.id.audio_player_textView_country_read)
+    private val audioPlayerImageTrack: ImageView = activity.findViewById(R.id.audio_player_image_track)
+    private val audioPlayerNameSong: TextView = activity.findViewById(R.id.audio_player_name_song)
+    private val audioPlayerNameMusician: TextView = activity.findViewById(R.id.audio_player_name_musician)
+    private val audioPlayerTime: TextView = activity.findViewById(R.id.audio_player_time)
+    private val audioPlayerTextViewTimeRead: TextView = activity.findViewById(R.id.audio_player_textView_time_read)
+    private val audioPlayerTextViewTrackNameRead: TextView = activity.findViewById(R.id.audio_player_textView_track_name_read)
+    private val audioPlayerTextViewYearRead: TextView = activity.findViewById(R.id.audio_player_textView_year_read)
+    private val audioPlayerTextViewGenreRead: TextView = activity.findViewById(R.id.audio_player_textView_genre_read)
+    private val audioPlayerTextViewCountryRead: TextView = activity.findViewById(R.id.audio_player_textView_country_read)
 
     fun bind (track: Track) {
 
@@ -33,16 +33,12 @@ class AudioPlayerLoadTrack(private val activity: AudioPlayerActivity) {
         audioPlayerTextViewGenreRead.text = track.primaryGenreName
         audioPlayerTextViewCountryRead.text = track.country
 
-        audioPlayerTime.text = SimpleDateFormat("mm:ss", Locale.getDefault())
-            .format(track.trackTimeMillis.toLong())
+        audioPlayerTime.text = track.trackTime
 
-        audioPlayerTextViewTimeRead.text = audioPlayerTime.text
-
-        val originalImageUrl = track.artworkUrl100
-        fun getCoverArtwork() = originalImageUrl.replaceAfterLast('/', "512x512bb.jpg")
+        audioPlayerTextViewTimeRead.text = track.trackTime
 
         Glide.with(activity)
-            .load(getCoverArtwork())
+            .load(track.artworkUrl512)
             .transform(RoundedCorners(ConstTrack.ROUNDED_CORNERS_RADIUS))
             .placeholder(R.drawable.vector_plug)
             .into(audioPlayerImageTrack)

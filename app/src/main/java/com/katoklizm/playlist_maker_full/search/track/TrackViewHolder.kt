@@ -24,14 +24,12 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(model: Track) {
         trackName.text = model.trackName
         artistName.text = model.artistName
-        trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault())
-            .format(model.trackTimeMillis.toLong())
+        trackTime.text = model.trackTime
         val imageUrl = model.artworkUrl100
 
         Glide.with(itemView)
             .load(imageUrl)
             .transform(RoundedCorners(ConstTrack.ROUNDED_CORNERS_RADIUS))
-//            .placeholder(R.drawable.media_library_playlist)
             .into(artworkUrl100)
     }
 

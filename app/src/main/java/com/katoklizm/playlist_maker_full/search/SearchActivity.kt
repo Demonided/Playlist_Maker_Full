@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -19,6 +18,7 @@ import com.google.gson.Gson
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
 import com.katoklizm.playlist_maker_full.search.audioplayer.AudioPlayerActivity
+import com.katoklizm.playlist_maker_full.search.track.ConstTrack.SAVE_TRACK
 import com.katoklizm.playlist_maker_full.search.track.ConstTrack.USER_TEXT
 import com.katoklizm.playlist_maker_full.search.track.HistoryTrackManager
 import com.katoklizm.playlist_maker_full.search.track.Track
@@ -83,26 +83,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
             trackAdapter.notifyDataSetChanged()
         }
 
-        val simpleTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // empty
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.searchClearButton.visibility = clearButtonVisibility(s)
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // empty
-            }
-        }
-
         if (savedInstanceState != null) {
             enteredText = savedInstanceState.getString(USER_TEXT)
             binding.searchEditText.setText(enteredText)
         }
-
-        binding.searchEditText.addTextChangedListener(simpleTextWatcher)
 
         searchMusicTrack()
         examinationFocusEditText()
@@ -118,6 +102,11 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         binding.searchEditText.doOnTextChanged { text, start, before, count ->
             binding.searchLinerLayoutHistoryTrack.visibility =
                 if (binding.searchEditText.hasFocus() && text?.isEmpty() == true && trackHistoryList.size > 0) View.VISIBLE else View.GONE
+
+            when (count) {
+                0 -> binding.searchClearButton.visibility = View.GONE
+                else -> binding.searchClearButton.visibility = View.VISIBLE
+            }
 
             if (binding.searchEditText.text.isEmpty()) {
                 binding.searchNothingFound.visibility = View.GONE
@@ -135,7 +124,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         val gson = Gson()
         val json = gson.toJson(track)
         val intent = Intent(this, AudioPlayerActivity::class.java)
-        intent.putExtra("selectedTrack", json)
+        intent.putExtra(SAVE_TRACK, json)
         startActivity(intent)
     }
 
@@ -222,14 +211,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     private fun hideSoftKeyboard() {
         val hide = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         hide.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
-    }
-
-    private fun clearButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) {
-            View.INVISIBLE
-        } else {
-            View.VISIBLE
-        }
     }
 
     override fun onButtonRecyclerViewSaveTrack(track: Track) {
