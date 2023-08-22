@@ -1,6 +1,7 @@
 package com.katoklizm.playlist_maker_full.search
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -11,10 +12,13 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
+import com.katoklizm.playlist_maker_full.search.audioplayer.AudioPlayerActivity
 import com.katoklizm.playlist_maker_full.search.track.ConstTrack.USER_TEXT
 import com.katoklizm.playlist_maker_full.search.track.HistoryTrackManager
 import com.katoklizm.playlist_maker_full.search.track.Track
@@ -111,41 +115,36 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         recyclerView.adapter = trackAdapter
         trackAdapter.tracks = trackHistoryList
 
-        binding.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // empty
-            }
+        binding.searchEditText.doOnTextChanged { text, start, before, count ->
+            binding.searchLinerLayoutHistoryTrack.visibility =
+                if (binding.searchEditText.hasFocus() && text?.isEmpty() == true && trackHistoryList.size > 0) View.VISIBLE else View.GONE
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.searchLinerLayoutHistoryTrack.visibility =
-                    if (binding.searchEditText.hasFocus() && s?.isEmpty() == true && trackHistoryList.size > 0) View.VISIBLE else View.GONE
-
-                if (binding.searchEditText.text.isEmpty()) {
-                    binding.searchNothingFound.visibility = View.GONE
-                    binding.searchErrorImage.visibility = View.GONE
-                    trackAdapter.updateTrackList(trackHistoryList)
-                    trackAdapter.notifyDataSetChanged()
-                } else {
-                    trackAdapter.updateTrackList(trackList)
-                    trackAdapter.notifyDataSetChanged()
-                }
+            if (binding.searchEditText.text.isEmpty()) {
+                binding.searchNothingFound.visibility = View.GONE
+                binding.searchErrorImage.visibility = View.GONE
+                trackAdapter.updateTrackList(trackHistoryList)
+                trackAdapter.notifyDataSetChanged()
+            } else {
+                trackAdapter.updateTrackList(trackList)
+                trackAdapter.notifyDataSetChanged()
             }
+        }
+    }
 
-            override fun afterTextChanged(s: Editable?) {
-                // empty
-            }
-        })
+    private fun openAudioPlayer(track: Track) {
+        val gson = Gson()
+        val json = gson.toJson(track)
+        val intent = Intent(this, AudioPlayerActivity::class.java)
+        intent.putExtra("selectedTrack", json)
+        startActivity(intent)
     }
 
     private fun examinationFocusEditText() {
         binding.searchEditText.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
-                if (historyTrackManager.getHistory().size == 0) {
-                    binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
-                } else {
-                    binding.searchLinerLayoutHistoryTrack.visibility = View.VISIBLE
-                    trackHistoryList.addAll(historyTrackManager.getHistory())
-                }
+            if (hasFocus && historyTrackManager.getHistory().size > 0) {
+                binding.searchLinerLayoutHistoryTrack.visibility = View.VISIBLE
+                trackHistoryList.addAll(historyTrackManager.getHistory())
+                trackAdapter.updateTrackList(trackHistoryList)
             } else {
                 binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
             }
@@ -234,19 +233,15 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     }
 
     override fun onButtonRecyclerViewSaveTrack(track: Track) {
-        Log.d("ButtonRecyclerView", "Мы смогли реализовать нажатие ${track.trackName}")
+
+        if (trackHistoryList.contains(track)) {
+            openAudioPlayer(track)
+        }
 
         historyTrackManager.saveHistory(track)
         trackHistoryList.clear()
         trackHistoryList.addAll(historyTrackManager.getHistory())
         trackAdapter.notifyDataSetChanged()
-
-        Toast.makeText(
-            applicationContext,
-            "Мы добавили трек ${track.trackName} and ${historyTrackManager.getHistory().size}",
-            Toast.LENGTH_LONG
-        )
-            .show()
     }
 }
 

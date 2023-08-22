@@ -112,4 +112,18 @@
         <item name="fontFamily">@font/ys_display_medium</item>
     </style>
 
+    <style name="AudioPlayerPlay">
+        <item name="backgroundTint">@color/black</item>
+    </style>
+
+    <style name="AudioPlayerTextStyleMiniDark">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="AudioPlayerTextStyleMaxiDark">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
 </resources>
