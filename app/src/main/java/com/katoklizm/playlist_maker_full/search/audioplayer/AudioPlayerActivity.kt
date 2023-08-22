@@ -10,17 +10,15 @@ import com.katoklizm.playlist_maker_full.search.track.ConstTrack.SAVE_TRACK
 import com.katoklizm.playlist_maker_full.search.track.Track
 
 class AudioPlayerActivity : AppCompatActivity() {
-    lateinit var binding: AudioPlayerBinding
+    var binding: AudioPlayerBinding? = null
     lateinit var audioPlayerLoadTrack: AudioPlayerLoadTrack
-
-    var mediaPlayer: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = AudioPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(binding!!.root)
 
-        binding.audioPlayerBack.setOnClickListener {
+        binding?.audioPlayerBack?.setOnClickListener {
             finish()
         }
 
