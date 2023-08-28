@@ -98,13 +98,13 @@
 
     <ImageView
         android:id="@+id/audio_player_add_music_track"
-        android:background="@drawable/audio_player_add_song_off"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@id/audio_player_play_song"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
         app:layout_constraintTop_toTopOf="@id/audio_player_play_song"
+        android:src="@drawable/audio_player_add_song_off"/>
         />
 
     <ImageView
