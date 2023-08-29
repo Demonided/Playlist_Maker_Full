@@ -17,4 +17,17 @@
     <string name="search_nothing_found">Ничего не нашлось</string>
     <string name="search_communication_problem">Проблемы со связью\n\nЗагрузка не удалась. Проверьте \nподключение к интернету</string>
     <string name="search_button_update">Обновить</string>
+
+    <string name="track_trackTimeMillis">Длительность</string>
+    <string name="track_trackName">Альбом</string>
+    <string name="track_releaseDate">Год</string>
+    <string name="track_primaryGenreName">Жанр</string>
+    <string name="track_country">Страна</string>
+
+    <string name="tools_track_name">Track_name</string>
+    <string name="tools_performer_group">Performer_group</string>
+    <string name="tools_time">0:00</string>
+    <string name="tools_year">Year</string>
+    <string name="tools_genre">Genre</string>
+    <string name="tools_country">Country</string>
 </resources>
