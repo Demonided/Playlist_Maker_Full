@@ -4,6 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -31,6 +35,18 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClickListener {
     var binding: ActivitySearchBinding? = null
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
+
+    private val searchRunnable = Runnable { updatePageSearch() }
+
+    private var isClickAllowed = true
+
+    private val handler = Handler(Looper.getMainLooper())
+
     private var enteredText: String? = ""
 
     private val imdbBaseUrl = "https://itunes.apple.com"
@@ -106,7 +122,12 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
                 else -> binding?.searchClearButton?.visibility = View.VISIBLE
             }
 
-            if (binding!!.searchEditText.text.isEmpty()) {
+            if (text!!.isNotEmpty() && count > 0) {
+                searchDebounce()
+                trackList.clear()
+            }
+
+            if (binding?.searchEditText?.text!!.isEmpty()) {
                 binding?.searchNothingFound?.visibility = View.GONE
                 binding?.searchErrorImage?.visibility = View.GONE
                 trackAdapter.updateTrackList(trackHistoryList)
@@ -119,12 +140,12 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     }
 
     private fun openAudioPlayer(track: Track) {
-        val gson = Gson()
-        val json = gson.toJson(track)
         val intent = Intent(this, AudioPlayerActivity::class.java)
-        intent.putExtra(SAVE_TRACK, json)
+        intent.putExtra(SAVE_TRACK, track)
         startActivity(intent)
     }
+
+
 
     private fun examinationFocusEditText() {
         binding?.searchEditText?.setOnFocusChangeListener { v, hasFocus ->
@@ -138,38 +159,67 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         }
     }
 
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        val searchText = binding?.searchEditText?.text.toString().trim()
+        if (searchText.isNotEmpty()) {
+            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        } else {
+            trackList.clear()
+            trackAdapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
     private fun updatePageSearch() {
-        iTunesService.search(binding?.searchEditText?.text.toString())
-            .enqueue(object : Callback<TrackResponse> {
-                @SuppressLint("NotifyDataSetChanged")
-                override fun onResponse(
-                    call: Call<TrackResponse>,
-                    response: Response<TrackResponse>
-                ) {
-                    if (response.code() == 200) {
-                        trackList.clear()
-                        if (response.body()?.results?.isNotEmpty() == true) {
-                            trackList.addAll(response.body()?.results!!)
-                            trackAdapter.notifyDataSetChanged()
-                            binding?.searchNothingFound?.visibility = View.GONE
-                            binding?.searchErrorImage?.visibility = View.GONE
-                        } else showMessage(binding!!.searchNothingFound, binding!!.searchErrorImage, "")
+        if (binding?.searchEditText?.text!!.isNotEmpty()) {
+            binding?.searchProgressBar?.visibility = View.VISIBLE
+            iTunesService.search(binding?.searchEditText?.text.toString())
+                .enqueue(object : Callback<TrackResponse> {
+                    @SuppressLint("NotifyDataSetChanged")
+                    override fun onResponse(
+                        call: Call<TrackResponse>,
+                        response: Response<TrackResponse>
+                    ) {
+                        if (response.code() == 200) {
+                            trackList.clear()
+                            if (response.body()?.results?.isNotEmpty() == true) {
+                                binding?.searchProgressBar?.visibility = View.GONE
+                                trackList.addAll(response.body()?.results!!)
+                                trackAdapter.notifyDataSetChanged()
+                                binding?.searchNothingFound?.visibility = View.GONE
+                                binding?.searchErrorImage?.visibility = View.GONE
+                            } else showMessage(
+                                binding!!.searchNothingFound,
+                                binding!!.searchErrorImage,
+                                ""
+                            )
 
-                    } else showMessage(
-                        binding!!.searchErrorImage,
-                        binding!!.searchNothingFound,
-                        response.code().toString()
-                    )
-                }
+                        } else showMessage(
+                            binding!!.searchErrorImage,
+                            binding!!.searchNothingFound,
+                            response.code().toString()
+                        )
 
-                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    showMessage(
-                        binding!!.searchErrorImage,
-                        binding!!.searchNothingFound,
-                        t.message.toString()
-                    )
-                }
-            })
+                    }
+
+                    override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                        showMessage(
+                            binding!!.searchErrorImage,
+                            binding!!.searchNothingFound,
+                            t.message.toString()
+                        )
+                    }
+                })
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -217,10 +267,12 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
             openAudioPlayer(track)
         }
 
-        historyTrackManager.saveHistory(track)
-        trackHistoryList.clear()
-        trackHistoryList.addAll(historyTrackManager.getHistory())
-        trackAdapter.notifyDataSetChanged()
+        if (clickDebounce()) {
+            historyTrackManager.saveHistory(track)
+            trackHistoryList.clear()
+            trackHistoryList.addAll(historyTrackManager.getHistory())
+            trackAdapter.notifyDataSetChanged()
+        }
     }
 }
 
