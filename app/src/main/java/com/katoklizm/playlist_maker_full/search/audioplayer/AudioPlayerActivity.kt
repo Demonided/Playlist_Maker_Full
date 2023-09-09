@@ -1,6 +1,7 @@
 package com.katoklizm.playlist_maker_full.search.audioplayer
 
 import android.media.MediaPlayer
+import android.media.MediaPlayer.TrackInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,8 +15,12 @@ import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.databinding.AudioPlayerBinding
 import com.katoklizm.playlist_maker_full.search.track.ConstTrack.SAVE_TRACK
 import com.katoklizm.playlist_maker_full.search.track.Track
+import com.katoklizm.playlist_maker_full.search.track.iTunesSearchApi
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import javax.security.auth.callback.Callback
 
 class AudioPlayerActivity : AppCompatActivity() {
     var binding: AudioPlayerBinding? = null
@@ -160,12 +165,10 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         if (playerState == STATE_PREPARED) {
             remainingTimeMillis =
-                if (track?.trackTimeMillis!!.toLong() / 1000 >= 30) 30L else track?.trackTimeMillis!!.toLong() / 1000
+                if (track?.trackTimeMillis!!.toLong() / 1000 > 30) 30L else track?.trackTimeMillis!!.toLong() / 1000
         }
 
         playerState = STATE_PLAYING
-
-
 
         if (remainingTimeMillis <= 0) {
             Toast.makeText(applicationContext, "Not", Toast.LENGTH_LONG).show()
@@ -177,7 +180,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         timerIsRunning = true
     }
 
-    private fun pausePlayer(track: Track?) {
+    private fun pausePlayer() {
         mediaPlayer.pause()
         binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
         playerState = STATE_PAUSED
@@ -189,7 +192,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     private fun playbackControl(track: Track?) {
         when (playerState) {
             STATE_PLAYING -> {
-                pausePlayer(track)
+                pausePlayer()
             }
 
             STATE_PREPARED, STATE_PAUSED -> {
