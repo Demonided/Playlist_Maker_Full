@@ -160,7 +160,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
-        val searchText = binding?.searchEditText?.text.toString()
+        val searchText = binding?.searchEditText?.text.toString().trim()
         if (searchText.isNotEmpty()) {
             handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
         } else {
