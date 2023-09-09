@@ -117,7 +117,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
             binding?.searchLinerLayoutHistoryTrack?.visibility =
                 if (binding!!.searchEditText.hasFocus() && text?.isEmpty() == true && trackHistoryList.size > 0) View.VISIBLE else View.GONE
 
-            when (count) {
+            when (text!!.length) {
                 0 -> binding?.searchClearButton?.visibility = View.GONE
                 else -> binding?.searchClearButton?.visibility = View.VISIBLE
             }
