@@ -20,6 +20,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.text.SimpleDateFormat
+import java.util.Locale
 import javax.security.auth.callback.Callback
 
 class AudioPlayerActivity : AppCompatActivity() {
@@ -30,13 +32,12 @@ class AudioPlayerActivity : AppCompatActivity() {
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
-        private const val DELAY = 1000L
-        private const val TRACK_EXCERPT = 30L
+        private const val DELAY = 400L
     }
 
     private var track: Track? = null
 
-    private var remainingTimeMillis: Long = TRACK_EXCERPT
+    private var remainingTimeMillis = "00:00"
 
     private var secondsLeftTextView: TextView? = null
 
@@ -47,6 +48,8 @@ class AudioPlayerActivity : AppCompatActivity() {
     lateinit var audioPlayerLoadTrack: AudioPlayerLoadTrack
 
     private var mediaPlayer = MediaPlayer()
+
+    private val handler = Handler(Looper.getMainLooper())
 
     private var timerIsRunning = false
 
@@ -72,7 +75,6 @@ class AudioPlayerActivity : AppCompatActivity() {
         preparePlayer(track)
 
         binding?.audioPlayerPlaySong?.setOnClickListener {
-
             playbackControl(track)
         }
     }
@@ -105,39 +107,27 @@ class AudioPlayerActivity : AppCompatActivity() {
         super.onBackPressed()
     }
 
-    private fun startTimer(duration: Long) {
-        // Запоминаем время начала таймера
-        val startTime = System.currentTimeMillis()
-        // И отправляем задачу в Handler
-        // Число секунд из EditText'а переводим в миллисекунды
+    private fun startTimer() {
         mainThreadHandler?.post(
-            createUpdateTimerTask(startTime, duration * DELAY)
+            createUpdateTimerTask(track)
         )
     }
 
-    private fun createUpdateTimerTask(startTime: Long, duration: Long): Runnable {
+    private fun createUpdateTimerTask(track: Track?): Runnable {
         return object : Runnable {
             override fun run() {
 
                 if (!timerIsRunning) return
 
-                // Сколько прошло времени с момента запуска таймера
-                val elapsedTime = System.currentTimeMillis() - startTime
-                // Сколько осталось до конца
-                val remainingTime = duration - elapsedTime
-
-                if (remainingTime > 0) {
-                    // Если всё ещё отсчитываем секунды —
-                    // обновляем UI и снова планируем задачу
-                    val seconds = remainingTime / DELAY
-                    secondsLeftTextView?.text = String.format("%d:%02d", seconds / 60, seconds % 60)
-                    mainThreadHandler?.postDelayed(this, DELAY)
-                    remainingTimeMillis = seconds
-                } else {
-                    showMessage("The end")
+                if (playerState == STATE_PLAYING) {
+                        remainingTimeMillis = SimpleDateFormat(
+                            "mm:ss",
+                            Locale.getDefault()
+                        ).format(mediaPlayer.currentPosition)
+                        binding?.audioPlayerTime?.text = remainingTimeMillis
+                        handler.postDelayed(this, DELAY)
                 }
             }
-
         }
     }
 
@@ -150,7 +140,10 @@ class AudioPlayerActivity : AppCompatActivity() {
                     playerState = STATE_PREPARED
                 }
                 mediaPlayer.setOnCompletionListener {
+                    binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
                     playerState = STATE_PREPARED
+                    remainingTimeMillis = "00:00"
+                    binding?.audioPlayerTime?.text = remainingTimeMillis
                 }
             }
         } catch (e: Exception) {
@@ -163,19 +156,9 @@ class AudioPlayerActivity : AppCompatActivity() {
         mediaPlayer.start()
         binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_pause_song)
 
-        if (playerState == STATE_PREPARED) {
-            remainingTimeMillis =
-                if (track?.trackTimeMillis!!.toLong() / 1000 > 30) 30L else track?.trackTimeMillis!!.toLong() / 1000
-        }
-
         playerState = STATE_PLAYING
 
-        if (remainingTimeMillis <= 0) {
-            Toast.makeText(applicationContext, "Not", Toast.LENGTH_LONG).show()
-
-        } else {
-            startTimer(remainingTimeMillis)
-        }
+        startTimer()
 
         timerIsRunning = true
     }
@@ -205,7 +188,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         val rootView = findViewById<View>(android.R.id.content)?.rootView
         if (rootView != null) {
             binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
-            remainingTimeMillis = TRACK_EXCERPT
+            remainingTimeMillis = "00:00"
             Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
         }
     }

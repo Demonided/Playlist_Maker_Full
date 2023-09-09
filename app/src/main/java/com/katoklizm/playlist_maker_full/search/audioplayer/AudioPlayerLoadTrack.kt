@@ -33,7 +33,7 @@ class AudioPlayerLoadTrack(private val activity: AudioPlayerActivity) {
         audioPlayerTextViewGenreRead.text = track?.primaryGenreName
         audioPlayerTextViewCountryRead.text = track?.country
 
-        audioPlayerTime.text = track?.trackTime
+        audioPlayerTime.text = "00:00"
 
         audioPlayerTextViewTimeRead.text = track?.trackTime
 
