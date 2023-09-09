@@ -145,8 +145,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         startActivity(intent)
     }
 
-
-
     private fun examinationFocusEditText() {
         binding?.searchEditText?.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus && historyTrackManager.getHistory().size > 0) {
@@ -167,6 +165,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         } else {
             trackList.clear()
             trackAdapter.notifyDataSetChanged()
+            binding?.searchProgressBar?.visibility = View.GONE
         }
     }
 
@@ -208,7 +207,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
                             binding!!.searchNothingFound,
                             response.code().toString()
                         )
-
                     }
 
                     override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
@@ -263,9 +261,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
     override fun onButtonRecyclerViewSaveTrack(track: Track) {
 
-        if (trackHistoryList.contains(track)) {
-            openAudioPlayer(track)
-        }
+//        if (trackHistoryList.contains(track)) {
+//            openAudioPlayer(track)
+//        }
+        openAudioPlayer(track)
 
         if (clickDebounce()) {
             historyTrackManager.saveHistory(track)
