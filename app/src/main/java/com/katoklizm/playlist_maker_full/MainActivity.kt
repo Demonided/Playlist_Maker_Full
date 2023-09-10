@@ -10,7 +10,7 @@ import com.katoklizm.playlist_maker_full.setting.App
 import com.katoklizm.playlist_maker_full.setting.SettingActivity
 
 class MainActivity : AppCompatActivity() {
-    var binding: ActivityMainBinding? = null
+    private var binding: ActivityMainBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val app = applicationContext as App

@@ -3,6 +3,7 @@ package com.katoklizm.playlist_maker_full.search.track
 import android.os.Parcel
 import android.os.Parcelable
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 data class Track(
@@ -12,7 +13,7 @@ data class Track(
     val trackTimeMillis: String?, // Продолжительность трека
     val artworkUrl100: String?, // Ссылка на изображение обложки
     val collectionName: String?, // Название альбома
-    val releaseDate: String?, // Год релиза трека
+    val releaseDate: Date?, // Год релиза трека
     val primaryGenreName: String?, // Жанр трека
     val country: String?, // Страна
     val previewUrl: String? // 30сек проигрывание трека
@@ -32,7 +33,7 @@ data class Track(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readString(),
+        parcel.readSerializable() as Date?,
         parcel.readString(),
         parcel.readString(),
         parcel.readString()
@@ -50,7 +51,7 @@ data class Track(
         dest.writeString(trackTimeMillis)
         dest.writeString(artworkUrl100)
         dest.writeString(collectionName)
-        dest.writeString(releaseDate)
+        dest.writeSerializable(releaseDate)
         dest.writeString(primaryGenreName)
         dest.writeString(country)
         dest.writeString(previewUrl)
