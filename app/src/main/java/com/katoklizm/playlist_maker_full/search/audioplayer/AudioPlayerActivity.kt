@@ -120,12 +120,17 @@ class AudioPlayerActivity : AppCompatActivity() {
                 if (!timerIsRunning) return
 
                 if (playerState == STATE_PLAYING) {
+                    if (mediaPlayer.isPlaying) {
+                        val currentPosition = mediaPlayer.currentPosition
                         remainingTimeMillis = SimpleDateFormat(
                             "mm:ss",
                             Locale.getDefault()
-                        ).format(mediaPlayer.currentPosition)
+                        ).format(currentPosition)
                         binding?.audioPlayerTime?.text = remainingTimeMillis
                         handler.postDelayed(this, DELAY)
+                    } else {
+                        timerIsRunning = false
+                    }
                 }
             }
         }

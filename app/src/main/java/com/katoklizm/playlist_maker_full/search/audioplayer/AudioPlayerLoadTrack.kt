@@ -1,5 +1,6 @@
 package com.katoklizm.playlist_maker_full.search.audioplayer
 
+import android.text.format.DateUtils
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
@@ -29,7 +30,7 @@ class AudioPlayerLoadTrack(private val activity: AudioPlayerActivity) {
         audioPlayerNameMusician.text = track?.artistName
 
         audioPlayerTextViewTrackNameRead.text = track?.trackName
-        audioPlayerTextViewYearRead.text = track?.releaseDate
+        audioPlayerTextViewYearRead.text = track?.releaseDate?.let { ConstTrack.formatDate(it) }
         audioPlayerTextViewGenreRead.text = track?.primaryGenreName
         audioPlayerTextViewCountryRead.text = track?.country
 

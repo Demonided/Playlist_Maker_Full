@@ -80,6 +80,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
         binding?.searchClearButton?.setOnClickListener {
             binding?.searchEditText?.text?.clear()
+            binding?.searchProgressBar?.visibility = View.GONE
             hideSoftKeyboard()
             trackList.clear()
             trackAdapter.notifyDataSetChanged()
@@ -117,9 +118,11 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
             binding?.searchLinerLayoutHistoryTrack?.visibility =
                 if (binding!!.searchEditText.hasFocus() && text?.isEmpty() == true && trackHistoryList.size > 0) View.VISIBLE else View.GONE
 
-
             when (text!!.length) {
-                0 -> binding?.searchClearButton?.visibility = View.GONE
+                0 -> {
+                    binding?.searchClearButton?.visibility = View.GONE
+                    binding?.searchProgressBar?.visibility = View.GONE
+                }
                 else -> binding?.searchClearButton?.visibility = View.VISIBLE
             }
 
@@ -262,9 +265,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
     override fun onButtonRecyclerViewSaveTrack(track: Track) {
 
-//        if (trackHistoryList.contains(track)) {
-//            openAudioPlayer(track)
-//        }
         openAudioPlayer(track)
 
         if (clickDebounce()) {
