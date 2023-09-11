@@ -43,6 +43,8 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private var mainThreadHandler: Handler? = null
 
+    private var timerRunnable: Runnable? = null
+
     private var playerState = STATE_DEFAULT
 
     lateinit var audioPlayerLoadTrack: AudioPlayerLoadTrack
@@ -61,6 +63,9 @@ class AudioPlayerActivity : AppCompatActivity() {
         secondsLeftTextView = findViewById(R.id.audio_player_time)
 
         mainThreadHandler = Handler(Looper.getMainLooper())
+
+        timerRunnable = createUpdateTimerTask()
+        mainThreadHandler?.post(timerRunnable!!)
 
         binding?.audioPlayerBack?.setOnClickListener {
             finish()
@@ -98,6 +103,10 @@ class AudioPlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer.release()
+        timerRunnable?.let {
+            mainThreadHandler?.removeCallbacks(it)
+            timerRunnable = null
+        }
     }
 
     override fun onBackPressed() {
@@ -109,27 +118,32 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private fun startTimer() {
         mainThreadHandler?.post(
-            createUpdateTimerTask(track)
+            createUpdateTimerTask()
         )
     }
 
-    private fun createUpdateTimerTask(track: Track?): Runnable {
+    private fun createUpdateTimerTask(): Runnable {
         return object : Runnable {
             override fun run() {
 
                 if (!timerIsRunning) return
 
                 if (playerState == STATE_PLAYING) {
-                    if (mediaPlayer.isPlaying) {
-                        val currentPosition = mediaPlayer.currentPosition
-                        remainingTimeMillis = SimpleDateFormat(
-                            "mm:ss",
-                            Locale.getDefault()
-                        ).format(currentPosition)
-                        binding?.audioPlayerTime?.text = remainingTimeMillis
-                        handler.postDelayed(this, DELAY)
-                    } else {
+                    try {
+                        if (mediaPlayer.isPlaying) {
+                            val currentPosition = mediaPlayer.currentPosition
+                            remainingTimeMillis = SimpleDateFormat(
+                                "mm:ss",
+                                Locale.getDefault()
+                            ).format(currentPosition)
+                            binding?.audioPlayerTime?.text = remainingTimeMillis
+                            handler.postDelayed(this, DELAY)
+                        } else {
+                            timerIsRunning = false
+                        }
+                    } catch (e: IllegalStateException) {
                         timerIsRunning = false
+                        e.printStackTrace()
                     }
                 }
             }
