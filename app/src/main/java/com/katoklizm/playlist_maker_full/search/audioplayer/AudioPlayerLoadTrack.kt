@@ -44,5 +44,4 @@ class AudioPlayerLoadTrack(private val activity: AudioPlayerActivity) {
             .placeholder(R.drawable.vector_plug)
             .into(audioPlayerImageTrack)
     }
-
 }
