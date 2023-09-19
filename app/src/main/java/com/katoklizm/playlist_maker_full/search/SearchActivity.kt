@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -32,7 +34,19 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClickListener {
-    private lateinit var binding: ActivitySearchBinding
+    var binding: ActivitySearchBinding? = null
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
+
+    private val searchRunnable = Runnable { updatePageSearch() }
+
+    private var isClickAllowed = true
+
+    private val handler = Handler(Looper.getMainLooper())
+
     private var enteredText: String? = ""
 
     private val imdbBaseUrl = "https://itunes.apple.com"
@@ -56,28 +70,29 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(binding!!.root)
 
         historyTrackManager = HistoryTrackManager(this)
 
-        binding.settingBack.setOnClickListener {
+        binding?.settingBack?.setOnClickListener {
             finish()
         }
 
-        binding.searchClearButton.setOnClickListener {
-            binding.searchEditText.text.clear()
+        binding?.searchClearButton?.setOnClickListener {
+            binding?.searchEditText?.text?.clear()
+            binding?.searchProgressBar?.visibility = View.GONE
             hideSoftKeyboard()
             trackList.clear()
             trackAdapter.notifyDataSetChanged()
         }
 
-        binding.searchUpdatePage.setOnClickListener {
+        binding?.searchUpdatePage?.setOnClickListener {
             updatePageSearch()
         }
 
-        binding.searchClearHistory.setOnClickListener {
+        binding?.searchClearHistory?.setOnClickListener {
             historyTrackManager.prefs.edit().clear().apply()
-            binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
+            binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
             trackAdapter.tracks.clear()
             trackHistoryList.clear()
             trackAdapter.notifyDataSetChanged()
@@ -85,7 +100,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
         if (savedInstanceState != null) {
             enteredText = savedInstanceState.getString(USER_TEXT)
-            binding.searchEditText.setText(enteredText)
+            binding?.searchEditText?.setText(enteredText)
         }
 
         searchMusicTrack()
@@ -99,18 +114,26 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         recyclerView.adapter = trackAdapter
         trackAdapter.tracks = trackHistoryList
 
-        binding.searchEditText.doOnTextChanged { text, start, before, count ->
-            binding.searchLinerLayoutHistoryTrack.visibility =
-                if (binding.searchEditText.hasFocus() && text?.isEmpty() == true && trackHistoryList.size > 0) View.VISIBLE else View.GONE
+        binding?.searchEditText?.doOnTextChanged { text, start, before, count ->
+            binding?.searchLinerLayoutHistoryTrack?.visibility =
+                if (binding!!.searchEditText.hasFocus() && text?.isEmpty() == true && trackHistoryList.size > 0) View.VISIBLE else View.GONE
 
-            when (count) {
-                0 -> binding.searchClearButton.visibility = View.GONE
-                else -> binding.searchClearButton.visibility = View.VISIBLE
+            when (text!!.length) {
+                0 -> {
+                    binding?.searchClearButton?.visibility = View.GONE
+                    binding?.searchProgressBar?.visibility = View.GONE
+                }
+                else -> binding?.searchClearButton?.visibility = View.VISIBLE
             }
 
-            if (binding.searchEditText.text.isEmpty()) {
-                binding.searchNothingFound.visibility = View.GONE
-                binding.searchErrorImage.visibility = View.GONE
+            if (text!!.isNotEmpty()) {
+                searchDebounce()
+                trackList.clear()
+            }
+
+            if (binding?.searchEditText?.text!!.isEmpty()) {
+                binding?.searchNothingFound?.visibility = View.GONE
+                binding?.searchErrorImage?.visibility = View.GONE
                 trackAdapter.updateTrackList(trackHistoryList)
                 trackAdapter.notifyDataSetChanged()
             } else {
@@ -121,57 +144,84 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     }
 
     private fun openAudioPlayer(track: Track) {
-        val gson = Gson()
-        val json = gson.toJson(track)
         val intent = Intent(this, AudioPlayerActivity::class.java)
-        intent.putExtra(SAVE_TRACK, json)
+        intent.putExtra(SAVE_TRACK, track)
         startActivity(intent)
     }
 
     private fun examinationFocusEditText() {
-        binding.searchEditText.setOnFocusChangeListener { v, hasFocus ->
+        binding?.searchEditText?.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus && historyTrackManager.getHistory().size > 0) {
-                binding.searchLinerLayoutHistoryTrack.visibility = View.VISIBLE
+                binding?.searchLinerLayoutHistoryTrack?.visibility = View.VISIBLE
                 trackHistoryList.addAll(historyTrackManager.getHistory())
                 trackAdapter.updateTrackList(trackHistoryList)
             } else {
-                binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
+                binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
             }
         }
     }
 
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        val searchText = binding?.searchEditText?.text.toString().trim()
+        if (searchText.isNotEmpty()) {
+            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        } else {
+            trackList.clear()
+            trackAdapter.notifyDataSetChanged()
+            binding?.searchProgressBar?.visibility = View.GONE
+        }
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
     private fun updatePageSearch() {
-        iTunesService.search(binding.searchEditText.text.toString())
-            .enqueue(object : Callback<TrackResponse> {
-                @SuppressLint("NotifyDataSetChanged")
-                override fun onResponse(
-                    call: Call<TrackResponse>,
-                    response: Response<TrackResponse>
-                ) {
-                    if (response.code() == 200) {
-                        trackList.clear()
-                        if (response.body()?.results?.isNotEmpty() == true) {
-                            trackList.addAll(response.body()?.results!!)
-                            trackAdapter.notifyDataSetChanged()
-                            binding.searchNothingFound.visibility = View.GONE
-                            binding.searchErrorImage.visibility = View.GONE
-                        } else showMessage(binding.searchNothingFound, binding.searchErrorImage, "")
+        if (binding?.searchEditText?.text!!.isNotEmpty()) {
+            binding?.searchProgressBar?.visibility = View.VISIBLE
+            iTunesService.search(binding?.searchEditText?.text.toString())
+                .enqueue(object : Callback<TrackResponse> {
+                    @SuppressLint("NotifyDataSetChanged")
+                    override fun onResponse(
+                        call: Call<TrackResponse>,
+                        response: Response<TrackResponse>
+                    ) {
+                        if (response.code() == 200) {
+                            trackList.clear()
+                            if (response.body()?.results?.isNotEmpty() == true) {
+                                binding?.searchProgressBar?.visibility = View.GONE
+                                trackList.addAll(response.body()?.results!!)
+                                trackAdapter.notifyDataSetChanged()
+                                binding?.searchNothingFound?.visibility = View.GONE
+                                binding?.searchErrorImage?.visibility = View.GONE
+                            } else showMessage(
+                                binding!!.searchNothingFound,
+                                binding!!.searchErrorImage,
+                                ""
+                            )
 
-                    } else showMessage(
-                        binding.searchErrorImage,
-                        binding.searchNothingFound,
-                        response.code().toString()
-                    )
-                }
+                        } else showMessage(
+                            binding!!.searchErrorImage,
+                            binding!!.searchNothingFound,
+                            response.code().toString()
+                        )
+                    }
 
-                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    showMessage(
-                        binding.searchErrorImage,
-                        binding.searchNothingFound,
-                        t.message.toString()
-                    )
-                }
-            })
+                    override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                        showMessage(
+                            binding!!.searchErrorImage,
+                            binding!!.searchNothingFound,
+                            t.message.toString()
+                        )
+                    }
+                })
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -186,9 +236,9 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     }
 
     private fun searchMusicTrack() {
-        binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
+        binding?.searchEditText?.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (binding.searchEditText.text.isNotEmpty()) {
+                if (binding!!.searchEditText.text.isNotEmpty()) {
                     updatePageSearch()
                 }
             }
@@ -198,31 +248,31 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        enteredText = binding.searchEditText.text.toString()
+        enteredText = binding?.searchEditText?.text.toString()
         outState.putString(USER_TEXT, enteredText)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         enteredText = savedInstanceState.getString(USER_TEXT)
-        binding.searchEditText.setText(enteredText)
+        binding?.searchEditText?.setText(enteredText)
     }
 
     private fun hideSoftKeyboard() {
         val hide = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        hide.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
+        hide.hideSoftInputFromWindow(binding?.searchEditText?.windowToken, 0)
     }
 
     override fun onButtonRecyclerViewSaveTrack(track: Track) {
 
-        if (trackHistoryList.contains(track)) {
-            openAudioPlayer(track)
-        }
+        openAudioPlayer(track)
 
-        historyTrackManager.saveHistory(track)
-        trackHistoryList.clear()
-        trackHistoryList.addAll(historyTrackManager.getHistory())
-        trackAdapter.notifyDataSetChanged()
+        if (clickDebounce()) {
+            historyTrackManager.saveHistory(track)
+            trackHistoryList.clear()
+            trackHistoryList.addAll(historyTrackManager.getHistory())
+            trackAdapter.notifyDataSetChanged()
+        }
     }
 }
 

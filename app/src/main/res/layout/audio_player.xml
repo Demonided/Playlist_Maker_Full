@@ -66,7 +66,7 @@
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/audio_player_image_track"
-        tools:text="Track_name" />
+        tools:text="@string/tools_track_name" />
 
     <TextView
         android:id="@+id/audio_player_name_musician"
@@ -81,7 +81,7 @@
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/audio_player_name_song"
-        tools:text="Performer_group" />
+        tools:text="@string/tools_performer_group" />
 
     <ImageView
         android:id="@+id/audio_player_play_song"
@@ -98,13 +98,13 @@
 
     <ImageView
         android:id="@+id/audio_player_add_music_track"
-        android:background="@drawable/audio_player_add_song_off"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@id/audio_player_play_song"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
         app:layout_constraintTop_toTopOf="@id/audio_player_play_song"
+        android:src="@drawable/audio_player_add_song_off"/>
         />
 
     <ImageView
@@ -129,14 +129,14 @@
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/audio_player_play_song"
-        tools:text="0:00" />
+        tools:text="@string/tools_time" />
 
     <TextView
         android:id="@+id/audio_player_textView_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="Длительность"
+        android:text="@string/track_trackTimeMillis"
         android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@id/audio_player_textView_track_name"
         app:layout_constraintEnd_toStartOf="@id/audio_player_barrier"
@@ -155,14 +155,14 @@
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/audio_player_barrier"
         app:layout_constraintVertical_chainStyle="spread_inside"
-        tools:text="0:00" />
+        tools:text="@string/tools_time" />
 
     <TextView
         android:id="@+id/audio_player_textView_track_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="Альбом"
+        android:text="@string/track_trackName"
         android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@id/audio_player_textView_year"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
@@ -179,14 +179,14 @@
         app:layout_constraintBaseline_toBaselineOf="@id/audio_player_textView_track_name"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/audio_player_barrier"
-        tools:text="Track name" />
+        tools:text="@string/tools_track_name" />
 
     <TextView
         android:id="@+id/audio_player_textView_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="Год"
+        android:text="@string/track_releaseDate"
         android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@id/audio_player_textView_genre"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
@@ -202,14 +202,14 @@
         app:layout_constraintBaseline_toBaselineOf="@id/audio_player_textView_year"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/audio_player_barrier"
-        tools:text="Year" />
+        tools:text="@string/tools_year" />
 
     <TextView
         android:id="@+id/audio_player_textView_genre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="Жанр"
+        android:text="@string/track_primaryGenreName"
         android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@id/audio_player_textView_country"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
@@ -225,7 +225,7 @@
         app:layout_constraintBaseline_toBaselineOf="@id/audio_player_textView_genre"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/audio_player_barrier"
-        tools:text="Genre" />
+        tools:text="@string/tools_genre" />
 
     <TextView
         android:id="@+id/audio_player_textView_country"
@@ -233,7 +233,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:padding="8dp"
-        android:text="Страна"
+        android:text="@string/track_country"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/left_guideline"

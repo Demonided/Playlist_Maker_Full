@@ -1,5 +1,6 @@
 package com.katoklizm.playlist_maker_full.search.audioplayer
 
+import android.text.format.DateUtils
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
@@ -22,23 +23,23 @@ class AudioPlayerLoadTrack(private val activity: AudioPlayerActivity) {
     private val audioPlayerTextViewGenreRead: TextView = activity.findViewById(R.id.audio_player_textView_genre_read)
     private val audioPlayerTextViewCountryRead: TextView = activity.findViewById(R.id.audio_player_textView_country_read)
 
-    fun bind (track: Track) {
+    fun bind (track: Track?) {
 
-        audioPlayerNameSong.text = track.trackName
+        audioPlayerNameSong.text = track?.trackName
 
-        audioPlayerNameMusician.text = track.artistName
+        audioPlayerNameMusician.text = track?.artistName
 
-        audioPlayerTextViewTrackNameRead.text = track.trackName
-        audioPlayerTextViewYearRead.text = track.releaseDate
-        audioPlayerTextViewGenreRead.text = track.primaryGenreName
-        audioPlayerTextViewCountryRead.text = track.country
+        audioPlayerTextViewTrackNameRead.text = track?.trackName
+        audioPlayerTextViewYearRead.text = track?.releaseDate?.let { ConstTrack.formatDate(it) }
+        audioPlayerTextViewGenreRead.text = track?.primaryGenreName
+        audioPlayerTextViewCountryRead.text = track?.country
 
-        audioPlayerTime.text = track.trackTime
+        audioPlayerTime.text = "00:00"
 
-        audioPlayerTextViewTimeRead.text = track.trackTime
+        audioPlayerTextViewTimeRead.text = track?.trackTime
 
         Glide.with(activity)
-            .load(track.artworkUrl512)
+            .load(track?.artworkUrl512)
             .transform(RoundedCorners(ConstTrack.ROUNDED_CORNERS_RADIUS))
             .placeholder(R.drawable.vector_plug)
             .into(audioPlayerImageTrack)
