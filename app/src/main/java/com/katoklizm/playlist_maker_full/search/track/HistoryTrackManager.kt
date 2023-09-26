@@ -3,6 +3,7 @@ package com.katoklizm.playlist_maker_full.search.track
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.katoklizm.playlist_maker_full.domain.model.Track
 import com.katoklizm.playlist_maker_full.search.track.ConstTrack.HISTORY_KEY
 import com.katoklizm.playlist_maker_full.search.track.ConstTrack.PREFERENCE_NAME
 

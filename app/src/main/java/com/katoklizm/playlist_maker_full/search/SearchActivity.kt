@@ -6,8 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -16,17 +14,20 @@ import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 import com.katoklizm.playlist_maker_full.R
+import com.katoklizm.playlist_maker_full.data.dto.TrackDto
+import com.katoklizm.playlist_maker_full.data.dto.TrackSearchResponse
+import com.katoklizm.playlist_maker_full.data.network.RetrofitNetworkClient
+import com.katoklizm.playlist_maker_full.data.network.TrackRepositoryImpl
+import com.katoklizm.playlist_maker_full.data.network.iTunesSearchApi
 import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
-import com.katoklizm.playlist_maker_full.search.audioplayer.AudioPlayerActivity
+import com.katoklizm.playlist_maker_full.domain.impl.TrackInteractorImpl
+import com.katoklizm.playlist_maker_full.ui.audioplayer.AudioPlayerActivity
 import com.katoklizm.playlist_maker_full.search.track.ConstTrack.SAVE_TRACK
 import com.katoklizm.playlist_maker_full.search.track.ConstTrack.USER_TEXT
 import com.katoklizm.playlist_maker_full.search.track.HistoryTrackManager
-import com.katoklizm.playlist_maker_full.search.track.Track
-import com.katoklizm.playlist_maker_full.search.track.TrackAdapter
-import com.katoklizm.playlist_maker_full.search.track.TrackResponse
-import com.katoklizm.playlist_maker_full.search.track.iTunesSearchApi
+import com.katoklizm.playlist_maker_full.domain.model.Track
+import com.katoklizm.playlist_maker_full.ui.track.TrackAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,13 +42,11 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
-    private val searchRunnable = Runnable { updatePageSearch() }
+    private val retrofitNetworkClient = RetrofitNetworkClient()
 
-    private var isClickAllowed = true
+    private val trackRepositoryImpl = TrackRepositoryImpl(retrofitNetworkClient)
 
-    private val handler = Handler(Looper.getMainLooper())
-
-    private var enteredText: String? = ""
+    private val trackInteractorImpl = TrackInteractorImpl(trackRepositoryImpl)
 
     private val imdbBaseUrl = "https://itunes.apple.com"
 
@@ -58,9 +57,17 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
     private val iTunesService = retrofit.create(iTunesSearchApi::class.java)
 
+    private val searchRunnable = Runnable { updatePageSearch() }
+
+    private var isClickAllowed = true
+
+    private val handler = Handler(Looper.getMainLooper())
+
+    private var enteredText: String? = ""
+
     private lateinit var recyclerView: RecyclerView
 
-    private val trackList = ArrayList<Track>()
+    private val trackList = ArrayList<TrackDto>()
     private val trackAdapter = TrackAdapter(this)
 
     private val trackHistoryList = ArrayList<Track>()
@@ -137,7 +144,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
                 trackAdapter.updateTrackList(trackHistoryList)
                 trackAdapter.notifyDataSetChanged()
             } else {
-                trackAdapter.updateTrackList(trackList)
+//                trackAdapter.updateTrackList(trackList)
                 trackAdapter.notifyDataSetChanged()
             }
         }
@@ -186,11 +193,11 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         if (binding?.searchEditText?.text!!.isNotEmpty()) {
             binding?.searchProgressBar?.visibility = View.VISIBLE
             iTunesService.search(binding?.searchEditText?.text.toString())
-                .enqueue(object : Callback<TrackResponse> {
+                .enqueue(object : Callback<TrackSearchResponse> {
                     @SuppressLint("NotifyDataSetChanged")
                     override fun onResponse(
-                        call: Call<TrackResponse>,
-                        response: Response<TrackResponse>
+                        call: Call<TrackSearchResponse>,
+                        response: Response<TrackSearchResponse>
                     ) {
                         if (response.code() == 200) {
                             trackList.clear()
@@ -213,7 +220,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
                         )
                     }
 
-                    override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                    override fun onFailure(call: Call<TrackSearchResponse>, t: Throwable) {
                         showMessage(
                             binding!!.searchErrorImage,
                             binding!!.searchNothingFound,

@@ -1,28 +1,19 @@
-package com.katoklizm.playlist_maker_full.search.audioplayer
+package com.katoklizm.playlist_maker_full.ui.audioplayer
 
 import android.media.MediaPlayer
-import android.media.MediaPlayer.TrackInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.Gson
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.databinding.AudioPlayerBinding
 import com.katoklizm.playlist_maker_full.search.track.ConstTrack.SAVE_TRACK
-import com.katoklizm.playlist_maker_full.search.track.Track
-import com.katoklizm.playlist_maker_full.search.track.iTunesSearchApi
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Query
+import com.katoklizm.playlist_maker_full.domain.model.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
-import javax.security.auth.callback.Callback
 
 class AudioPlayerActivity : AppCompatActivity() {
     var binding: AudioPlayerBinding? = null
@@ -80,7 +71,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         preparePlayer(track)
 
         binding?.audioPlayerPlaySong?.setOnClickListener {
-            playbackControl(track)
+            playbackControl()
         }
     }
 
@@ -96,7 +87,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (playerState == STATE_PLAYING) {
-            startPlayer(track)
+            startPlayer()
         }
     }
 
@@ -171,7 +162,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun startPlayer(track: Track?) {
+    private fun startPlayer() {
         mediaPlayer.start()
         binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_pause_song)
 
@@ -191,14 +182,14 @@ class AudioPlayerActivity : AppCompatActivity() {
         timerIsRunning = false
     }
 
-    private fun playbackControl(track: Track?) {
+    private fun playbackControl() {
         when (playerState) {
             STATE_PLAYING -> {
                 pausePlayer()
             }
 
             STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer(track)
+                startPlayer()
             }
         }
     }

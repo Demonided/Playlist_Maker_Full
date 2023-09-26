@@ -1,16 +1,15 @@
-package com.katoklizm.playlist_maker_full.search.track
+package com.katoklizm.playlist_maker_full.ui.track
 
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.databinding.SearchTrackBinding
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.katoklizm.playlist_maker_full.domain.model.Track
+import com.katoklizm.playlist_maker_full.search.track.ConstTrack
 
 class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

@@ -1,10 +1,11 @@
-package com.katoklizm.playlist_maker_full.search.track
+package com.katoklizm.playlist_maker_full.ui.track
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.katoklizm.playlist_maker_full.R
+import com.katoklizm.playlist_maker_full.domain.model.Track
 
 class TrackAdapter(val onSaveTrackManagersClickListener: OnSaveTrackManagersClickListener) :
     RecyclerView.Adapter<TrackViewHolder>() {

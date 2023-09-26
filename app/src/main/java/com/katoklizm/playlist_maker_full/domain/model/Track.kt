@@ -1,4 +1,4 @@
-package com.katoklizm.playlist_maker_full.search.track
+package com.katoklizm.playlist_maker_full.domain.model
 
 import android.os.Parcel
 import android.os.Parcelable

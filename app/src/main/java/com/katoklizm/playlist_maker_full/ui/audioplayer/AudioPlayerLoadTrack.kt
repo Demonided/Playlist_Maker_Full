@@ -1,15 +1,12 @@
-package com.katoklizm.playlist_maker_full.search.audioplayer
+package com.katoklizm.playlist_maker_full.ui.audioplayer
 
-import android.text.format.DateUtils
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.search.track.ConstTrack
-import com.katoklizm.playlist_maker_full.search.track.Track
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.katoklizm.playlist_maker_full.domain.model.Track
 
 class AudioPlayerLoadTrack(private val activity: AudioPlayerActivity) {
 

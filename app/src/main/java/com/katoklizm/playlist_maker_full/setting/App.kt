@@ -2,13 +2,7 @@ package com.katoklizm.playlist_maker_full.setting
 
 import android.app.Application
 import android.content.Context
-import android.preference.PreferenceManager
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.appcompat.app.AppCompatDelegate
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.katoklizm.playlist_maker_full.search.track.ConstTrack
-import com.katoklizm.playlist_maker_full.search.track.Track
 import com.katoklizm.playlist_maker_full.setting.ConstSetting.SAVE_SUBJECT_KEY
 import com.katoklizm.playlist_maker_full.setting.ConstSetting.SHARED_PREF_SAVE_SUBJECT
 
