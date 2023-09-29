@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.katoklizm.playlist_maker_full.databinding.ActivityMainBinding
 import com.katoklizm.playlist_maker_full.media_library.MediaLibraryActivity
-import com.katoklizm.playlist_maker_full.search.SearchActivity
+import com.katoklizm.playlist_maker_full.ui.track.SearchActivity
 import com.katoklizm.playlist_maker_full.setting.App
 import com.katoklizm.playlist_maker_full.setting.SettingActivity
 
