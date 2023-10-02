@@ -183,24 +183,40 @@ class TrackSearchController(private val activity: Activity,
                 searchEditText.text.toString(),
                 object :
                     TrackInteractor.TrackConsumer {
-                    override fun consume(foundTrack: List<Track>) {
+                    override fun consume(foundTrack: List<Track>?, errorMessage: String?) {
                         handler.post {
                             searchProgressBar?.visibility = View.GONE
-                            trackList.clear()
-                            trackList.addAll(foundTrack)
-                            searchNothingFound?.visibility = View.GONE
-                            searchErrorImage?.visibility = View.GONE
-                            adapter.notifyDataSetChanged()
-                            if (trackList.isEmpty()) {
+
+                            if (foundTrack != null) {
+                                trackList.clear()
+                                trackList.addAll(foundTrack)
+                                searchNothingFound?.visibility = View.GONE
+                                searchErrorImage?.visibility = View.GONE
+                                adapter.updateTrackList(trackList)
+                                Toast.makeText(activity.applicationContext, "Сюда мы заходим но это не всё", Toast.LENGTH_LONG).show()
+                            }
+
+                            if (errorMessage != null) {
                                 showMessage(
                                     searchNothingFound,
                                     searchErrorImage,
-                                    "Список поиска пустой"
+                                    errorMessage
                                 )
-                            } else showMessage(
-                                searchErrorImage,
-                                searchNothingFound,
-                                "Какая-то хуйня")
+                            } else if (trackList.isEmpty()) {
+                                // Если список треков после поиска пуст
+                                showMessage(
+                                    searchNothingFound,
+                                    searchErrorImage,
+                                    "GG"
+                                )
+                            } else {
+                                showMessage(
+                                    searchErrorImage,
+                                    searchNothingFound,
+                                    "Крайний метод"
+                                )
+                            }
+
                         }
                     }
                 })
