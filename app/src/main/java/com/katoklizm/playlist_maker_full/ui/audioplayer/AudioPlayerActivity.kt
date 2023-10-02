@@ -10,8 +10,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.databinding.AudioPlayerBinding
-import com.katoklizm.playlist_maker_full.search.track.ConstTrack.SAVE_TRACK
+import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
 import com.katoklizm.playlist_maker_full.domain.model.Track
+import com.katoklizm.playlist_maker_full.presentation.AudioPlayerController
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -38,7 +39,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private var playerState = STATE_DEFAULT
 
-    lateinit var audioPlayerLoadTrack: AudioPlayerLoadTrack
+    lateinit var audioPlayerController: AudioPlayerController
 
     private var mediaPlayer = MediaPlayer()
 
@@ -62,11 +63,11 @@ class AudioPlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        audioPlayerLoadTrack = AudioPlayerLoadTrack(this)
+        audioPlayerController = AudioPlayerController(this)
 
         track = intent.getParcelableExtra<Track>(SAVE_TRACK)
 
-        audioPlayerLoadTrack.bind(track)
+        audioPlayerController.bind(track)
 
         preparePlayer(track)
 
@@ -191,15 +192,6 @@ class AudioPlayerActivity : AppCompatActivity() {
             STATE_PREPARED, STATE_PAUSED -> {
                 startPlayer()
             }
-        }
-    }
-
-    private fun showMessage(text: String) {
-        val rootView = findViewById<View>(android.R.id.content)?.rootView
-        if (rootView != null) {
-            binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
-            remainingTimeMillis = "00:00"
-            Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
         }
     }
 }

@@ -1,11 +1,11 @@
-package com.katoklizm.playlist_maker_full.search.track
+package com.katoklizm.playlist_maker_full.data.track
 
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.katoklizm.playlist_maker_full.domain.model.Track
-import com.katoklizm.playlist_maker_full.search.track.ConstTrack.HISTORY_KEY
-import com.katoklizm.playlist_maker_full.search.track.ConstTrack.PREFERENCE_NAME
+import com.katoklizm.playlist_maker_full.data.ConstTrack.HISTORY_KEY
+import com.katoklizm.playlist_maker_full.data.ConstTrack.PREFERENCE_NAME
 
 class HistoryTrackManager(context: Context) {
     val prefs = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)

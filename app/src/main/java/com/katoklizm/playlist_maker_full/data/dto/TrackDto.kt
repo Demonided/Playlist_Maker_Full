@@ -1,11 +1,6 @@
 package com.katoklizm.playlist_maker_full.data.dto
 
-import android.os.Parcel
-import android.os.Parcelable
-import com.katoklizm.playlist_maker_full.domain.model.Track
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 
 data class TrackDto(
     val id: Int,

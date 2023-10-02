@@ -1,4 +1,4 @@
-package com.katoklizm.playlist_maker_full.creator
+package com.katoklizm.playlist_maker_full.util
 
 import android.app.Activity
 import android.content.Context

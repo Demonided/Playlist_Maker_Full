@@ -20,10 +20,10 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.katoklizm.playlist_maker_full.R
-import com.katoklizm.playlist_maker_full.creator.Creator
+import com.katoklizm.playlist_maker_full.util.Creator
 import com.katoklizm.playlist_maker_full.domain.api.TrackInteractor
 import com.katoklizm.playlist_maker_full.domain.model.Track
-import com.katoklizm.playlist_maker_full.search.track.HistoryTrackManager
+import com.katoklizm.playlist_maker_full.data.track.HistoryTrackManager
 import com.katoklizm.playlist_maker_full.ui.track.TrackAdapter
 
 class TrackSearchController(private val activity: Activity,
@@ -74,6 +74,7 @@ class TrackSearchController(private val activity: Activity,
             hideSoftKeyboard()
             trackList.clear()
             adapter.notifyDataSetChanged()
+            adapter.updateTrackList(trackHistoryList)
         }
 
         searchUpdatePage.setOnClickListener {
@@ -87,11 +88,6 @@ class TrackSearchController(private val activity: Activity,
             trackHistoryList.clear()
             adapter.notifyDataSetChanged()
         }
-
-//        if (savedInstanceState != null) {
-//            enteredText = savedInstanceState.getString(ConstTrack.USER_TEXT)
-//            binding?.searchEditText?.setText(enteredText)
-//        }
 
         searchMusicTrack()
         examinationFocusEditText()
@@ -110,21 +106,20 @@ class TrackSearchController(private val activity: Activity,
 
             when (text!!.length) {
                 0 -> {
-                    searchClearButton?.visibility = View.GONE
-                    searchProgressBar?.visibility = View.GONE
+                    searchClearButton.visibility = View.GONE
+                    searchProgressBar.visibility = View.GONE
                 }
-
-                else -> searchClearButton?.visibility = View.VISIBLE
+                else -> searchClearButton.visibility = View.VISIBLE
             }
 
-            if (text!!.isNotEmpty()) {
+            if (text.isNotEmpty()) {
                 searchDebounce()
                 trackList.clear()
             }
 
-            if (searchEditText?.text!!.isEmpty()) {
-                searchNothingFound?.visibility = View.GONE
-                searchErrorImage?.visibility = View.GONE
+            if (searchEditText.text!!.isEmpty()) {
+                searchNothingFound.visibility = View.GONE
+                searchErrorImage.visibility = View.GONE
                 adapter.updateTrackList(trackHistoryList)
                 adapter.notifyDataSetChanged()
             } else {
@@ -172,12 +167,10 @@ class TrackSearchController(private val activity: Activity,
         }
     }
 
-
-
     private fun updatePageSearch() {
         if (searchEditText.text!!.isNotEmpty()) {
 
-            searchProgressBar?.visibility = View.VISIBLE
+            searchProgressBar.visibility = View.VISIBLE
 
             trackInteractor.searchTrack(
                 searchEditText.text.toString(),
@@ -185,21 +178,19 @@ class TrackSearchController(private val activity: Activity,
                     TrackInteractor.TrackConsumer {
                     override fun consume(foundTrack: List<Track>?, errorMessage: String?) {
                         handler.post {
-                            searchProgressBar?.visibility = View.GONE
+                            searchProgressBar.visibility = View.GONE
 
                             if (foundTrack != null) {
                                 trackList.clear()
                                 trackList.addAll(foundTrack)
-                                searchNothingFound?.visibility = View.GONE
-                                searchErrorImage?.visibility = View.GONE
-                                adapter.updateTrackList(trackList)
-                                Toast.makeText(activity.applicationContext, "Сюда мы заходим но это не всё", Toast.LENGTH_LONG).show()
+                                searchNothingFound.visibility = View.GONE
+                                searchErrorImage.visibility = View.GONE
                             }
 
                             if (errorMessage != null) {
                                 showMessage(
-                                    searchNothingFound,
                                     searchErrorImage,
+                                    searchNothingFound,
                                     errorMessage
                                 )
                             } else if (trackList.isEmpty()) {
@@ -210,11 +201,8 @@ class TrackSearchController(private val activity: Activity,
                                     "GG"
                                 )
                             } else {
-                                showMessage(
-                                    searchErrorImage,
-                                    searchNothingFound,
-                                    "Крайний метод"
-                                )
+                                adapter.updateTrackList(trackList)
+                                adapter.notifyDataSetChanged()
                             }
 
                         }
@@ -224,7 +212,7 @@ class TrackSearchController(private val activity: Activity,
     }
 
     private fun searchMusicTrack() {
-        searchEditText?.setOnEditorActionListener { _, actionId, _ ->
+        searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (searchEditText.text.isNotEmpty()) {
                     updatePageSearch()

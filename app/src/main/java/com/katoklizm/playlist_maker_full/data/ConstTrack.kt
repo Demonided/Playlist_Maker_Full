@@ -1,4 +1,4 @@
-package com.katoklizm.playlist_maker_full.search.track
+package com.katoklizm.playlist_maker_full.data
 
 import java.text.SimpleDateFormat
 import java.util.Date

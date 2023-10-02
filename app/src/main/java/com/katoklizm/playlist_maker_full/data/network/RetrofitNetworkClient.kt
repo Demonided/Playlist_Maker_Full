@@ -2,7 +2,6 @@ package com.katoklizm.playlist_maker_full.data.network
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.Network
 import android.net.NetworkCapabilities
 import com.katoklizm.playlist_maker_full.data.NetworkClient
 import com.katoklizm.playlist_maker_full.data.dto.Response
