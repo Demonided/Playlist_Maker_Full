@@ -1,10 +1,10 @@
-package com.katoklizm.playlist_maker_full.setting
+package com.katoklizm.playlist_maker_full.app
 
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import com.katoklizm.playlist_maker_full.setting.ConstSetting.SAVE_SUBJECT_KEY
-import com.katoklizm.playlist_maker_full.setting.ConstSetting.SHARED_PREF_SAVE_SUBJECT
+import com.katoklizm.playlist_maker_full.data.ConstSetting.SAVE_SUBJECT_KEY
+import com.katoklizm.playlist_maker_full.data.ConstSetting.SHARED_PREF_SAVE_SUBJECT
 
 class App : Application() {
 

@@ -1,4 +1,4 @@
-package com.katoklizm.playlist_maker_full.media_library
+package com.katoklizm.playlist_maker_full.ui.medialibrary
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

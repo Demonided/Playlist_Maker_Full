@@ -1,12 +1,11 @@
-package com.katoklizm.playlist_maker_full.setting
+package com.katoklizm.playlist_maker_full.ui
 
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Switch
-import com.google.android.material.switchmaterial.SwitchMaterial
 import com.katoklizm.playlist_maker_full.R
+import com.katoklizm.playlist_maker_full.app.App
 import com.katoklizm.playlist_maker_full.databinding.ActivitySettingBinding
 
 class SettingActivity : AppCompatActivity() {

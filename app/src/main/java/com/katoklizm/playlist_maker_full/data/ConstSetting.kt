@@ -1,4 +1,4 @@
-package com.katoklizm.playlist_maker_full.setting
+package com.katoklizm.playlist_maker_full.data
 
 object ConstSetting {
     const val SHARED_PREF_SAVE_SUBJECT = "shared_pref_save_subject"
