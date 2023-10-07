@@ -10,7 +10,7 @@ import com.katoklizm.playlist_maker_full.domain.player.PlayerRepository
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerRepositoryImpl(activity: Activity): PlayerRepository {
+class PlayerRepositoryImpl: PlayerRepository {
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
     private var timerIsRunning = false
