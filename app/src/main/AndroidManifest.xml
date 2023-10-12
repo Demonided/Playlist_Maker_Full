@@ -19,7 +19,7 @@
             android:name=".ui.audioplayer.AudioPlayerActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.SettingActivity"
+            android:name=".ui.setting.activity.SettingActivity"
             android:exported="false" />
         <activity
             android:name=".ui.track.SearchActivity"
@@ -28,7 +28,7 @@
             android:name=".ui.medialibrary.MediaLibraryActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

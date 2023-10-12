@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.katoklizm.playlist_maker_full.R
-import com.katoklizm.playlist_maker_full.domain.model.Track
+import com.katoklizm.playlist_maker_full.domain.search.model.Track
 
 class TrackAdapter(val onSaveTrackManagersClickListener: OnSaveTrackManagersClickListener) :
     RecyclerView.Adapter<TrackViewHolder>() {

@@ -21,9 +21,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.util.Creator
-import com.katoklizm.playlist_maker_full.domain.api.TrackInteractor
-import com.katoklizm.playlist_maker_full.domain.model.Track
-import com.katoklizm.playlist_maker_full.data.track.HistoryTrackManager
+import com.katoklizm.playlist_maker_full.domain.search.api.TrackInteractor
+import com.katoklizm.playlist_maker_full.domain.search.model.Track
+import com.katoklizm.playlist_maker_full.data.search.track.HistoryTrackManager
 import com.katoklizm.playlist_maker_full.ui.track.TrackAdapter
 
 class TrackSearchController(private val activity: Activity,

@@ -1,8 +1,8 @@
 package com.katoklizm.playlist_maker_full.ui.audioplayer
 
 import androidx.lifecycle.ViewModel
-import com.katoklizm.playlist_maker_full.data.dto.TrackDto
-import com.katoklizm.playlist_maker_full.domain.model.Track
+import com.katoklizm.playlist_maker_full.data.search.dto.TrackDto
+import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.domain.player.PlayerInteractor
 
 class AudioPlayerViewModel(

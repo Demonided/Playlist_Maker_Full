@@ -11,8 +11,8 @@ import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
 import com.katoklizm.playlist_maker_full.ui.audioplayer.AudioPlayerActivity
 import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
 import com.katoklizm.playlist_maker_full.data.ConstTrack.USER_TEXT
-import com.katoklizm.playlist_maker_full.data.track.HistoryTrackManager
-import com.katoklizm.playlist_maker_full.domain.model.Track
+import com.katoklizm.playlist_maker_full.data.search.track.HistoryTrackManager
+import com.katoklizm.playlist_maker_full.domain.search.model.Track
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClickListener {
 
