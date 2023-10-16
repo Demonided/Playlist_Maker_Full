@@ -30,6 +30,7 @@ object Creator {
     fun init(application: App) {
         this.application = application
     }
+
     private fun getTrackRepository(context: Context): TrackRepository {
         return TrackRepositoryImpl(RetrofitNetworkClient(context))
     }

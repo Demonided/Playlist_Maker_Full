@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val app = applicationContext as App
-        app.switchTheme(app.darkTheme)
+        app.switchTheme(app.currentTheme)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
@@ -23,10 +23,12 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
         }
+
         binding?.mediaLibraryPlaylistMaker?.setOnClickListener {
             val intent = Intent(this, MediaLibraryActivity::class.java)
             startActivity(intent)
         }
+
         binding?.settingPlaylistMaker?.setOnClickListener {
             val intent = Intent(this, SettingActivity::class.java)
             startActivity(intent)

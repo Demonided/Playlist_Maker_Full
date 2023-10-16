@@ -19,6 +19,7 @@ class ExternalNavigatorImpl(private val application: App): ExternalNavigator {
     override fun openLink(offer: String) {
         val url = Uri.parse(offer)
         val intent = Intent(Intent.ACTION_VIEW, url)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         application.startActivity(intent)
     }
 
@@ -27,12 +28,10 @@ class ExternalNavigatorImpl(private val application: App): ExternalNavigator {
         val subject = application.getString(R.string.setting_subject_text_email)
         val shareIntent = Intent(Intent.ACTION_SENDTO)
         shareIntent.data = Uri.parse("mailto:")
-        shareIntent.putExtra(
-            Intent.EXTRA_EMAIL,
-            arrayOf(email.email)
-        )
+        shareIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email.email))
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
         shareIntent.putExtra(Intent.EXTRA_TEXT, message)
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         application.startActivity(shareIntent)
     }
 

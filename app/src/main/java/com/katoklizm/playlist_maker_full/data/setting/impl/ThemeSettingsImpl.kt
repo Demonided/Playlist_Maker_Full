@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.katoklizm.playlist_maker_full.app.App
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeSettings
+import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
 
 class ThemeSettingsImpl(private val application: App): ThemeSettings {
 
@@ -14,17 +15,29 @@ class ThemeSettingsImpl(private val application: App): ThemeSettings {
 
     private val themeSharedPreference: SharedPreferences =
         application.getSharedPreferences(THEME_PREFS, Context.MODE_PRIVATE)
-    override fun setLightTheme(): Boolean {
+
+    override fun setLightTheme(): ThemeState {
         themeSharedPreference.edit().putBoolean(THEME_KEY, false).apply()
-        return false
+        return ThemeState.LightTheme
     }
 
-    override fun setDarkTheme(): Boolean {
+    override fun setDarkTheme(): ThemeState {
         themeSharedPreference.edit().putBoolean(THEME_KEY, true).apply()
-        return true
+        return ThemeState.DarkTheme
     }
 
-    override fun lookAtTheme(): Boolean {
-        return themeSharedPreference.getBoolean(THEME_KEY, false)
+    override fun lookAtTheme(): ThemeState {
+        return if (themeSharedPreference.getBoolean(THEME_KEY, false)){
+            ThemeState.DarkTheme
+        } else {
+            ThemeState.LightTheme
+        }
+    }
+
+    override fun saveCurrentTheme(theme: ThemeState) {
+        when (theme) {
+            is ThemeState.LightTheme -> setLightTheme()
+            is ThemeState.DarkTheme -> setDarkTheme()
+        }
     }
 }

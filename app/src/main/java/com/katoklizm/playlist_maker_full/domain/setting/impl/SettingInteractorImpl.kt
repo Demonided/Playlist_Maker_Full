@@ -9,15 +9,20 @@ class SettingInteractorImpl(
 ) : SettingsInteractor {
 
     override fun getAppTheme(): ThemeState {
-        val isDarkTheme = themeSettings.setLightTheme()
-        return if (isDarkTheme) ThemeState.DarkTheme else ThemeState.LightTheme
+        return themeSettings.lookAtTheme()
     }
 
     override fun setAppTheme(theme: ThemeState) {
         when (theme) {
-            is ThemeState.LightTheme -> themeSettings.setLightTheme()
-            is ThemeState.DarkTheme -> themeSettings.setDarkTheme()
+            is ThemeState.LightTheme -> {
+                themeSettings.setLightTheme()
+                themeSettings.saveCurrentTheme(ThemeState.LightTheme) // Сохранение светлой темы
+            }
+
+            is ThemeState.DarkTheme -> {
+                themeSettings.setDarkTheme()
+                themeSettings.saveCurrentTheme(ThemeState.DarkTheme) // Сохранение темной темы
+            }
         }
     }
-
 }
