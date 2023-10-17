@@ -23,34 +23,29 @@ class SettingsViewModel(
     }
 
     private val _themeLiveData = MutableLiveData(settingsInteractor.getAppTheme())
-    val themeLiveData: LiveData<ThemeState> = _themeLiveData
 
     private val finishActivityLiveData = MutableLiveData<Any>()
     val finishActivity: LiveData<Any> = finishActivityLiveData
-
-    private var isChangingTheme = false
-
 
     fun onBackClick() {
         finishActivityLiveData.value = Any()
     }
 
     fun themeSetting() {
-        if (!isChangingTheme) {
-            isChangingTheme = true
-            val getting = if (themeLiveData.hasObservers()) "day" else "night"
-            Log.d("Тема", "ViewModel get $getting")
-            val currentTheme = settingsInteractor.getAppTheme()
-            val newTheme = if (currentTheme is ThemeState.DarkTheme) {
-                ThemeState.LightTheme
-            } else {
-                ThemeState.DarkTheme
-            }
+        val currentTheme = settingsInteractor.getAppTheme()
+        val newTheme = if (currentTheme is ThemeState.DarkTheme) {
+            ThemeState.LightTheme
+        } else {
+            ThemeState.DarkTheme
+        }
 
-            settingsInteractor.setAppTheme(newTheme)
+        settingsInteractor.setAppTheme(newTheme)
+        _themeLiveData.value = newTheme
 
-            _themeLiveData.value = newTheme
-            isChangingTheme = false
+        if (newTheme is ThemeState.DarkTheme) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
     }
 

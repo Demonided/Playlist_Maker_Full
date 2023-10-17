@@ -2,6 +2,7 @@ package com.katoklizm.playlist_maker_full.data.setting.impl
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import com.katoklizm.playlist_maker_full.app.App
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeSettings
@@ -19,13 +20,15 @@ class ThemeSettingsImpl(private val application: App): ThemeSettings {
 
     override fun setLightTheme(): ThemeState {
         themeSharedPreference.edit().putBoolean(THEME_KEY, false).apply()
+        Log.d("SaveLog", "Set: false")
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         return ThemeState.LightTheme
     }
 
     override fun setDarkTheme(): ThemeState {
         themeSharedPreference.edit().putBoolean(THEME_KEY, true).apply()
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        Log.d("SaveLog", "Set: true")
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         return ThemeState.DarkTheme
     }
 
@@ -39,8 +42,14 @@ class ThemeSettingsImpl(private val application: App): ThemeSettings {
 
     override fun saveCurrentTheme(theme: ThemeState) {
         when (theme) {
-            is ThemeState.LightTheme -> setLightTheme()
-            is ThemeState.DarkTheme -> setDarkTheme()
+            is ThemeState.LightTheme -> {
+                Log.d("SaveLog", "Save: false")
+                setLightTheme()
+            }
+            is ThemeState.DarkTheme -> {
+                Log.d("SaveLog", "Save: true")
+                setDarkTheme()
+            }
         }
     }
 }

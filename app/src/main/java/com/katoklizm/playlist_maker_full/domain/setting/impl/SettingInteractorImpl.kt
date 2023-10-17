@@ -15,6 +15,6 @@ class SettingInteractorImpl(
 
     override fun setAppTheme(theme: ThemeState) {
         themeSettings.saveCurrentTheme(theme)
-        App.instance.switchTheme(theme)
+//        App.instance.switchTheme(theme)
     }
 }

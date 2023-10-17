@@ -28,9 +28,6 @@ class SettingActivity : AppCompatActivity() {
             SettingsViewModel.getViewModelFactory()
         )[SettingsViewModel::class.java]
 
-        val currentTheme = themeSettings.lookAtTheme()
-
-
         binding.settingsShareAppText
         binding.settingsWriteSupportText
         binding.settingsTermUseText
