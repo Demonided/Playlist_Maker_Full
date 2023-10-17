@@ -29,13 +29,7 @@ class SettingActivity : AppCompatActivity() {
         )[SettingsViewModel::class.java]
 
         val currentTheme = themeSettings.lookAtTheme()
-        if (currentTheme is ThemeState.DarkTheme) {
-            // Включить темный режим
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        } else {
-            // Выключить темный режим
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }
+
 
         binding.settingsShareAppText
         binding.settingsWriteSupportText
@@ -49,7 +43,7 @@ class SettingActivity : AppCompatActivity() {
             settingsViewModel.onBackClick()
         }
 
-        binding.settingsNightSubject.setOnClickListener {
+        binding.themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
             settingsViewModel.themeSetting()
         }
 

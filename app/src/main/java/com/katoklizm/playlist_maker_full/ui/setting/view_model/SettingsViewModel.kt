@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.katoklizm.playlist_maker_full.domain.setting.SettingsInteractor
+import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeSettings
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
 import com.katoklizm.playlist_maker_full.domain.sharing.SharingInteractor
 import com.katoklizm.playlist_maker_full.util.Creator
@@ -27,22 +28,29 @@ class SettingsViewModel(
     private val finishActivityLiveData = MutableLiveData<Any>()
     val finishActivity: LiveData<Any> = finishActivityLiveData
 
+    private var isChangingTheme = false
+
+
     fun onBackClick() {
         finishActivityLiveData.value = Any()
     }
 
     fun themeSetting() {
-        val getting = if (themeLiveData.hasObservers()) "day" else "night"
-        Log.d("Тема", "ViewModel get $getting")
-        val newTheme = settingsInteractor.getAppTheme()
-        _themeLiveData.value = newTheme
+        if (!isChangingTheme) {
+            isChangingTheme = true
+            val getting = if (themeLiveData.hasObservers()) "day" else "night"
+            Log.d("Тема", "ViewModel get $getting")
+            val currentTheme = settingsInteractor.getAppTheme()
+            val newTheme = if (currentTheme is ThemeState.DarkTheme) {
+                ThemeState.LightTheme
+            } else {
+                ThemeState.DarkTheme
+            }
 
-        if (newTheme is ThemeState.DarkTheme) {
-            // Включить темный режим
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        } else {
-            // Выключить темный режим
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            settingsInteractor.setAppTheme(newTheme)
+
+            _themeLiveData.value = newTheme
+            isChangingTheme = false
         }
     }
 

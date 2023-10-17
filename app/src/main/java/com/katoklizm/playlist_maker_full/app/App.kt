@@ -11,6 +11,7 @@ import com.katoklizm.playlist_maker_full.util.Creator
 
 class App : Application() {
     var currentTheme: ThemeState = ThemeState.LightTheme
+    private var themeChanged = false
 
     override fun onCreate() {
         super.onCreate()
@@ -23,22 +24,10 @@ class App : Application() {
     }
 
     fun switchTheme(theme: ThemeState) {
-        currentTheme = theme
-        saveThemeToPrefs(currentTheme)
-
-        val nightMode = when (theme) {
-            is ThemeState.LightTheme -> AppCompatDelegate.MODE_NIGHT_NO
-            is ThemeState.DarkTheme -> AppCompatDelegate.MODE_NIGHT_YES
+        if (theme != currentTheme) {
+            currentTheme = theme
+            themeChanged = true
         }
-
-        AppCompatDelegate.setDefaultNightMode(nightMode)
-    }
-
-    private fun saveThemeToPrefs(theme: ThemeState) {
-        val sharedPreferences = getSharedPreferences(SHARED_PREF_SAVE_SUBJECT, Context.MODE_PRIVATE)
-        sharedPreferences.edit()
-            .putBoolean(SAVE_SUBJECT_KEY, theme is ThemeState.DarkTheme)
-            .apply()
     }
 
     companion object {
