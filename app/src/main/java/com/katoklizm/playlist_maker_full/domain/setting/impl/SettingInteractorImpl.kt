@@ -1,6 +1,5 @@
 package com.katoklizm.playlist_maker_full.domain.setting.impl
 
-import com.katoklizm.playlist_maker_full.app.App
 import com.katoklizm.playlist_maker_full.domain.setting.SettingsInteractor
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeSettings
@@ -15,6 +14,5 @@ class SettingInteractorImpl(
 
     override fun setAppTheme(theme: ThemeState) {
         themeSettings.saveCurrentTheme(theme)
-//        App.instance.switchTheme(theme)
     }
 }

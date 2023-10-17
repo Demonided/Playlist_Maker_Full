@@ -15,13 +15,14 @@ import com.katoklizm.playlist_maker_full.util.Creator
 class SettingActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingBinding
     private lateinit var settingsViewModel: SettingsViewModel
-    private lateinit var themeSettings: ThemeSettings
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        themeSettings = Creator.provideThemeSettings()
+        val isCheckedThemeSwitch = Creator.provideThemeSettings()
+        val isChecked = isCheckedThemeSwitch.lookAtTheme()
 
         settingsViewModel = ViewModelProvider(
             this,
@@ -40,8 +41,11 @@ class SettingActivity : AppCompatActivity() {
             settingsViewModel.onBackClick()
         }
 
-        binding.themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
+        binding.themeSwitcher.isChecked = isChecked is ThemeState.LightTheme
+        binding.themeSwitcher.setOnClickListener {
             settingsViewModel.themeSetting()
+            binding.themeSwitcher.isChecked = isChecked is ThemeState.DarkTheme
+
         }
 
         binding.settingsShareApp.setOnClickListener {

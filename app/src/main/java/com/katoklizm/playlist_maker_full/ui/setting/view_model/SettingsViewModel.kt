@@ -1,13 +1,11 @@
 package com.katoklizm.playlist_maker_full.ui.setting.view_model
 
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.katoklizm.playlist_maker_full.domain.setting.SettingsInteractor
-import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeSettings
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
 import com.katoklizm.playlist_maker_full.domain.sharing.SharingInteractor
 import com.katoklizm.playlist_maker_full.util.Creator
@@ -23,6 +21,7 @@ class SettingsViewModel(
     }
 
     private val _themeLiveData = MutableLiveData(settingsInteractor.getAppTheme())
+    val themeLiveData: LiveData<ThemeState> = _themeLiveData
 
     private val finishActivityLiveData = MutableLiveData<Any>()
     val finishActivity: LiveData<Any> = finishActivityLiveData
@@ -43,9 +42,9 @@ class SettingsViewModel(
         _themeLiveData.value = newTheme
 
         if (newTheme is ThemeState.DarkTheme) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }
     }
 

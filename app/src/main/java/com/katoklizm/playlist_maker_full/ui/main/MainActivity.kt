@@ -3,18 +3,32 @@ package com.katoklizm.playlist_maker_full.ui.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatDelegate
 import com.katoklizm.playlist_maker_full.databinding.ActivityMainBinding
 import com.katoklizm.playlist_maker_full.ui.medialibrary.MediaLibraryActivity
 import com.katoklizm.playlist_maker_full.ui.track.SearchActivity
 import com.katoklizm.playlist_maker_full.app.App
+import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeSettings
+import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
 import com.katoklizm.playlist_maker_full.ui.setting.activity.SettingActivity
+import com.katoklizm.playlist_maker_full.util.Creator
 
 class MainActivity : AppCompatActivity() {
     private var binding: ActivityMainBinding? = null
+    private lateinit var themeSettings: ThemeSettings
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val app = applicationContext as App
         app.switchTheme(app.currentTheme)
+
+        themeSettings = Creator.provideThemeSettings()
+        val currentTheme = themeSettings.lookAtTheme()
+        if (currentTheme is ThemeState.DarkTheme) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
