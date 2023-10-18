@@ -45,7 +45,6 @@ class SettingActivity : AppCompatActivity() {
         binding.themeSwitcher.setOnClickListener {
             settingsViewModel.themeSetting()
             binding.themeSwitcher.isChecked = isChecked is ThemeState.DarkTheme
-
         }
 
         binding.settingsShareApp.setOnClickListener {

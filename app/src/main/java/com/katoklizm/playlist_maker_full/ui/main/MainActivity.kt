@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import com.katoklizm.playlist_maker_full.databinding.ActivityMainBinding
 import com.katoklizm.playlist_maker_full.ui.medialibrary.MediaLibraryActivity
-import com.katoklizm.playlist_maker_full.ui.track.SearchActivity
+import com.katoklizm.playlist_maker_full.ui.search.activity.SearchActivity
 import com.katoklizm.playlist_maker_full.app.App
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeSettings
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState

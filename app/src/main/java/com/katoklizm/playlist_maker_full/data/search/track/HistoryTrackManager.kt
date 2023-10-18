@@ -35,4 +35,15 @@ class HistoryTrackManager(context: Context) {
         val type = object : TypeToken<List<Track>>() {}.type
         return gson.fromJson(json, type) ?: arrayListOf()
     }
+
+    private fun writeSharePrefs(searchHistoryTrackList: List<Track>) {
+        prefs.edit()
+            .putString(PREFERENCE_NAME, Gson().toJson(searchHistoryTrackList))
+            .apply()
+
+    }
+
+    fun clearSearchHistory() {
+        writeSharePrefs(ArrayList())
+    }
 }

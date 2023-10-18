@@ -1,9 +1,10 @@
-package com.katoklizm.playlist_maker_full.ui.audioplayer
+package com.katoklizm.playlist_maker_full.ui.audioplayer.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.katoklizm.playlist_maker_full.data.search.dto.TrackDto
+import androidx.lifecycle.ViewModelProvider
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.domain.player.PlayerInteractor
+import com.katoklizm.playlist_maker_full.util.Creator
 
 class AudioPlayerViewModel(
     private val playerInteractor: PlayerInteractor
@@ -26,5 +27,18 @@ class AudioPlayerViewModel(
 
     fun playbackControl() {
         playerInteractor.playbackControl()
+    }
+
+    companion object {
+        fun getViewModelFactory(): ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                // 1
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return AudioPlayerViewModel(
+                        Creator.providePlayerInteractor()
+                    ) as T
+                }
+            }
     }
 }

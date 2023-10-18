@@ -9,4 +9,7 @@ interface TrackInteractor {
     interface TrackConsumer{
         fun consume(foundTrack: List<Track>?, errorMessage: String?)
     }
+    fun readSearchHistory(): ArrayList<Track>
+    fun addTrackToSearchHistory(track: Track)
+    fun clearSearchHistory()
 }

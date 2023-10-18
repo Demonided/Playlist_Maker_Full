@@ -1,4 +1,4 @@
-package com.katoklizm.playlist_maker_full.ui.track
+package com.katoklizm.playlist_maker_full.ui.search
 
 import android.view.View
 import android.widget.ImageView
