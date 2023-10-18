@@ -8,6 +8,7 @@ import com.katoklizm.playlist_maker_full.databinding.ActivityMainBinding
 import com.katoklizm.playlist_maker_full.ui.medialibrary.MediaLibraryActivity
 import com.katoklizm.playlist_maker_full.ui.search.activity.SearchActivity
 import com.katoklizm.playlist_maker_full.app.App
+import com.katoklizm.playlist_maker_full.domain.setting.SettingsInteractor
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeSettings
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
 import com.katoklizm.playlist_maker_full.ui.setting.activity.SettingActivity
@@ -15,15 +16,15 @@ import com.katoklizm.playlist_maker_full.util.Creator
 
 class MainActivity : AppCompatActivity() {
     private var binding: ActivityMainBinding? = null
-    private lateinit var themeSettings: ThemeSettings
+    private lateinit var themeSettings: SettingsInteractor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val app = applicationContext as App
         app.switchTheme(app.currentTheme)
 
-        themeSettings = Creator.provideThemeSettings()
-        val currentTheme = themeSettings.lookAtTheme()
+        themeSettings = Creator.provideSettingInteractor()
+        val currentTheme = themeSettings.getAppTheme()
         if (currentTheme is ThemeState.DarkTheme) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         } else {

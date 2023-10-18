@@ -37,8 +37,6 @@ class SearchViewModel(
 ) : AndroidViewModel(application) {
 
     companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-
         fun getModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 SearchViewModel(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application)
@@ -46,7 +44,7 @@ class SearchViewModel(
         }
     }
 
-    private val trackInteractor = Creator.provideTrackInteractor(application)
+    private val trackInteractor = Creator.provideTrackInteractor(getApplication())
 
     private val stateLiveData = MutableLiveData<SearchState>()
     fun observeState(): LiveData<SearchState> = stateLiveData
@@ -56,9 +54,9 @@ class SearchViewModel(
     }
 
     fun onTextChanged(searchText: String?) {
-        if (searchText!!.isNotEmpty()) {
+        if (searchText.isNullOrEmpty()) {
             if (trackInteractor.readSearchHistory().isNotEmpty()) renderState(
-                SearchState.ContentListSearchTrack(
+                SearchState.ContentListSaveTrack(
                     trackInteractor.readSearchHistory()
                 )
             ) else {
@@ -81,6 +79,7 @@ class SearchViewModel(
 
     fun refreshSearchButton(searchText: String) {
         searchRequest(searchText)
+
     }
 
     fun onTrackPresent(track: Track) {

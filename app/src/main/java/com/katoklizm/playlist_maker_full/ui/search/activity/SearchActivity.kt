@@ -1,10 +1,13 @@
 package com.katoklizm.playlist_maker_full.ui.search.activity
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -17,12 +20,14 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.Group
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.katoklizm.playlist_maker_full.R
+import com.katoklizm.playlist_maker_full.app.App
 import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
 import com.katoklizm.playlist_maker_full.ui.audioplayer.activity.AudioPlayerActivity
 import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
@@ -30,11 +35,13 @@ import com.katoklizm.playlist_maker_full.data.ConstTrack.USER_TEXT
 import com.katoklizm.playlist_maker_full.data.search.track.HistoryTrackManager
 import com.katoklizm.playlist_maker_full.domain.player.SearchState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
+import com.katoklizm.playlist_maker_full.domain.setting.SettingsInteractor
+import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
 import com.katoklizm.playlist_maker_full.presentation.SearchViewModel
 import com.katoklizm.playlist_maker_full.ui.search.TrackAdapter
+import com.katoklizm.playlist_maker_full.util.Creator
 
-class SearchActivity : ComponentActivity(), TrackAdapter.OnSaveTrackManagersClickListener {
-
+class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClickListener {
     var binding: ActivitySearchBinding? = null
 
     companion object {
@@ -50,7 +57,7 @@ class SearchActivity : ComponentActivity(), TrackAdapter.OnSaveTrackManagersClic
 
     private var isClickAllowed = true
 
-    private var enteredText: String? = ""
+    private var enteredText: String = ""
 
     private val trackHistoryList = ArrayList<Track>()
     private val trackList = ArrayList<Track>()
@@ -89,41 +96,22 @@ class SearchActivity : ComponentActivity(), TrackAdapter.OnSaveTrackManagersClic
             finish()
         }
 
-        searchEditText.doOnTextChanged { text, start, before, count ->
-            viewModel.onTextChanged(text.toString())
-            searchDebounce()
+        val textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
 
-//            while(count > 0) {
-//                enteredText = searchEditText.text.toString()
-//            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchClearButton.visibility = clearButtonVisibility(s)
+                viewModel.onTextChanged(s.toString())
+                searchDebounce()
+            }
 
-
-//            searchLinerLayoutHistoryTrack.visibility =
-//                if (searchEditText.hasFocus() && text?.isEmpty() == true && trackHistoryList.size > 0) View.VISIBLE else View.GONE
-//
-//            when (text!!.length) {
-//                0 -> {
-//                    searchClearButton.visibility = View.GONE
-//                    searchProgressBar.visibility = View.GONE
-//                }
-//
-//                else -> searchClearButton.visibility = View.VISIBLE
-//            }
-//
-//            if (text.isNotEmpty()) {
-//                trackList.clear()
-//            }
-//
-//            if (searchEditText.text!!.isEmpty()) {
-//                searchNothingFound.visibility = View.GONE
-//                searchErrorImage.visibility = View.GONE
-//                trackAdapter.updateTrackList(trackHistoryList)
-//                trackAdapter.notifyDataSetChanged()
-//            } else {
-//                trackAdapter.updateTrackList(trackList)
-//                trackAdapter.notifyDataSetChanged()
-//            }
+            override fun afterTextChanged(s: Editable?) {
+                enteredText = searchEditText.text.toString()
+            }
         }
+
+        searchEditText.addTextChangedListener(textWatcher)
 
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -138,12 +126,8 @@ class SearchActivity : ComponentActivity(), TrackAdapter.OnSaveTrackManagersClic
         }
 
         searchClearButton.setOnClickListener {
-//            searchEditText.text.clear()
-//            searchProgressBar.visibility = View.GONE
-//            hideSoftKeyboard()
-//            trackList.clear()
-//            trackAdapter.notifyDataSetChanged()
-//            trackAdapter.updateTrackList(trackHistoryList)
+            searchEditText.text.clear()
+            closeKeyboard()
         }
 
         searchUpdatePage.setOnClickListener {
@@ -152,13 +136,7 @@ class SearchActivity : ComponentActivity(), TrackAdapter.OnSaveTrackManagersClic
 
         searchClearHistory.setOnClickListener {
             viewModel.clearSearchHistory()
-//            searchLinerLayoutHistoryTrack.visibility = View.GONE
-//            trackAdapter.tracks.clear()
-//            trackHistoryList.clear()
-//            trackAdapter.notifyDataSetChanged()
         }
-
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -197,14 +175,27 @@ class SearchActivity : ComponentActivity(), TrackAdapter.OnSaveTrackManagersClic
         }
     }
 
+    private fun closeKeyboard() {
+        val imputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imputMethodManager.hideSoftInputFromWindow(searchEditText.windowToken, 0)
+    }
+
+    private fun clearButtonVisibility(s: CharSequence?): Int {
+        return if (s.isNullOrEmpty()) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
+    }
+
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
     private fun searchTrack() {
-        if (enteredText!!.isNotEmpty()) {
-            viewModel.searchRequest(enteredText!!)
+        if (enteredText.isNotEmpty()) {
+            viewModel.searchRequest(enteredText)
         }
     }
 
@@ -243,6 +234,7 @@ class SearchActivity : ComponentActivity(), TrackAdapter.OnSaveTrackManagersClic
         trackList.addAll(track)
         trackAdapter.tracks = trackList
         trackAdapter.updateTrackList(trackList)
+        trackAdapter.notifyDataSetChanged()
     }
 
     fun showContentListSaveTrack(trackHistory: List<Track>) {
@@ -252,10 +244,9 @@ class SearchActivity : ComponentActivity(), TrackAdapter.OnSaveTrackManagersClic
         recyclerView.visibility = View.VISIBLE
         searchProgressBar.visibility = View.GONE
 
-//        trackList.clear()
-        // Посмотреть как в этом случае себя покажет если что надо будет изменить
-        trackAdapter.tracks = trackHistoryList
-        trackAdapter.updateTrackList(trackHistoryList)
+        trackAdapter.tracks = trackHistory as ArrayList<Track>
+        trackAdapter.updateTrackList(trackHistory)
+        trackAdapter.notifyDataSetChanged()
     }
 
     private fun clickDebounce(): Boolean {
@@ -275,16 +266,9 @@ class SearchActivity : ComponentActivity(), TrackAdapter.OnSaveTrackManagersClic
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onButtonRecyclerViewSaveTrack(track: Track) {
-
-//        openAudioPlayer(track)
-
         if (clickDebounce()) {
             viewModel.onTrackPresent(track)
             openAudioPlayer(track)
-//            historyTrackManager.saveHistory(track)
-//            trackHistoryList.clear()
-//            trackHistoryList.addAll(historyTrackManager.getHistory())
-//            trackAdapter.notifyDataSetChanged()
         }
     }
 }
