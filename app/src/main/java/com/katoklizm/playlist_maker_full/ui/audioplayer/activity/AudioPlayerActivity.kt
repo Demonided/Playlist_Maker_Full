@@ -88,6 +88,8 @@ class AudioPlayerActivity : AppCompatActivity() {
             .placeholder(R.drawable.vector_plug)
             .into(audioPlayerImageTrack)
 
+        playerState = viewModelAudioPlayer.playerStateListener()
+
         mainThreadHandler = Handler(Looper.getMainLooper())
 
         mainThreadHandler?.post(
@@ -114,7 +116,6 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        playerState = viewModelAudioPlayer.playerStateListener()
         if (playerState == PlayerState.STATE_PLAYING) {
             viewModelAudioPlayer.pausePlayer()
             binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
