@@ -1,6 +1,5 @@
 package com.katoklizm.playlist_maker_full.data.player.impl
 
-import android.app.Activity
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
