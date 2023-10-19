@@ -1,7 +1,10 @@
 package com.katoklizm.playlist_maker_full.domain.player
 
+import com.katoklizm.playlist_maker_full.data.search.dto.TrackDto
 import com.katoklizm.playlist_maker_full.data.player.PlayerState
-import com.katoklizm.playlist_maker_full.domain.model.Track
+import com.katoklizm.playlist_maker_full.data.player.TimerIsRunning
+import com.katoklizm.playlist_maker_full.domain.search.model.Track
+import com.katoklizm.playlist_maker_full.util.Creator
 
 class PlayerInteractorImpl : PlayerInteractor {
     val repository = Creator.providePlayerRepository()
@@ -28,6 +31,10 @@ class PlayerInteractorImpl : PlayerInteractor {
 
     override fun playerStateListener(): PlayerState {
         return repository.playerStateReporter()
+    }
+
+    override fun transferTime(): String {
+        return repository.transferTime()
     }
 
 }
