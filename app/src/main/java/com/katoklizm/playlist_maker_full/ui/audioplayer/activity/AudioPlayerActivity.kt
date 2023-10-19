@@ -114,8 +114,9 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        if (mediaPlayer.isPlaying) {
-            mediaPlayer.pause()
+        playerState = viewModelAudioPlayer.playerStateListener()
+        if (playerState == PlayerState.STATE_PLAYING) {
+            viewModelAudioPlayer.pausePlayer()
             binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
             timerIsRunning = false
         }
