@@ -20,18 +20,18 @@ class PlayerRepositoryImpl: PlayerRepository {
 
     override fun startPlayer() {
         mediaPlayer.start()
-//        binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_pause_song)
-
         playerState = PlayerState.STATE_PLAYING
 
         startTimer()
 
         timerIsRunning = true
+        handler.post(
+            createUpdateTimerTask()
+        )
     }
 
     override fun pausePlayer() {
         mediaPlayer.pause()
-//        binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
         playerState = PlayerState.STATE_PAUSED
 
         //Останавливаем таймер и сбрасываем флаг
@@ -47,10 +47,7 @@ class PlayerRepositoryImpl: PlayerRepository {
                     playerState = PlayerState.STATE_PREPARED
                 }
                 mediaPlayer.setOnCompletionListener {
-//                    binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
                     playerState = PlayerState.STATE_PREPARED
-                    remainingTimeMillis = "00:00"
-//                    binding?.audioPlayerTime?.text = remainingTimeMillis
                 }
             }
         } catch (e: Exception) {
@@ -73,9 +70,10 @@ class PlayerRepositoryImpl: PlayerRepository {
                                 "mm:ss",
                                 Locale.getDefault()
                             ).format(currentPosition)
-//                            binding?.audioPlayerTime?.text = remainingTimeMillis
                             handler.postDelayed(this, DELAY)
                         } else {
+                            remainingTimeMillis = "00:00"
+                            handler.postDelayed(this, DELAY)
                             timerIsRunning = false
                         }
                     } catch (e: IllegalStateException) {
@@ -111,6 +109,10 @@ class PlayerRepositoryImpl: PlayerRepository {
 
     override fun playerStateReporter(): PlayerState {
         return playerState
+    }
+
+    override fun transferTime(): String {
+        return remainingTimeMillis
     }
 
     companion object {

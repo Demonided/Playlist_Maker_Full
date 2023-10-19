@@ -16,4 +16,6 @@ interface PlayerRepository {
     fun playbackControl()
 
     fun playerStateReporter(): PlayerState
+
+    fun transferTime(): String
 }

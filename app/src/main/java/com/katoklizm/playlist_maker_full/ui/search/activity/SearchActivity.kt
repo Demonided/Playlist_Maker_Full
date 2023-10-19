@@ -9,7 +9,6 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -17,29 +16,19 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.Group
-import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.katoklizm.playlist_maker_full.R
-import com.katoklizm.playlist_maker_full.app.App
 import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
 import com.katoklizm.playlist_maker_full.ui.audioplayer.activity.AudioPlayerActivity
 import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
-import com.katoklizm.playlist_maker_full.data.ConstTrack.USER_TEXT
-import com.katoklizm.playlist_maker_full.data.search.track.HistoryTrackManager
 import com.katoklizm.playlist_maker_full.domain.player.SearchState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
-import com.katoklizm.playlist_maker_full.domain.setting.SettingsInteractor
-import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
-import com.katoklizm.playlist_maker_full.presentation.SearchViewModel
+import com.katoklizm.playlist_maker_full.ui.search.viewmodel.SearchViewModel
 import com.katoklizm.playlist_maker_full.ui.search.TrackAdapter
-import com.katoklizm.playlist_maker_full.util.Creator
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClickListener {
     var binding: ActivitySearchBinding? = null

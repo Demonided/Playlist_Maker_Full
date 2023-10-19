@@ -33,4 +33,8 @@ class PlayerInteractorImpl : PlayerInteractor {
         return repository.playerStateReporter()
     }
 
+    override fun transferTime(): String {
+        return repository.transferTime()
+    }
+
 }
