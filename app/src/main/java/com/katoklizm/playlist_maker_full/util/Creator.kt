@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import com.katoklizm.playlist_maker_full.data.network.RetrofitNetworkClient
 import com.katoklizm.playlist_maker_full.data.network.TrackRepositoryImpl
-import com.katoklizm.playlist_maker_full.data.player.PlayerRepositoryImpl
 import com.katoklizm.playlist_maker_full.domain.api.TrackInteractor
 import com.katoklizm.playlist_maker_full.domain.api.TrackRepository
 import com.katoklizm.playlist_maker_full.domain.impl.TrackInteractorImpl
