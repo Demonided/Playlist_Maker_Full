@@ -20,7 +20,6 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.katoklizm.playlist_maker_full.R
-import com.katoklizm.playlist_maker_full.util.Creator
 import com.katoklizm.playlist_maker_full.domain.api.TrackInteractor
 import com.katoklizm.playlist_maker_full.domain.model.Track
 import com.katoklizm.playlist_maker_full.data.track.HistoryTrackManager

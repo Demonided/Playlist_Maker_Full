@@ -12,7 +12,6 @@ import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
 import com.katoklizm.playlist_maker_full.data.player.PlayerState
 import com.katoklizm.playlist_maker_full.domain.model.Track
 import com.katoklizm.playlist_maker_full.presentation.AudioPlayerController
-import com.katoklizm.playlist_maker_full.util.Creator
 
 class AudioPlayerActivity : AppCompatActivity() {
     var binding: AudioPlayerBinding? = null
