@@ -38,7 +38,7 @@ class SearchViewModel(
     }
 
     fun onTextChanged(searchText: String?) {
-        if (searchText.isNullOrEmpty()) {
+        if (searchText.isNullOrBlank()) {
             if (trackInteractor.readSearchHistory().isNotEmpty()) renderState(
                 SearchState.ContentListSaveTrack(
                     trackInteractor.readSearchHistory()
@@ -57,14 +57,12 @@ class SearchViewModel(
     }
 
     fun clearSearchHistory() {
-
         trackInteractor.clearSearchHistory()
-        renderState(SearchState.Empty(emptyList))
+//        renderState(SearchState.EmptyScreen)
     }
 
     fun refreshSearchButton(searchText: String) {
         searchRequest(searchText)
-
     }
 
     fun onTrackPresent(track: Track) {

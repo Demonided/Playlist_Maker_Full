@@ -122,6 +122,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
             is SearchState.Error -> showError()
             is SearchState.ContentListSearchTrack -> showContentListSearchTrack(state.track)
             is SearchState.ContentListSaveTrack -> showContentListSaveTrack(state.track)
+//            is SearchState.EmptyScreen -> showEmptyScreen()
         }
     }
 
@@ -149,7 +150,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         }
     }
 
-    fun showLoading() {
+    private fun showLoading() {
         binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
         binding?.searchErrorImage?.visibility = View.GONE
         binding?.searchNothingFound?.visibility = View.GONE
@@ -157,7 +158,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         binding?.searchProgressBar?.visibility = View.VISIBLE
     }
 
-    fun showEmpty() {
+    private fun showEmpty() {
         binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
         binding?.searchErrorImage?.visibility = View.GONE
         binding?.searchNothingFound?.visibility = View.VISIBLE
@@ -165,7 +166,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         binding?.searchProgressBar?.visibility = View.GONE
     }
 
-    fun showError() {
+    private fun showError() {
         binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
         binding?.searchErrorImage?.visibility = View.VISIBLE
         binding?.searchNothingFound?.visibility = View.GONE
@@ -173,7 +174,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         binding?.searchProgressBar?.visibility = View.GONE
     }
 
-    fun showContentListSearchTrack(track: List<Track>) {
+    private fun showContentListSearchTrack(track: List<Track>) {
         binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
         binding?.searchErrorImage?.visibility = View.GONE
         binding?.searchNothingFound?.visibility = View.GONE
@@ -187,7 +188,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         trackAdapter.notifyDataSetChanged()
     }
 
-    fun showContentListSaveTrack(trackHistory: List<Track>) {
+    private fun showContentListSaveTrack(trackHistory: List<Track>) {
         binding?.searchLinerLayoutHistoryTrack?.visibility = View.VISIBLE
         binding?.searchErrorImage?.visibility = View.GONE
         binding?.searchNothingFound?.visibility = View.GONE
@@ -198,6 +199,14 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         trackAdapter.updateTrackList(trackHistory)
         trackAdapter.notifyDataSetChanged()
     }
+
+//    private fun showEmptyScreen() {
+//        binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
+//        binding?.searchErrorImage?.visibility = View.GONE
+//        binding?.searchNothingFound?.visibility = View.GONE
+//        binding?.searchRecyclerMusicTrack?.visibility = View.GONE
+//        binding?.searchProgressBar?.visibility = View.GONE
+//    }
 
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed

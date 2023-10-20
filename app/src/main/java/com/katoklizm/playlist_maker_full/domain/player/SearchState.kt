@@ -20,4 +20,6 @@ sealed interface SearchState {
     data class Empty(
         val emptyMessage: String
     ) : SearchState
+
+//    object EmptyScreen: SearchState
 }
