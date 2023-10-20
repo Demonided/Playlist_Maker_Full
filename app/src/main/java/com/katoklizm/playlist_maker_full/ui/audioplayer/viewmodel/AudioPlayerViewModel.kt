@@ -22,10 +22,6 @@ class AudioPlayerViewModel(
         playerInteractor.preparePlayer(track)
     }
 
-    fun startTimer() {
-        playerInteractor.startTimer()
-    }
-
     fun playbackControl() {
         playerInteractor.playbackControl()
     }
@@ -36,6 +32,10 @@ class AudioPlayerViewModel(
 
     fun playerStateListener(): PlayerState {
         return playerInteractor.playerStateListener()
+    }
+
+    fun release() {
+        playerInteractor.release()
     }
 
     companion object {

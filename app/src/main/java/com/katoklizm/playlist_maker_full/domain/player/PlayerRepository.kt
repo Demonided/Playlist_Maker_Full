@@ -18,4 +18,6 @@ interface PlayerRepository {
     fun playerStateReporter(): PlayerState
 
     fun transferTime(): String
+
+    fun release()
 }

@@ -37,4 +37,8 @@ class PlayerInteractorImpl : PlayerInteractor {
         return repository.transferTime()
     }
 
+    override fun release() {
+        repository.release()
+    }
+
 }

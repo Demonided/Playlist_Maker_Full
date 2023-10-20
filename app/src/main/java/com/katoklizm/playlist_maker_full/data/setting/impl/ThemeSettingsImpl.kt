@@ -9,11 +9,6 @@ import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
 
 class ThemeSettingsImpl(private val application: App): ThemeSettings {
 
-    companion object{
-        const val THEME_PREFS = "theme_prefs"
-        const val THEME_KEY = "app_theme"
-    }
-
     private val themeSharedPreference: SharedPreferences =
         application.getSharedPreferences(THEME_PREFS, Context.MODE_PRIVATE)
 
@@ -48,5 +43,10 @@ class ThemeSettingsImpl(private val application: App): ThemeSettings {
                 setDarkTheme()
             }
         }
+    }
+
+    companion object{
+        const val THEME_PREFS = "theme_prefs"
+        const val THEME_KEY = "app_theme"
     }
 }

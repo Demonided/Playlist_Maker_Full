@@ -1,12 +1,8 @@
 package com.katoklizm.playlist_maker_full.ui.audioplayer.activity
 
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -18,7 +14,6 @@ import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
 import com.katoklizm.playlist_maker_full.data.player.PlayerState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.ui.audioplayer.viewmodel.AudioPlayerViewModel
-import com.katoklizm.playlist_maker_full.util.Creator
 
 class AudioPlayerActivity : AppCompatActivity() {
     var binding: AudioPlayerBinding? = null
@@ -31,64 +26,40 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private var playerState = PlayerState.STATE_DEFAULT
 
-    lateinit var viewModelAudioPlayer: AudioPlayerViewModel
-
-    lateinit var audioPlayerImageTrack: ImageView
-    lateinit var audioPlayerNameSong: TextView
-    lateinit var audioPlayerNameMusician: TextView
-    lateinit var audioPlayerTime: TextView
-    lateinit var audioPlayerTextViewTimeRead: TextView
-    lateinit var audioPlayerTextViewTrackNameRead: TextView
-    lateinit var audioPlayerTextViewYearRead: TextView
-    lateinit var audioPlayerTextViewGenreRead: TextView
-    lateinit var audioPlayerTextViewCountryRead: TextView
-
-    private var mediaPlayer = MediaPlayer()
-
-    private var timerIsRunning = false
+    lateinit var audioPlayerViewModel: AudioPlayerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = AudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
 
-        viewModelAudioPlayer = ViewModelProvider(
+        audioPlayerViewModel = ViewModelProvider(
             this,
             AudioPlayerViewModel.getViewModelFactory()
         )[AudioPlayerViewModel::class.java]
 
         track = intent.getParcelableExtra(SAVE_TRACK)
 
-        audioPlayerImageTrack = findViewById(R.id.audio_player_image_track)
-        audioPlayerNameSong = findViewById(R.id.audio_player_name_song)
-        audioPlayerNameMusician = findViewById(R.id.audio_player_name_musician)
-        audioPlayerTime = findViewById(R.id.audio_player_time)
-        audioPlayerTextViewTimeRead = findViewById(R.id.audio_player_textView_time_read)
-        audioPlayerTextViewTrackNameRead = findViewById(R.id.audio_player_textView_track_name_read)
-        audioPlayerTextViewYearRead = findViewById(R.id.audio_player_textView_year_read)
-        audioPlayerTextViewGenreRead = findViewById(R.id.audio_player_textView_genre_read)
-        audioPlayerTextViewCountryRead = findViewById(R.id.audio_player_textView_country_read)
+        binding?.audioPlayerNameSong?.text = track?.trackName
 
-        audioPlayerNameSong.text = track?.trackName
+       binding?.audioPlayerNameMusician?.text = track?.artistName
 
-        audioPlayerNameMusician.text = track?.artistName
+        binding?.audioPlayerTextViewTrackNameRead?.text = track?.trackName
+        binding?.audioPlayerTextViewYearRead?.text = track?.releaseDate?.let { ConstTrack.formatDate(it) }
+        binding?.audioPlayerTextViewGenreRead?.text = track?.primaryGenreName
+        binding?.audioPlayerTextViewCountryRead?.text = track?.country
 
-        audioPlayerTextViewTrackNameRead.text = track?.trackName
-        audioPlayerTextViewYearRead.text = track?.releaseDate?.let { ConstTrack.formatDate(it) }
-        audioPlayerTextViewGenreRead.text = track?.primaryGenreName
-        audioPlayerTextViewCountryRead.text = track?.country
+        binding?.audioPlayerTime?.text = getString(R.string.start_time)
 
-        audioPlayerTime.text = "00:00"
-
-        audioPlayerTextViewTimeRead.text = track?.trackTime
+        binding?.audioPlayerTextViewTimeRead?.text = track?.trackTime
 
         Glide.with(this)
             .load(track?.artworkUrl512)
             .transform(RoundedCorners(ConstTrack.ROUNDED_CORNERS_RADIUS))
             .placeholder(R.drawable.vector_plug)
-            .into(audioPlayerImageTrack)
+            .into(binding!!.audioPlayerImageTrack)
 
-        playerState = viewModelAudioPlayer.playerStateListener()
+        playerState = audioPlayerViewModel.playerStateListener()
 
         mainThreadHandler = Handler(Looper.getMainLooper())
 
@@ -100,7 +71,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             updateTimer()
         )
 
-        viewModelAudioPlayer.preparePlayer(track){
+        audioPlayerViewModel.preparePlayer(track){
             // доработать в процесе отображения не активной кнопки
             preparePlayer()
         }
@@ -110,16 +81,15 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
 
         binding?.audioPlayerPlaySong?.setOnClickListener {
-            viewModelAudioPlayer.playbackControl()
+            audioPlayerViewModel.playbackControl()
 
         }
     }
 
     override fun onPause() {
         if (playerState == PlayerState.STATE_PLAYING) {
-            viewModelAudioPlayer.pausePlayer()
+            audioPlayerViewModel.pausePlayer()
             binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
-            timerIsRunning = false
         }
         super.onPause()
     }
@@ -127,13 +97,13 @@ class AudioPlayerActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (playerState == PlayerState.STATE_PLAYING) {
-            viewModelAudioPlayer.startPlayer()
+            audioPlayerViewModel.startPlayer()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        audioPlayerViewModel.release()
         timerRunnable?.let {
             mainThreadHandler?.removeCallbacks(it)
             timerRunnable = null
@@ -141,14 +111,14 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (mediaPlayer.isPlaying) {
-            mediaPlayer.stop()
+        if (playerState == PlayerState.STATE_PLAYING) {
+            audioPlayerViewModel.pausePlayer()
         }
         super.onBackPressed()
     }
 
     fun playerStateDrawer() {
-        playerState = viewModelAudioPlayer.playerStateListener()
+        playerState = audioPlayerViewModel.playerStateListener()
         when (playerState) {
             PlayerState.STATE_DEFAULT -> {
                 binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
@@ -184,7 +154,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private fun updateTimer(): Runnable {
         val updatedTimer = Runnable {
-            binding?.audioPlayerTime?.text = viewModelAudioPlayer.transferTime()
+            binding?.audioPlayerTime?.text = audioPlayerViewModel.transferTime()
             mainThreadHandler?.postDelayed(updateTimer(), DELAY)
         }
         return updatedTimer

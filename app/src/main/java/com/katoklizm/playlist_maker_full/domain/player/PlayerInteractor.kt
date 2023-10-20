@@ -18,4 +18,6 @@ interface PlayerInteractor {
     fun playerStateListener(): PlayerState
 
     fun transferTime(): String
+
+    fun release()
 }

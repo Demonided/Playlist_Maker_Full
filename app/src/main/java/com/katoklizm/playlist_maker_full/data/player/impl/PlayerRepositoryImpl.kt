@@ -112,6 +112,10 @@ class PlayerRepositoryImpl : PlayerRepository {
         return remainingTimeMillis
     }
 
+    override fun release() {
+        mediaPlayer.release()
+    }
+
     companion object {
         const val DELAY = 100L
     }

@@ -37,8 +37,10 @@ class SettingActivity : AppCompatActivity() {
             finish()
         })
 
+//        settingsViewModel.themeSetting()
+
         binding.settingBack.setOnClickListener {
-            settingsViewModel.onBackClick()
+            finish()
         }
 
         binding.themeSwitcher.isChecked = isChecked is ThemeState.LightTheme
