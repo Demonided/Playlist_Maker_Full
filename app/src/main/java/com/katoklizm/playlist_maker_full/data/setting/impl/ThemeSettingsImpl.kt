@@ -31,9 +31,9 @@ class ThemeSettingsImpl(private val application: App): ThemeSettings {
 
     override fun lookAtTheme(): ThemeState {
         return if (themeSharedPreference.getBoolean(THEME_KEY, false)){
-            ThemeState.DarkTheme
-        } else {
             ThemeState.LightTheme
+        } else {
+            ThemeState.DarkTheme
         }
     }
 

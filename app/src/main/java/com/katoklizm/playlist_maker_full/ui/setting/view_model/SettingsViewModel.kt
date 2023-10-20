@@ -33,18 +33,18 @@ class SettingsViewModel(
     fun themeSetting() {
         val currentTheme = settingsInteractor.getAppTheme()
         val newTheme = if (currentTheme is ThemeState.DarkTheme) {
-            ThemeState.LightTheme
-        } else {
             ThemeState.DarkTheme
+        } else {
+            ThemeState.LightTheme
         }
 
         settingsInteractor.setAppTheme(newTheme)
         _themeLiveData.value = newTheme
 
         if (newTheme is ThemeState.DarkTheme) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
     }
 
