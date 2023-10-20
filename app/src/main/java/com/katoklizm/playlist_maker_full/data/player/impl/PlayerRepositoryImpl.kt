@@ -9,7 +9,7 @@ import com.katoklizm.playlist_maker_full.domain.player.PlayerRepository
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerRepositoryImpl: PlayerRepository {
+class PlayerRepositoryImpl : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
     private var timerIsRunning = false
@@ -61,24 +61,22 @@ class PlayerRepositoryImpl: PlayerRepository {
 
                 if (!timerIsRunning) return
 
-                if (playerState == PlayerState.STATE_PLAYING) {
-                    try {
-                        if (mediaPlayer.isPlaying) {
-                            val currentPosition = mediaPlayer.currentPosition
-                            remainingTimeMillis = SimpleDateFormat(
-                                "mm:ss",
-                                Locale.getDefault()
-                            ).format(currentPosition)
-                            handler.postDelayed(this, DELAY)
-                        } else {
-                            remainingTimeMillis = "00:00"
-                            handler.postDelayed(this, DELAY)
-                            timerIsRunning = false
-                        }
-                    } catch (e: IllegalStateException) {
+                try {
+                    if (playerState == PlayerState.STATE_PLAYING) {
+                        val currentPosition = mediaPlayer.currentPosition
+                        remainingTimeMillis = SimpleDateFormat(
+                            "mm:ss",
+                            Locale.getDefault()
+                        ).format(currentPosition)
+                        handler.postDelayed(this, DELAY)
+                    } else {
+                        remainingTimeMillis = "00:00"
                         timerIsRunning = false
-                        e.printStackTrace()
+                        handler.removeCallbacksAndMessages(null)
                     }
+                } catch (e: IllegalStateException) {
+                    timerIsRunning = false
+                    e.printStackTrace()
                 }
             }
         }
