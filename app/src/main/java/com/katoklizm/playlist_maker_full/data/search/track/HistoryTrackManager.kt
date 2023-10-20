@@ -38,7 +38,7 @@ class HistoryTrackManager(context: Context) {
 
     private fun writeSharePrefs(searchHistoryTrackList: List<Track>) {
         prefs.edit()
-            .putString(PREFERENCE_NAME, Gson().toJson(searchHistoryTrackList))
+            .putString(HISTORY_KEY, Gson().toJson(searchHistoryTrackList))
             .apply()
 
     }
