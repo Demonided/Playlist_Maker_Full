@@ -122,7 +122,6 @@ class AudioPlayerActivity : AppCompatActivity() {
         when (playerState) {
             PlayerState.STATE_DEFAULT -> {
                 binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
-
             }
 
             PlayerState.STATE_PREPARED -> {

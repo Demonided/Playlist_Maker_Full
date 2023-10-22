@@ -8,11 +8,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.katoklizm.playlist_maker_full.R
-import com.katoklizm.playlist_maker_full.app.App
 import com.katoklizm.playlist_maker_full.util.Creator
 import com.katoklizm.playlist_maker_full.domain.search.api.TrackInteractor
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
-import com.katoklizm.playlist_maker_full.domain.player.SearchState
+import com.katoklizm.playlist_maker_full.domain.search.SearchState
 
 class SearchViewModel(
     application: Application

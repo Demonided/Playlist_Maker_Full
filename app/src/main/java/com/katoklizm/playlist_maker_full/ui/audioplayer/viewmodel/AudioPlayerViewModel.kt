@@ -1,5 +1,7 @@
 package com.katoklizm.playlist_maker_full.ui.audioplayer.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.katoklizm.playlist_maker_full.data.player.PlayerState
@@ -10,6 +12,10 @@ import com.katoklizm.playlist_maker_full.util.Creator
 class AudioPlayerViewModel(
     private val playerInteractor: PlayerInteractor
 ) : ViewModel() {
+
+    private val _statePlayer = MutableLiveData<PlayerState>()
+    val statePlayer: LiveData<PlayerState> = _statePlayer
+
     fun startPlayer() {
         playerInteractor.startPlayer()
     }
