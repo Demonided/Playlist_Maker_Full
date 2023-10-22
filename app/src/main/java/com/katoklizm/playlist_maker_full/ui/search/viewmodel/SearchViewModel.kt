@@ -44,7 +44,7 @@ class SearchViewModel(
                     trackInteractor.readSearchHistory()
                 )
             ) else {
-                renderState(SearchState.Empty(""))
+                renderState(SearchState.EmptyScreen)
             }
         }
     }
@@ -52,13 +52,17 @@ class SearchViewModel(
 
     fun onFocusChanged(hasFocus: Boolean, searchText: String) {
         if (hasFocus && searchText.isEmpty()) {
-            renderState(SearchState.ContentListSaveTrack(trackInteractor.readSearchHistory()))
+            if (trackInteractor.readSearchHistory().isNotEmpty()) {
+                renderState(SearchState.ContentListSaveTrack(trackInteractor.readSearchHistory()))
+            } else {
+                renderState(SearchState.EmptyScreen)
+            }
         }
     }
 
     fun clearSearchHistory() {
         trackInteractor.clearSearchHistory()
-//        renderState(SearchState.EmptyScreen)
+        renderState(SearchState.EmptyScreen)
     }
 
     fun refreshSearchButton(searchText: String) {

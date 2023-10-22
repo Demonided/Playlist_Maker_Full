@@ -122,7 +122,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
             is SearchState.Error -> showError()
             is SearchState.ContentListSearchTrack -> showContentListSearchTrack(state.track)
             is SearchState.ContentListSaveTrack -> showContentListSaveTrack(state.track)
-//            is SearchState.EmptyScreen -> showEmptyScreen()
+            is SearchState.EmptyScreen -> showEmptyScreen()
         }
     }
 
@@ -200,13 +200,13 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         trackAdapter.notifyDataSetChanged()
     }
 
-//    private fun showEmptyScreen() {
-//        binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
-//        binding?.searchErrorImage?.visibility = View.GONE
-//        binding?.searchNothingFound?.visibility = View.GONE
-//        binding?.searchRecyclerMusicTrack?.visibility = View.GONE
-//        binding?.searchProgressBar?.visibility = View.GONE
-//    }
+    private fun showEmptyScreen() {
+        binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
+        binding?.searchErrorImage?.visibility = View.GONE
+        binding?.searchNothingFound?.visibility = View.GONE
+        binding?.searchRecyclerMusicTrack?.visibility = View.GONE
+        binding?.searchProgressBar?.visibility = View.GONE
+    }
 
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed

@@ -21,5 +21,5 @@ sealed interface SearchState {
         val emptyMessage: String
     ) : SearchState
 
-//    object EmptyScreen: SearchState
+    object EmptyScreen: SearchState
 }
