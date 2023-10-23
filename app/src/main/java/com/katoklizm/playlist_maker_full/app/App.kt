@@ -20,11 +20,25 @@ class App : Application() {
 
         val settingInteractor = Creator.provideSettingInteractor()
         currentTheme = settingInteractor.getAppTheme()
+
         switchTheme(currentTheme)
+//        render(currentTheme)
     }
 
+//    private fun render(state: ThemeState) {
+//        when(state) {
+//            ThemeState.DarkTheme -> {
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//            }
+//
+//            ThemeState.LightTheme -> {
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+//            }
+//        }
+//    }
+
     fun switchTheme(theme: ThemeState) {
-        if (theme != currentTheme) {
+        if (theme == currentTheme) {
             currentTheme = theme
             themeChanged = true
         }

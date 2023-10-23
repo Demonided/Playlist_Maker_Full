@@ -2,6 +2,7 @@ package com.katoklizm.playlist_maker_full.ui.setting.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -34,16 +35,19 @@ class SettingActivity : AppCompatActivity() {
             render(it)
         }
 
-        settingsViewModel.stateCheked.observe(this) {
-            isCheked(it)
-        }
+//        settingsViewModel.stateChecked.observe(this) {
+//            isCheked(it)
+//        }
 
         binding.settingBack.setOnClickListener {
             finish()
         }
 
         binding.themeSwitcher.setOnClickListener {
-            settingsViewModel.themeSetting()
+            settingsViewModel.themeSetting(
+                settingsViewModel.getThemeState(),
+                settingsViewModel.getThemeStateBoolean()
+            )
         }
 
         binding.settingsShareApp.setOnClickListener {
@@ -59,21 +63,23 @@ class SettingActivity : AppCompatActivity() {
         }
     }
 
-    private fun isCheked(state: Boolean) {
-        binding.themeSwitcher.isChecked = state
-    }
+//    private fun isCheked(state: Boolean) {
+//        binding.themeSwitcher.isChecked = state
+//    }
 
     private fun render(state: ThemeState) {
         when(state) {
             ThemeState.DarkTheme -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                binding.themeSwitcher.isChecked = settingsViewModel.getThemeStateBoolean()
+                Log.d("getThemeState", "Такой статус ${settingsViewModel.getThemeStateBoolean()}")
             }
 
             ThemeState.LightTheme -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                binding.themeSwitcher.isChecked = settingsViewModel.getThemeStateBoolean()
+                Log.d("getThemeState", "Такой статус ${settingsViewModel.getThemeStateBoolean()}")
             }
         }
     }
-
-
 }
