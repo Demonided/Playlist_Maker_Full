@@ -46,7 +46,7 @@ class ThemeSettingsImpl(private val application: App): ThemeSettings {
     }
 
     override fun lookAtThemeBoolean(): Boolean {
-        return !themeSharedPreference.getBoolean(THEME_KEY, false)
+        return themeSharedPreference.getBoolean(THEME_KEY, false)
     }
 
     companion object{

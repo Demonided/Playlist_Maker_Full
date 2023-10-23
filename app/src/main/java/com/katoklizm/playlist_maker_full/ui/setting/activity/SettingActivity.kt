@@ -72,13 +72,13 @@ class SettingActivity : AppCompatActivity() {
             ThemeState.DarkTheme -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 binding.themeSwitcher.isChecked = settingsViewModel.getThemeStateBoolean()
-                Log.d("getThemeState", "Такой статус ${settingsViewModel.getThemeStateBoolean()}")
+                Log.d("getThemeState", "Такой статус 1 ${settingsViewModel.getThemeStateBoolean()}")
             }
 
             ThemeState.LightTheme -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 binding.themeSwitcher.isChecked = settingsViewModel.getThemeStateBoolean()
-                Log.d("getThemeState", "Такой статус ${settingsViewModel.getThemeStateBoolean()}")
+                Log.d("getThemeState", "Такой статус 2 ${settingsViewModel.getThemeStateBoolean()}")
             }
         }
     }

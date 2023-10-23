@@ -30,9 +30,11 @@ class SettingsViewModel(
 
     fun themeSetting(themeState: ThemeState, checkedState:Boolean) {
         if (themeState is ThemeState.DarkTheme) {
+            settingsInteractor.setAppTheme(themeState)
             _themeStateSetting.postValue(ThemeState.DarkTheme)
             _stateChecked.postValue(checkedState)
         } else {
+            settingsInteractor.setAppTheme(themeState)
             _themeStateSetting.postValue(ThemeState.LightTheme)
             _stateChecked.postValue(checkedState)
         }
