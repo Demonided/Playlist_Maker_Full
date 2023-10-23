@@ -1,6 +1,5 @@
 package com.katoklizm.playlist_maker_full.domain.player
 
-import com.katoklizm.playlist_maker_full.data.player.PlayerState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.util.Creator
 
@@ -23,9 +22,9 @@ class PlayerInteractorImpl : PlayerInteractor {
         return repository.startTimer()
     }
 
-    override fun playbackControl() {
-        return repository.playbackControl()
-    }
+//    override fun playbackControl() {
+//        return repository.playbackControl()
+//    }
 
     override fun playerStateListener(): PlayerState {
         return repository.playerStateReporter()

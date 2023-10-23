@@ -1,10 +1,11 @@
 package com.katoklizm.playlist_maker_full.ui.audioplayer.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.katoklizm.playlist_maker_full.data.player.PlayerState
+import com.katoklizm.playlist_maker_full.domain.player.PlayerState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.domain.player.PlayerInteractor
 import com.katoklizm.playlist_maker_full.util.Creator
@@ -18,10 +19,12 @@ class AudioPlayerViewModel(
 
     fun startPlayer() {
         playerInteractor.startPlayer()
+        _statePlayer.value = PlayerState.STATE_PLAYING
     }
 
     fun pausePlayer() {
         playerInteractor.pausePlayer()
+        _statePlayer.value = PlayerState.STATE_PAUSED
     }
 
     fun preparePlayer(track: Track?, completion: () -> Unit) {
@@ -29,7 +32,22 @@ class AudioPlayerViewModel(
     }
 
     fun playbackControl() {
-        playerInteractor.playbackControl()
+        when (playerStateListener()) {
+            PlayerState.STATE_PLAYING -> {
+                pausePlayer()
+                Log.d("StatePlayer", "Статус 1 во вьюМоделе")
+            }
+
+            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> {
+                startPlayer()
+                Log.d("StatePlayer", "Статус 2 во вьюМоделе")
+            }
+
+            else -> {
+                pausePlayer()
+                Log.d("StatePlayer", "Статус 3 во вьюМоделе")
+            }
+        }
     }
 
     fun transferTime(): String {

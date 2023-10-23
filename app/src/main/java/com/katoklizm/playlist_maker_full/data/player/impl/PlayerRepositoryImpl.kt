@@ -3,7 +3,8 @@ package com.katoklizm.playlist_maker_full.data.player.impl
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
-import com.katoklizm.playlist_maker_full.data.player.PlayerState
+import android.util.Log
+import com.katoklizm.playlist_maker_full.domain.player.PlayerState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.domain.player.PlayerRepository
 import java.text.SimpleDateFormat
@@ -88,21 +89,24 @@ class PlayerRepositoryImpl : PlayerRepository {
         )
     }
 
-    override fun playbackControl() {
-        when (playerState) {
-            PlayerState.STATE_PLAYING -> {
-                pausePlayer()
-            }
-
-            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> {
-                startPlayer()
-            }
-
-            else -> {
-                pausePlayer()
-            }
-        }
-    }
+//    override fun playbackControl() {
+//        when (playerState) {
+//            PlayerState.STATE_PLAYING -> {
+//                pausePlayer()
+//                Log.d("StatePlayer", "Статус 1 в репозитории")
+//            }
+//
+//            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> {
+//                startPlayer()
+//                Log.d("StatePlayer", "Статус 2 в репозитории")
+//            }
+//
+//            else -> {
+//                pausePlayer()
+//                Log.d("StatePlayer", "Статус 3 в репозитории")
+//            }
+//        }
+//    }
 
     override fun playerStateReporter(): PlayerState {
         return playerState

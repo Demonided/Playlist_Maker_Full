@@ -1,6 +1,5 @@
 package com.katoklizm.playlist_maker_full.domain.player
 
-import com.katoklizm.playlist_maker_full.data.player.PlayerState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 
 interface PlayerRepository {
@@ -12,7 +11,7 @@ interface PlayerRepository {
 
     fun startTimer()
 
-    fun playbackControl()
+//    fun playbackControl()
 
     fun playerStateReporter(): PlayerState
 
