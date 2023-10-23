@@ -6,4 +6,6 @@ interface SettingsInteractor {
     fun getAppTheme(): ThemeState
 
     fun setAppTheme(theme: ThemeState)
+
+    fun lookAtThemeBoolean(): Boolean
 }

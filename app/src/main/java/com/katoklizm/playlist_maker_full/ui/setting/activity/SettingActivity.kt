@@ -21,9 +21,6 @@ class SettingActivity : AppCompatActivity() {
         binding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val isCheckedThemeSwitch = Creator.provideThemeSettings()
-        val isChecked = isCheckedThemeSwitch.lookAtTheme()
-
         settingsViewModel = ViewModelProvider(
             this,
             SettingsViewModel.getViewModelFactory()
@@ -33,20 +30,20 @@ class SettingActivity : AppCompatActivity() {
         binding.settingsWriteSupportText
         binding.settingsTermUseText
 
-        settingsViewModel.finishActivity.observe(this, Observer {
-            finish()
-        })
+        settingsViewModel.themeStateSetting.observe(this) {
+            render(it)
+        }
 
-//        settingsViewModel.themeSetting()
+        settingsViewModel.stateCheked.observe(this) {
+            isCheked(it)
+        }
 
         binding.settingBack.setOnClickListener {
             finish()
         }
 
-        binding.themeSwitcher.isChecked = isChecked is ThemeState.LightTheme
         binding.themeSwitcher.setOnClickListener {
             settingsViewModel.themeSetting()
-            binding.themeSwitcher.isChecked = isChecked is ThemeState.DarkTheme
         }
 
         binding.settingsShareApp.setOnClickListener {
@@ -61,4 +58,22 @@ class SettingActivity : AppCompatActivity() {
             settingsViewModel.settingTermUse()
         }
     }
+
+    private fun isCheked(state: Boolean) {
+        binding.themeSwitcher.isChecked = state
+    }
+
+    private fun render(state: ThemeState) {
+        when(state) {
+            ThemeState.DarkTheme -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+
+            ThemeState.LightTheme -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
+    }
+
+
 }

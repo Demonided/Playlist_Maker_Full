@@ -65,7 +65,6 @@ class AudioPlayerViewModel(
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
-                // 1
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return AudioPlayerViewModel(

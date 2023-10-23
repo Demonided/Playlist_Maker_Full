@@ -1,4 +1,4 @@
-package com.katoklizm.playlist_maker_full.ui.main
+package com.katoklizm.playlist_maker_full.ui.main.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +9,6 @@ import com.katoklizm.playlist_maker_full.ui.medialibrary.MediaLibraryActivity
 import com.katoklizm.playlist_maker_full.ui.search.activity.SearchActivity
 import com.katoklizm.playlist_maker_full.app.App
 import com.katoklizm.playlist_maker_full.domain.setting.SettingsInteractor
-import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeSettings
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
 import com.katoklizm.playlist_maker_full.ui.setting.activity.SettingActivity
 import com.katoklizm.playlist_maker_full.util.Creator
@@ -48,6 +47,5 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SettingActivity::class.java)
             startActivity(intent)
         }
-     
     }
 }

@@ -45,6 +45,10 @@ class ThemeSettingsImpl(private val application: App): ThemeSettings {
         }
     }
 
+    override fun lookAtThemeBoolean(): Boolean {
+        return !themeSharedPreference.getBoolean(THEME_KEY, false)
+    }
+
     companion object{
         const val THEME_PREFS = "theme_prefs"
         const val THEME_KEY = "app_theme"

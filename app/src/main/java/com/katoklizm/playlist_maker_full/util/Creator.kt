@@ -1,5 +1,6 @@
 package com.katoklizm.playlist_maker_full.util
 
+import android.app.Application
 import android.content.Context
 import com.katoklizm.playlist_maker_full.app.App
 import com.katoklizm.playlist_maker_full.data.search.network.RetrofitNetworkClient
@@ -28,15 +29,15 @@ object Creator {
         this.application = application
     }
 
-    private fun getTrackRepository(context: Context): TrackRepository {
+    private fun getTrackRepository(): TrackRepository {
         return TrackRepositoryImpl(
-            RetrofitNetworkClient(context),
-            HistoryTrackManager(context)
+            RetrofitNetworkClient(application),
+            HistoryTrackManager(application)
             )
     }
 
-    fun provideTrackInteractor(context: Context): TrackInteractor {
-        return TrackInteractorImpl(getTrackRepository(context))
+    fun provideTrackInteractor(): TrackInteractor {
+        return TrackInteractorImpl(getTrackRepository())
     }
 
     fun providePlayerRepository():PlayerRepository {

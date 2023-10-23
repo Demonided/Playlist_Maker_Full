@@ -20,7 +20,6 @@ class App : Application() {
 
         val settingInteractor = Creator.provideSettingInteractor()
         currentTheme = settingInteractor.getAppTheme()
-
         switchTheme(currentTheme)
     }
 

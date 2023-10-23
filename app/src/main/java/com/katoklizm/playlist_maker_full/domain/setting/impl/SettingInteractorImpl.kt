@@ -15,4 +15,8 @@ class SettingInteractorImpl(
     override fun setAppTheme(theme: ThemeState) {
         themeSettings.saveCurrentTheme(theme)
     }
+
+    override fun lookAtThemeBoolean(): Boolean {
+        return themeSettings.lookAtThemeBoolean()
+    }
 }

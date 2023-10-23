@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.katoklizm.playlist_maker_full.domain.setting.SettingsInteractor
+import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeSettings
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
 import com.katoklizm.playlist_maker_full.domain.sharing.SharingInteractor
 import com.katoklizm.playlist_maker_full.util.Creator
@@ -20,14 +21,15 @@ class SettingsViewModel(
         settingsInteractor = Creator.provideSettingInteractor()
     }
 
-    private val _themeStateSetting = MutableLiveData(settingsInteractor.getAppTheme())
+    private val _themeStateSetting = MutableLiveData<ThemeState>()
     val themeStateSetting: LiveData<ThemeState> = _themeStateSetting
 
-    private val finishActivityLiveData = MutableLiveData<Any>()
-    val finishActivity: LiveData<Any> = finishActivityLiveData
+    private val _stateCheked = MutableLiveData<Boolean>()
+    val stateCheked:LiveData<Boolean> = _stateCheked
 
     fun themeSetting() {
         val currentTheme = settingsInteractor.getAppTheme()
+        val themeStateBoolean = settingsInteractor.lookAtThemeBoolean()
         val newTheme = if (currentTheme is ThemeState.DarkTheme) {
             ThemeState.DarkTheme
         } else {
@@ -39,10 +41,10 @@ class SettingsViewModel(
 
         if (newTheme is ThemeState.DarkTheme) {
             _themeStateSetting.postValue(ThemeState.DarkTheme)
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            _stateCheked.postValue(themeStateBoolean)
         } else {
             _themeStateSetting.postValue(ThemeState.LightTheme)
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            _stateCheked.postValue(themeStateBoolean)
         }
     }
 
