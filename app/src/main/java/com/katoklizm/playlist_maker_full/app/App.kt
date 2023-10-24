@@ -25,7 +25,7 @@ class App : Application() {
 
 //        switchTheme(currentTheme)
         render(currentTheme)
-        Log.d("SaveLog", "$currentTheme")
+        Log.d("SaveLog", "в АПП $currentTheme")
     }
 
     private fun render(state: Boolean) {

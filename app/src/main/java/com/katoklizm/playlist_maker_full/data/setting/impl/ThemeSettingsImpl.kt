@@ -10,7 +10,7 @@ import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
 class ThemeSettingsImpl(private val application: App): ThemeSettings {
 
     private val themeSharedPreference: SharedPreferences =
-        application.getSharedPreferences(THEME_PREFS, Context.MODE_PRIVATE)
+        application.getSharedPreferences(THEME_KEY, Context.MODE_PRIVATE)
 
     override fun setLightTheme(): ThemeState {
         themeSharedPreference.edit().putBoolean(THEME_KEY, false).apply()

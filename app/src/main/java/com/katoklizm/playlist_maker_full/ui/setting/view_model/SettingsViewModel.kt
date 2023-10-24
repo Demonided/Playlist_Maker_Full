@@ -30,7 +30,7 @@ class SettingsViewModel(
 
     fun themeSetting() {
         val checkedState = settingsInteractor.lookAtThemeBoolean()
-        if (themeStateSetting.value is ThemeState.LightTheme) {
+        if (getThemeState() is ThemeState.LightTheme) {
             settingsInteractor.setAppTheme(ThemeState.DarkTheme)
             _themeStateSetting.postValue(ThemeState.DarkTheme)
             _stateChecked.postValue(!checkedState)
