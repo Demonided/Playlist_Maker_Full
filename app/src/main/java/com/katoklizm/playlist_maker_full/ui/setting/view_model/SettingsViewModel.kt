@@ -28,17 +28,26 @@ class SettingsViewModel(
         _stateChecked.postValue(settingsInteractor.lookAtThemeBoolean())
     }
 
-    fun themeSetting(themeState: ThemeState, checkedState:Boolean) {
-        if (themeState is ThemeState.DarkTheme) {
-            settingsInteractor.setAppTheme(themeState)
+    fun themeSetting() {
+        val checkedState = settingsInteractor.lookAtThemeBoolean()
+        if (themeStateSetting.value is ThemeState.LightTheme) {
+            settingsInteractor.setAppTheme(ThemeState.DarkTheme)
             _themeStateSetting.postValue(ThemeState.DarkTheme)
-            _stateChecked.postValue(checkedState)
+            _stateChecked.postValue(!checkedState)
         } else {
-            settingsInteractor.setAppTheme(themeState)
+            settingsInteractor.setAppTheme(ThemeState.LightTheme)
             _themeStateSetting.postValue(ThemeState.LightTheme)
-            _stateChecked.postValue(checkedState)
+            _stateChecked.postValue(!checkedState)
         }
     }
+
+//    fun switchStateTheme() {
+//        if (themeState is ThemeState.LightTheme) {
+//            _themeStateSetting.value = ThemeState.DarkTheme
+//        } else {
+//            _themeStateSetting.value = ThemeState.LightTheme
+//        }
+//    }
 
     fun getThemeState(): ThemeState {
         return settingsInteractor.getAppTheme()

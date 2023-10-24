@@ -11,8 +11,6 @@ interface PlayerInteractor {
 
     fun startTimer()
 
-//    fun playbackControl()
-
     fun playerStateListener(): PlayerState
 
     fun transferTime(): String

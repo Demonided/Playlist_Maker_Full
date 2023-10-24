@@ -29,6 +29,7 @@ class AudioPlayerViewModel(
 
     fun preparePlayer(track: Track?, completion: () -> Unit) {
         playerInteractor.preparePlayer(track)
+        _statePlayer.value = PlayerState.STATE_PREPARED
     }
 
     fun playbackControl() {

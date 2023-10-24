@@ -35,19 +35,16 @@ class SettingActivity : AppCompatActivity() {
             render(it)
         }
 
-//        settingsViewModel.stateChecked.observe(this) {
-//            isCheked(it)
-//        }
+        settingsViewModel.stateChecked.observe(this) {
+            isCheked(it)
+        }
 
         binding.settingBack.setOnClickListener {
             finish()
         }
 
         binding.themeSwitcher.setOnClickListener {
-            settingsViewModel.themeSetting(
-                settingsViewModel.getThemeState(),
-                settingsViewModel.getThemeStateBoolean()
-            )
+            settingsViewModel.themeSetting()
         }
 
         binding.settingsShareApp.setOnClickListener {
@@ -63,21 +60,22 @@ class SettingActivity : AppCompatActivity() {
         }
     }
 
-//    private fun isCheked(state: Boolean) {
-//        binding.themeSwitcher.isChecked = state
-//    }
+    private fun isCheked(state: Boolean) {
+        binding.themeSwitcher.isChecked = state
+    Log.d("getThemeState", "Cтатус 3 ${settingsViewModel.getThemeStateBoolean()}")
+    }
 
     private fun render(state: ThemeState) {
         when(state) {
             ThemeState.DarkTheme -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                binding.themeSwitcher.isChecked = settingsViewModel.getThemeStateBoolean()
+//                binding.themeSwitcher.isChecked = settingsViewModel.getThemeStateBoolean()
                 Log.d("getThemeState", "Такой статус 1 ${settingsViewModel.getThemeStateBoolean()}")
             }
 
             ThemeState.LightTheme -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                binding.themeSwitcher.isChecked = settingsViewModel.getThemeStateBoolean()
+//                binding.themeSwitcher.isChecked = settingsViewModel.getThemeStateBoolean()
                 Log.d("getThemeState", "Такой статус 2 ${settingsViewModel.getThemeStateBoolean()}")
             }
         }

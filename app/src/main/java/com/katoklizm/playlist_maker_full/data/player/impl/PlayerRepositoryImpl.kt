@@ -3,7 +3,6 @@ package com.katoklizm.playlist_maker_full.data.player.impl
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import com.katoklizm.playlist_maker_full.domain.player.PlayerState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.domain.player.PlayerRepository
@@ -59,22 +58,15 @@ class PlayerRepositoryImpl : PlayerRepository {
     fun createUpdateTimerTask(): Runnable {
         return object : Runnable {
             override fun run() {
-
                 if (!timerIsRunning) return
 
                 try {
-                    if (playerState == PlayerState.STATE_PLAYING) {
-                        val currentPosition = mediaPlayer.currentPosition
-                        remainingTimeMillis = SimpleDateFormat(
-                            "mm:ss",
-                            Locale.getDefault()
-                        ).format(currentPosition)
-                        handler.postDelayed(this, DELAY)
-                    } else {
-                        remainingTimeMillis = "00:00"
-                        timerIsRunning = false
-                        handler.removeCallbacksAndMessages(null)
-                    }
+                    val currentPosition = mediaPlayer.currentPosition
+                    remainingTimeMillis = SimpleDateFormat(
+                        "mm:ss",
+                        Locale.getDefault()
+                    ).format(currentPosition)
+                    handler.postDelayed(this, DELAY)
                 } catch (e: IllegalStateException) {
                     timerIsRunning = false
                     e.printStackTrace()
@@ -88,25 +80,6 @@ class PlayerRepositoryImpl : PlayerRepository {
             createUpdateTimerTask()
         )
     }
-
-//    override fun playbackControl() {
-//        when (playerState) {
-//            PlayerState.STATE_PLAYING -> {
-//                pausePlayer()
-//                Log.d("StatePlayer", "Статус 1 в репозитории")
-//            }
-//
-//            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> {
-//                startPlayer()
-//                Log.d("StatePlayer", "Статус 2 в репозитории")
-//            }
-//
-//            else -> {
-//                pausePlayer()
-//                Log.d("StatePlayer", "Статус 3 в репозитории")
-//            }
-//        }
-//    }
 
     override fun playerStateReporter(): PlayerState {
         return playerState

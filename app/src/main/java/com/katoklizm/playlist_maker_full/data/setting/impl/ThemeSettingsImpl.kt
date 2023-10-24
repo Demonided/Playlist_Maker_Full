@@ -25,7 +25,7 @@ class ThemeSettingsImpl(private val application: App): ThemeSettings {
     }
 
     override fun lookAtTheme(): ThemeState {
-        return if (themeSharedPreference.getBoolean(THEME_KEY, false)){
+        return if (themeSharedPreference.getBoolean(THEME_KEY, true)){
             ThemeState.DarkTheme
         } else {
             ThemeState.LightTheme
@@ -46,7 +46,7 @@ class ThemeSettingsImpl(private val application: App): ThemeSettings {
     }
 
     override fun lookAtThemeBoolean(): Boolean {
-        return themeSharedPreference.getBoolean(THEME_KEY, false)
+        return themeSharedPreference.getBoolean(THEME_KEY, true)
     }
 
     companion object{
