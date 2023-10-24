@@ -1,5 +1,6 @@
 package com.katoklizm.playlist_maker_full.ui.setting.view_model
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -40,14 +41,6 @@ class SettingsViewModel(
             _stateChecked.postValue(!checkedState)
         }
     }
-
-//    fun switchStateTheme() {
-//        if (themeState is ThemeState.LightTheme) {
-//            _themeStateSetting.value = ThemeState.DarkTheme
-//        } else {
-//            _themeStateSetting.value = ThemeState.LightTheme
-//        }
-//    }
 
     fun getThemeState(): ThemeState {
         return settingsInteractor.getAppTheme()

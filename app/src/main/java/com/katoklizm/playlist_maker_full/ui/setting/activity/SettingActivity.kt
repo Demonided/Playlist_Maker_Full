@@ -61,7 +61,7 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun isCheked(state: Boolean) {
-        binding.themeSwitcher.isChecked = state
+        binding.themeSwitcher.isChecked = !state
     Log.d("getThemeState", "Cтатус 3 ${settingsViewModel.getThemeStateBoolean()}")
     }
 

@@ -13,22 +13,22 @@ class ThemeSettingsImpl(private val application: App): ThemeSettings {
         application.getSharedPreferences(THEME_PREFS, Context.MODE_PRIVATE)
 
     override fun setLightTheme(): ThemeState {
-        themeSharedPreference.edit().putBoolean(THEME_KEY, false).apply()
+        themeSharedPreference.edit().putBoolean(THEME_KEY, true).apply()
         Log.d("SaveLog", "Set: false")
         return ThemeState.LightTheme
     }
 
     override fun setDarkTheme(): ThemeState {
-        themeSharedPreference.edit().putBoolean(THEME_KEY, true).apply()
+        themeSharedPreference.edit().putBoolean(THEME_KEY, false).apply()
         Log.d("SaveLog", "Set: true")
         return ThemeState.DarkTheme
     }
 
     override fun lookAtTheme(): ThemeState {
         return if (themeSharedPreference.getBoolean(THEME_KEY, true)){
-            ThemeState.DarkTheme
-        } else {
             ThemeState.LightTheme
+        } else {
+            ThemeState.DarkTheme
         }
     }
 
