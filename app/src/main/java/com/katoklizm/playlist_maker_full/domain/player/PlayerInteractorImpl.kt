@@ -1,8 +1,5 @@
 package com.katoklizm.playlist_maker_full.domain.player
 
-import com.katoklizm.playlist_maker_full.data.search.dto.TrackDto
-import com.katoklizm.playlist_maker_full.data.player.PlayerState
-import com.katoklizm.playlist_maker_full.data.player.TimerIsRunning
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.util.Creator
 
@@ -17,8 +14,12 @@ class PlayerInteractorImpl : PlayerInteractor {
         return repository.pausePlayer()
     }
 
-    override fun preparePlayer(track: Track?) {
-        return repository.preparePlayer(track)
+    override fun preparePlayer(
+        track: Track?,
+        completion: () -> Unit,
+        statusObserver: PlayerInteractor.StatusObserver
+    ) {
+        return repository.preparePlayer(track, completion, statusObserver)
     }
 
     override fun startTimer() {
@@ -35,6 +36,10 @@ class PlayerInteractorImpl : PlayerInteractor {
 
     override fun transferTime(): String {
         return repository.transferTime()
+    }
+
+    override fun release() {
+        repository.release()
     }
 
 }

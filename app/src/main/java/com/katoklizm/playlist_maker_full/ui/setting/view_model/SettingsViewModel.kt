@@ -1,6 +1,5 @@
 package com.katoklizm.playlist_maker_full.ui.setting.view_model
 
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,37 +14,39 @@ class SettingsViewModel(
     private var settingsInteractor: SettingsInteractor
 ) : ViewModel() {
 
+    private val _themeStateSetting = MutableLiveData<ThemeState>()
+    val themeStateSetting: LiveData<ThemeState> = _themeStateSetting
+
+    private val _stateChecked = MutableLiveData<Boolean>()
+    val stateChecked:LiveData<Boolean> = _stateChecked
+
     init {
         sharingInteractor = Creator.provideSharingInteractor()
         settingsInteractor = Creator.provideSettingInteractor()
-    }
 
-    private val _themeLiveData = MutableLiveData(settingsInteractor.getAppTheme())
-    val themeLiveData: LiveData<ThemeState> = _themeLiveData
-
-    private val finishActivityLiveData = MutableLiveData<Any>()
-    val finishActivity: LiveData<Any> = finishActivityLiveData
-
-    fun onBackClick() {
-        finishActivityLiveData.value = Any()
+        _themeStateSetting.postValue(settingsInteractor.getAppTheme())
+        _stateChecked.postValue(settingsInteractor.lookAtThemeBoolean())
     }
 
     fun themeSetting() {
-        val currentTheme = settingsInteractor.getAppTheme()
-        val newTheme = if (currentTheme is ThemeState.DarkTheme) {
-            ThemeState.LightTheme
+        val checkedState = settingsInteractor.lookAtThemeBoolean()
+        if (getThemeState() is ThemeState.LightTheme) {
+            settingsInteractor.setAppTheme(ThemeState.DarkTheme)
+            _themeStateSetting.postValue(ThemeState.DarkTheme)
+            _stateChecked.postValue(!checkedState)
         } else {
-            ThemeState.DarkTheme
+            settingsInteractor.setAppTheme(ThemeState.LightTheme)
+            _themeStateSetting.postValue(ThemeState.LightTheme)
+            _stateChecked.postValue(!checkedState)
         }
+    }
 
-        settingsInteractor.setAppTheme(newTheme)
-        _themeLiveData.value = newTheme
+    fun getThemeState(): ThemeState {
+        return settingsInteractor.getAppTheme()
+    }
 
-        if (newTheme is ThemeState.DarkTheme) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        }
+    fun getThemeStateBoolean(): Boolean {
+        return settingsInteractor.lookAtThemeBoolean()
     }
 
     fun settingShareApp() {

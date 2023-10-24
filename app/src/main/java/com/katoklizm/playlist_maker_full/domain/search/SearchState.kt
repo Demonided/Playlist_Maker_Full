@@ -1,4 +1,4 @@
-package com.katoklizm.playlist_maker_full.domain.player
+package com.katoklizm.playlist_maker_full.domain.search
 
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 
@@ -20,4 +20,6 @@ sealed interface SearchState {
     data class Empty(
         val emptyMessage: String
     ) : SearchState
+
+    object EmptyScreen: SearchState
 }

@@ -11,33 +11,19 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.Group
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
 import com.katoklizm.playlist_maker_full.ui.audioplayer.activity.AudioPlayerActivity
 import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
-import com.katoklizm.playlist_maker_full.domain.player.SearchState
+import com.katoklizm.playlist_maker_full.domain.search.SearchState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.ui.search.viewmodel.SearchViewModel
 import com.katoklizm.playlist_maker_full.ui.search.TrackAdapter
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClickListener {
     var binding: ActivitySearchBinding? = null
-
-    companion object {
-        private const val SEARCH_TEXT = "SEARCH_TEXT"
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
 
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { searchTrack() }
@@ -51,24 +37,12 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     private val trackHistoryList = ArrayList<Track>()
     private val trackList = ArrayList<Track>()
 
-    private lateinit var searchClearButton: ImageView
-    private lateinit var searchUpdatePage: Button
-    private lateinit var searchClearHistory: Button
-    private lateinit var searchEditText: EditText
-    private lateinit var searchProgressBar: ProgressBar
-    private lateinit var searchLinerLayoutHistoryTrack: Group
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var searchErrorImage: LinearLayout
-    private lateinit var searchNothingFound: LinearLayout
-
     private lateinit var viewModel: SearchViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
-
-        initView()
 
         viewModel =
             ViewModelProvider(this, SearchViewModel.getModelFactory())[SearchViewModel::class.java]
@@ -77,8 +51,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
             render(it)
         }
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = trackAdapter
+        binding?.searchRecyclerMusicTrack?.layoutManager = LinearLayoutManager(this)
+        binding?.searchRecyclerMusicTrack?.adapter = trackAdapter
         trackAdapter.tracks = trackHistoryList
 
         binding?.settingBack?.setOnClickListener {
@@ -90,19 +64,19 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                searchClearButton.visibility = clearButtonVisibility(s)
+                binding?.searchClearButton?.visibility = clearButtonVisibility(s)
                 viewModel.onTextChanged(s.toString())
                 searchDebounce()
             }
 
             override fun afterTextChanged(s: Editable?) {
-                enteredText = searchEditText.text.toString()
+                enteredText = binding?.searchEditText?.text.toString()
             }
         }
 
-        searchEditText.addTextChangedListener(textWatcher)
+        binding?.searchEditText?.addTextChangedListener(textWatcher)
 
-        searchEditText.setOnEditorActionListener { _, actionId, _ ->
+        binding?.searchEditText?.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchTrack()
                 true
@@ -110,20 +84,20 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
             false
         }
 
-        searchEditText.setOnFocusChangeListener { _, hasFocus ->
-            viewModel.onFocusChanged(hasFocus, searchEditText.text.toString())
+        binding?.searchEditText?.setOnFocusChangeListener { _, hasFocus ->
+            viewModel.onFocusChanged(hasFocus, binding?.searchEditText?.text.toString())
         }
 
-        searchClearButton.setOnClickListener {
-            searchEditText.text.clear()
+        binding?.searchClearButton?.setOnClickListener {
+            binding?.searchEditText?.text?.clear()
             closeKeyboard()
         }
 
-        searchUpdatePage.setOnClickListener {
-            viewModel.refreshSearchButton(enteredText!!)
+        binding?.searchUpdatePage?.setOnClickListener {
+            viewModel.refreshSearchButton(enteredText)
         }
 
-        searchClearHistory.setOnClickListener {
+        binding?.searchClearHistory?.setOnClickListener {
             viewModel.clearSearchHistory()
         }
     }
@@ -133,27 +107,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         outState.putString(SEARCH_TEXT, enteredText)
     }
 
-    private fun initView() {
-        // Кнопка очистки EditText
-        searchClearButton = findViewById(R.id.search_clear_button)
-        // Кнопка обновить список при отсутствии интернета
-        searchUpdatePage = findViewById(R.id.search_update_page)
-        // Кнопка очистить историю сохраненых треков
-        searchClearHistory = findViewById(R.id.search_clear_history)
-        // EditText в главном меню
-        searchEditText = findViewById(R.id.search_edit_text)
-        // ProgressBar при поиске треков
-        searchProgressBar = findViewById(R.id.search_progressBar)
-        // Liner для отображения списка сохраненых треков
-        searchLinerLayoutHistoryTrack = findViewById(R.id.search_liner_layout_history_track)
-        // Liner при отсутсвии интернета
-        searchErrorImage = findViewById(R.id.search_error_image)
-        // Liner при отсутсвии контента поиска
-        searchNothingFound = findViewById(R.id.search_nothing_found)
-        // Recycler для отображения треков из интернета и сохраненых
-        recyclerView = findViewById(R.id.search_recycler_music_track)
-    }
-
     private fun render(state: SearchState) {
         when(state) {
             is SearchState.Loading -> showLoading()
@@ -161,12 +114,13 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
             is SearchState.Error -> showError()
             is SearchState.ContentListSearchTrack -> showContentListSearchTrack(state.track)
             is SearchState.ContentListSaveTrack -> showContentListSaveTrack(state.track)
+            is SearchState.EmptyScreen -> showEmptyScreen()
         }
     }
 
     private fun closeKeyboard() {
         val imputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imputMethodManager.hideSoftInputFromWindow(searchEditText.windowToken, 0)
+        imputMethodManager.hideSoftInputFromWindow(binding?.searchEditText?.windowToken, 0)
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -188,36 +142,36 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         }
     }
 
-    fun showLoading() {
-        searchLinerLayoutHistoryTrack.visibility = View.GONE
-        searchErrorImage.visibility = View.GONE
-        searchNothingFound.visibility = View.GONE
-        recyclerView.visibility = View.GONE
-        searchProgressBar.visibility = View.VISIBLE
+    private fun showLoading() {
+        binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
+        binding?.searchErrorImage?.visibility = View.GONE
+        binding?.searchNothingFound?.visibility = View.GONE
+        binding?.searchRecyclerMusicTrack?.visibility = View.GONE
+        binding?.searchProgressBar?.visibility = View.VISIBLE
     }
 
-    fun showEmpty() {
-        searchLinerLayoutHistoryTrack.visibility = View.GONE
-        searchErrorImage.visibility = View.GONE
-        searchNothingFound.visibility = View.VISIBLE
-        recyclerView.visibility = View.GONE
-        searchProgressBar.visibility = View.GONE
+    private fun showEmpty() {
+        binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
+        binding?.searchErrorImage?.visibility = View.GONE
+        binding?.searchNothingFound?.visibility = View.VISIBLE
+        binding?.searchRecyclerMusicTrack?.visibility = View.GONE
+        binding?.searchProgressBar?.visibility = View.GONE
     }
 
-    fun showError() {
-        searchLinerLayoutHistoryTrack.visibility = View.GONE
-        searchErrorImage.visibility = View.VISIBLE
-        searchNothingFound.visibility = View.GONE
-        recyclerView.visibility = View.GONE
-        searchProgressBar.visibility = View.GONE
+    private fun showError() {
+        binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
+        binding?.searchErrorImage?.visibility = View.VISIBLE
+        binding?.searchNothingFound?.visibility = View.GONE
+        binding?.searchRecyclerMusicTrack?.visibility = View.GONE
+        binding?.searchProgressBar?.visibility = View.GONE
     }
 
-    fun showContentListSearchTrack(track: List<Track>) {
-        searchLinerLayoutHistoryTrack.visibility = View.GONE
-        searchErrorImage.visibility = View.GONE
-        searchNothingFound.visibility = View.GONE
-        recyclerView.visibility = View.VISIBLE
-        searchProgressBar.visibility = View.GONE
+    private fun showContentListSearchTrack(track: List<Track>) {
+        binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
+        binding?.searchErrorImage?.visibility = View.GONE
+        binding?.searchNothingFound?.visibility = View.GONE
+        binding?.searchRecyclerMusicTrack?.visibility = View.VISIBLE
+        binding?.searchProgressBar?.visibility = View.GONE
 
         trackList.clear()
         trackList.addAll(track)
@@ -226,16 +180,24 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         trackAdapter.notifyDataSetChanged()
     }
 
-    fun showContentListSaveTrack(trackHistory: List<Track>) {
-        searchLinerLayoutHistoryTrack.visibility = View.VISIBLE
-        searchErrorImage.visibility = View.GONE
-        searchNothingFound.visibility = View.GONE
-        recyclerView.visibility = View.VISIBLE
-        searchProgressBar.visibility = View.GONE
+    private fun showContentListSaveTrack(trackHistory: List<Track>) {
+        binding?.searchLinerLayoutHistoryTrack?.visibility = View.VISIBLE
+        binding?.searchErrorImage?.visibility = View.GONE
+        binding?.searchNothingFound?.visibility = View.GONE
+        binding?.searchRecyclerMusicTrack?.visibility = View.VISIBLE
+        binding?.searchProgressBar?.visibility = View.GONE
 
         trackAdapter.tracks = trackHistory as ArrayList<Track>
         trackAdapter.updateTrackList(trackHistory)
         trackAdapter.notifyDataSetChanged()
+    }
+
+    private fun showEmptyScreen() {
+        binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
+        binding?.searchErrorImage?.visibility = View.GONE
+        binding?.searchNothingFound?.visibility = View.GONE
+        binding?.searchRecyclerMusicTrack?.visibility = View.GONE
+        binding?.searchProgressBar?.visibility = View.GONE
     }
 
     private fun clickDebounce(): Boolean {
@@ -259,6 +221,12 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
             viewModel.onTrackPresent(track)
             openAudioPlayer(track)
         }
+    }
+
+    companion object {
+        private const val SEARCH_TEXT = "SEARCH_TEXT"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }
 

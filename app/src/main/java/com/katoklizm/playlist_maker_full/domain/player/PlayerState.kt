@@ -1,4 +1,4 @@
-package com.katoklizm.playlist_maker_full.data.player
+package com.katoklizm.playlist_maker_full.domain.player
 
 enum class PlayerState {
     STATE_DEFAULT,

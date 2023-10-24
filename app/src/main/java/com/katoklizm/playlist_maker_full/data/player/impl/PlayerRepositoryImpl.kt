@@ -3,13 +3,15 @@ package com.katoklizm.playlist_maker_full.data.player.impl
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
-import com.katoklizm.playlist_maker_full.data.player.PlayerState
+import android.util.Log
+import com.katoklizm.playlist_maker_full.domain.player.PlayerInteractor
+import com.katoklizm.playlist_maker_full.domain.player.PlayerState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.domain.player.PlayerRepository
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerRepositoryImpl: PlayerRepository {
+class PlayerRepositoryImpl : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
     private var timerIsRunning = false
@@ -37,16 +39,20 @@ class PlayerRepositoryImpl: PlayerRepository {
         timerIsRunning = false
     }
 
-    override fun preparePlayer(track: Track?) {
+    override fun preparePlayer(track: Track?, completion: () -> Unit,
+                               statusObserver: PlayerInteractor.StatusObserver) {
         try {
             track?.previewUrl?.let {
                 mediaPlayer.setDataSource(it)
                 mediaPlayer.prepareAsync()
                 mediaPlayer.setOnPreparedListener {
                     playerState = PlayerState.STATE_PREPARED
+                    statusObserver.onPrepared()
+                    completion()
                 }
                 mediaPlayer.setOnCompletionListener {
                     playerState = PlayerState.STATE_PREPARED
+                    statusObserver.onCompletion()
                 }
             }
         } catch (e: Exception) {
@@ -61,24 +67,22 @@ class PlayerRepositoryImpl: PlayerRepository {
 
                 if (!timerIsRunning) return
 
-                if (playerState == PlayerState.STATE_PLAYING) {
-                    try {
-                        if (mediaPlayer.isPlaying) {
-                            val currentPosition = mediaPlayer.currentPosition
-                            remainingTimeMillis = SimpleDateFormat(
-                                "mm:ss",
-                                Locale.getDefault()
-                            ).format(currentPosition)
-                            handler.postDelayed(this, DELAY)
-                        } else {
-                            remainingTimeMillis = "00:00"
-                            handler.postDelayed(this, DELAY)
-                            timerIsRunning = false
-                        }
-                    } catch (e: IllegalStateException) {
+                try {
+                    if (playerState == PlayerState.STATE_PLAYING) {
+                        val currentPosition = mediaPlayer.currentPosition
+                        remainingTimeMillis = SimpleDateFormat(
+                            "mm:ss",
+                            Locale.getDefault()
+                        ).format(currentPosition)
+                        handler.postDelayed(this, DELAY)
+                    } else {
+                        remainingTimeMillis = "00:00"
                         timerIsRunning = false
-                        e.printStackTrace()
+                        handler.removeCallbacksAndMessages(null)
                     }
+                } catch (e: IllegalStateException) {
+                    timerIsRunning = false
+                    e.printStackTrace()
                 }
             }
         }
@@ -94,14 +98,17 @@ class PlayerRepositoryImpl: PlayerRepository {
         when (playerState) {
             PlayerState.STATE_PLAYING -> {
                 pausePlayer()
+                Log.d("StatePlayer", "Статус 1 в репозитории")
             }
 
             PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> {
                 startPlayer()
+                Log.d("StatePlayer", "Статус 2 в репозитории")
             }
 
             else -> {
                 pausePlayer()
+                Log.d("StatePlayer", "Статус 3 в репозитории")
             }
         }
     }
@@ -112,6 +119,10 @@ class PlayerRepositoryImpl: PlayerRepository {
 
     override fun transferTime(): String {
         return remainingTimeMillis
+    }
+
+    override fun release() {
+        mediaPlayer.release()
     }
 
     companion object {

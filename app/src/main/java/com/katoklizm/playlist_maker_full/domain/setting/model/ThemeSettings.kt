@@ -5,4 +5,5 @@ interface ThemeSettings {
     fun setDarkTheme(): ThemeState
     fun lookAtTheme(): ThemeState
     fun saveCurrentTheme(theme: ThemeState)
+    fun lookAtThemeBoolean(): Boolean
 }

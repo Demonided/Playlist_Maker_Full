@@ -1,8 +1,11 @@
 package com.katoklizm.playlist_maker_full.ui.audioplayer.viewmodel
 
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.katoklizm.playlist_maker_full.data.player.PlayerState
+import com.katoklizm.playlist_maker_full.domain.player.PlayerState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.domain.player.PlayerInteractor
 import com.katoklizm.playlist_maker_full.util.Creator
@@ -10,24 +13,63 @@ import com.katoklizm.playlist_maker_full.util.Creator
 class AudioPlayerViewModel(
     private val playerInteractor: PlayerInteractor
 ) : ViewModel() {
+
+    private val _statePlayer = MutableLiveData(PlayerState.STATE_DEFAULT)
+    val statePlayer: LiveData<PlayerState> = _statePlayer
+
+    private val _timerState = MutableLiveData<String>()
+    val timerState: LiveData<String> = _timerState
+
+
     fun startPlayer() {
         playerInteractor.startPlayer()
+        _statePlayer.value = PlayerState.STATE_PLAYING
+        _timerState.postValue(playerInteractor.transferTime())
     }
 
     fun pausePlayer() {
         playerInteractor.pausePlayer()
+        _statePlayer.value = PlayerState.STATE_PAUSED
+        _timerState.postValue(playerInteractor.transferTime())
     }
 
     fun preparePlayer(track: Track?, completion: () -> Unit) {
-        playerInteractor.preparePlayer(track)
-    }
+        playerInteractor.preparePlayer(track, completion,
+            statusObserver = object : PlayerInteractor.StatusObserver {
+                override fun onPrepared() {
+                    _statePlayer.postValue(PlayerState.STATE_PREPARED)
+                }
 
-    fun startTimer() {
-        playerInteractor.startTimer()
+                override fun onCompletion() {
+                    _statePlayer.postValue(PlayerState.STATE_PREPARED)
+//                    _timerState.postValue("00:00")
+                }
+
+            })
     }
 
     fun playbackControl() {
-        playerInteractor.playbackControl()
+        when (playerStateListener()) {
+            PlayerState.STATE_PLAYING -> {
+                pausePlayer()
+                Log.d("StatePlayer", "Статус 1 во вьюМоделе")
+            }
+
+            PlayerState.STATE_PREPARED -> {
+                startPlayer()
+                Log.d("StatePlayer", "Статус 2 во вьюМоделе")
+            }
+
+            PlayerState.STATE_PAUSED -> {
+                startPlayer()
+                Log.d("StatePlayer", "Статус 2 во вьюМоделе")
+            }
+
+            else -> {
+                pausePlayer()
+                Log.d("StatePlayer", "Статус 3 во вьюМоделе")
+            }
+        }
     }
 
     fun transferTime(): String {
@@ -38,10 +80,13 @@ class AudioPlayerViewModel(
         return playerInteractor.playerStateListener()
     }
 
+    fun release() {
+        playerInteractor.release()
+    }
+
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
-                // 1
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return AudioPlayerViewModel(

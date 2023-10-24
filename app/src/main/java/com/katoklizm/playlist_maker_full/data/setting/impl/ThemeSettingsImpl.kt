@@ -9,31 +9,26 @@ import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
 
 class ThemeSettingsImpl(private val application: App): ThemeSettings {
 
-    companion object{
-        const val THEME_PREFS = "theme_prefs"
-        const val THEME_KEY = "app_theme"
-    }
-
     private val themeSharedPreference: SharedPreferences =
         application.getSharedPreferences(THEME_PREFS, Context.MODE_PRIVATE)
 
     override fun setLightTheme(): ThemeState {
-        themeSharedPreference.edit().putBoolean(THEME_KEY, false).apply()
+        themeSharedPreference.edit().putBoolean(THEME_KEY, true).apply()
         Log.d("SaveLog", "Set: false")
         return ThemeState.LightTheme
     }
 
     override fun setDarkTheme(): ThemeState {
-        themeSharedPreference.edit().putBoolean(THEME_KEY, true).apply()
+        themeSharedPreference.edit().putBoolean(THEME_KEY, false).apply()
         Log.d("SaveLog", "Set: true")
         return ThemeState.DarkTheme
     }
 
     override fun lookAtTheme(): ThemeState {
-        return if (themeSharedPreference.getBoolean(THEME_KEY, false)){
-            ThemeState.DarkTheme
-        } else {
+        return if (themeSharedPreference.getBoolean(THEME_KEY, true)){
             ThemeState.LightTheme
+        } else {
+            ThemeState.DarkTheme
         }
     }
 
@@ -48,5 +43,14 @@ class ThemeSettingsImpl(private val application: App): ThemeSettings {
                 setDarkTheme()
             }
         }
+    }
+
+    override fun lookAtThemeBoolean(): Boolean {
+        return themeSharedPreference.getBoolean(THEME_KEY, true)
+    }
+
+    companion object{
+        const val THEME_PREFS = "theme_prefs"
+        const val THEME_KEY = "app_theme"
     }
 }

@@ -1,7 +1,5 @@
 package com.katoklizm.playlist_maker_full.domain.player
 
-import com.katoklizm.playlist_maker_full.data.search.dto.TrackDto
-import com.katoklizm.playlist_maker_full.data.player.PlayerState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 
 interface PlayerRepository {
@@ -9,7 +7,11 @@ interface PlayerRepository {
 
     fun pausePlayer()
 
-    fun preparePlayer(track: Track?)
+    fun preparePlayer(
+        track: Track?,
+        completion: () -> Unit,
+        statusObserver: PlayerInteractor.StatusObserver
+    )
 
     fun startTimer()
 
@@ -18,4 +20,6 @@ interface PlayerRepository {
     fun playerStateReporter(): PlayerState
 
     fun transferTime(): String
+
+    fun release()
 }
