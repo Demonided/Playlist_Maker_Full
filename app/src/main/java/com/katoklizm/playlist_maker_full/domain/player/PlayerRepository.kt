@@ -7,9 +7,15 @@ interface PlayerRepository {
 
     fun pausePlayer()
 
-    fun preparePlayer(track: Track?)
+    fun preparePlayer(
+        track: Track?,
+        completion: () -> Unit,
+        statusObserver: PlayerInteractor.StatusObserver
+    )
 
     fun startTimer()
+
+    fun playbackControl()
 
     fun playerStateReporter(): PlayerState
 

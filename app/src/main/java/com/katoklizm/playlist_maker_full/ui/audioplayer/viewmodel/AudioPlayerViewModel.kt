@@ -14,22 +14,38 @@ class AudioPlayerViewModel(
     private val playerInteractor: PlayerInteractor
 ) : ViewModel() {
 
-    private val _statePlayer = MutableLiveData<PlayerState>()
+    private val _statePlayer = MutableLiveData(PlayerState.STATE_DEFAULT)
     val statePlayer: LiveData<PlayerState> = _statePlayer
+
+    private val _timerState = MutableLiveData<String>()
+    val timerState: LiveData<String> = _timerState
+
 
     fun startPlayer() {
         playerInteractor.startPlayer()
         _statePlayer.value = PlayerState.STATE_PLAYING
+        _timerState.postValue(playerInteractor.transferTime())
     }
 
     fun pausePlayer() {
         playerInteractor.pausePlayer()
         _statePlayer.value = PlayerState.STATE_PAUSED
+        _timerState.postValue(playerInteractor.transferTime())
     }
 
     fun preparePlayer(track: Track?, completion: () -> Unit) {
-        playerInteractor.preparePlayer(track)
-        _statePlayer.value = PlayerState.STATE_PREPARED
+        playerInteractor.preparePlayer(track, completion,
+            statusObserver = object : PlayerInteractor.StatusObserver {
+                override fun onPrepared() {
+                    _statePlayer.postValue(PlayerState.STATE_PREPARED)
+                }
+
+                override fun onCompletion() {
+                    _statePlayer.postValue(PlayerState.STATE_PREPARED)
+//                    _timerState.postValue("00:00")
+                }
+
+            })
     }
 
     fun playbackControl() {
@@ -39,7 +55,12 @@ class AudioPlayerViewModel(
                 Log.d("StatePlayer", "Статус 1 во вьюМоделе")
             }
 
-            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> {
+            PlayerState.STATE_PREPARED -> {
+                startPlayer()
+                Log.d("StatePlayer", "Статус 2 во вьюМоделе")
+            }
+
+            PlayerState.STATE_PAUSED -> {
                 startPlayer()
                 Log.d("StatePlayer", "Статус 2 во вьюМоделе")
             }

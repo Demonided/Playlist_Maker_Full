@@ -15,6 +15,8 @@ import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
 import com.katoklizm.playlist_maker_full.domain.player.PlayerState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.ui.audioplayer.viewmodel.AudioPlayerViewModel
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class AudioPlayerActivity : AppCompatActivity() {
     var binding: AudioPlayerBinding? = null
@@ -65,6 +67,12 @@ class AudioPlayerActivity : AppCompatActivity() {
         audioPlayerViewModel.statePlayer.observe(this) {
             renderState(it)
         }
+
+//        audioPlayerViewModel.timerState.observe(this) {
+//            binding?.audioPlayerTime?.text = SimpleDateFormat(
+//        "mm:ss", Locale.getDefault()
+//            ).format(it)
+//        }
 
         mainThreadHandler = Handler(Looper.getMainLooper())
 
@@ -135,6 +143,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             }
 
             else -> {
+                binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
                 audioPlayerViewModel.pausePlayer()
             }
         }

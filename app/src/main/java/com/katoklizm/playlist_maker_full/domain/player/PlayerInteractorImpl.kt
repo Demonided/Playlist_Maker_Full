@@ -14,17 +14,21 @@ class PlayerInteractorImpl : PlayerInteractor {
         return repository.pausePlayer()
     }
 
-    override fun preparePlayer(track: Track?) {
-        return repository.preparePlayer(track)
+    override fun preparePlayer(
+        track: Track?,
+        completion: () -> Unit,
+        statusObserver: PlayerInteractor.StatusObserver
+    ) {
+        return repository.preparePlayer(track, completion, statusObserver)
     }
 
     override fun startTimer() {
         return repository.startTimer()
     }
 
-//    override fun playbackControl() {
-//        return repository.playbackControl()
-//    }
+    override fun playbackControl() {
+        return repository.playbackControl()
+    }
 
     override fun playerStateListener(): PlayerState {
         return repository.playerStateReporter()

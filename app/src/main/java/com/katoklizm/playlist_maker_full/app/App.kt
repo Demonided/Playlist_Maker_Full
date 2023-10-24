@@ -1,9 +1,7 @@
 package com.katoklizm.playlist_maker_full.app
 
 import android.app.Application
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
-import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
 import com.katoklizm.playlist_maker_full.util.Creator
 
 class App : Application() {
@@ -19,7 +17,6 @@ class App : Application() {
         currentTheme = settingInteractor.lookAtThemeBoolean()
 
         render(currentTheme)
-        Log.d("SaveLog", "в АПП $currentTheme")
     }
 
     private fun render(state: Boolean) {
@@ -29,13 +26,6 @@ class App : Application() {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }
     }
-
-//    fun switchTheme(theme: ThemeState) {
-//        if (theme != currentTheme) {
-//            currentTheme = theme
-//            themeChanged = true
-//        }
-//    }
 
     companion object {
         lateinit var instance: App

@@ -7,13 +7,21 @@ interface PlayerInteractor {
 
     fun pausePlayer()
 
-    fun preparePlayer(track: Track?)
+    fun preparePlayer(track: Track?, completion: () -> Unit, statusObserver: StatusObserver)
 
     fun startTimer()
 
     fun playerStateListener(): PlayerState
 
+    fun playbackControl()
+
     fun transferTime(): String
 
     fun release()
+
+    interface StatusObserver {
+        fun onPrepared()
+
+        fun onCompletion()
+    }
 }
