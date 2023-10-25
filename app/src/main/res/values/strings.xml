@@ -17,6 +17,8 @@
     <string name="search_nothing_found">Ничего не нашлось</string>
     <string name="search_communication_problem">Проблемы со связью\n\nЗагрузка не удалась. Проверьте \nподключение к интернету</string>
     <string name="search_button_update">Обновить</string>
+    <string name="search_clear_history">Очистить историю</string>
+    <string name="search_you_search">Вы искали</string>
 
     <string name="track_trackTimeMillis">Длительность</string>
     <string name="track_trackName">Альбом</string>
