@@ -120,7 +120,7 @@
 
     <TextView
         android:id="@+id/audio_player_time"
-        style="@style/AudioPlayerTextStyleMiniDark"
+        style="@style/AudioPlayerTextStyleMiddleDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"

@@ -41,6 +41,7 @@ class AudioPlayerViewModel(
     fun pausePlayer() {
         playerInteractor.pausePlayer()
         _statePlayer.value = PlayerState.STATE_PAUSED
+        handler.removeCallbacks(runnable)
     }
 
     fun preparePlayer(track: Track?, completion: () -> Unit) {

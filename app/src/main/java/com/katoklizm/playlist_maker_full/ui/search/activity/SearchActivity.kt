@@ -34,9 +34,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
     private var enteredText: String = ""
 
-    private val trackHistoryList = ArrayList<Track>()
-    private val trackList = ArrayList<Track>()
-
     private lateinit var viewModel: SearchViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +50,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
         binding?.searchRecyclerMusicTrack?.layoutManager = LinearLayoutManager(this)
         binding?.searchRecyclerMusicTrack?.adapter = trackAdapter
-        trackAdapter.tracks = trackHistoryList
+        trackAdapter.tracks = viewModel.trackHistoryList
 
         binding?.settingBack?.setOnClickListener {
             finish()
@@ -173,10 +170,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         binding?.searchRecyclerMusicTrack?.visibility = View.VISIBLE
         binding?.searchProgressBar?.visibility = View.GONE
 
-        trackList.clear()
-        trackList.addAll(track)
-        trackAdapter.tracks = trackList
-        trackAdapter.updateTrackList(trackList)
+        viewModel.trackList.clear()
+        viewModel.trackList.addAll(track)
+        trackAdapter.tracks = viewModel.trackList
+        trackAdapter.updateTrackList(viewModel.trackList)
         trackAdapter.notifyDataSetChanged()
     }
 

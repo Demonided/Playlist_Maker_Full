@@ -15,6 +15,9 @@ class SearchViewModel(
 
     private val stateLiveData = MutableLiveData<SearchState>()
 
+    val trackList = ArrayList<Track>()
+    val trackHistoryList = ArrayList<Track>()
+
     fun observeState(): LiveData<SearchState> = stateLiveData
 
     private fun renderState(state: SearchState) {
@@ -32,7 +35,6 @@ class SearchViewModel(
             }
         }
     }
-
 
     fun onFocusChanged(hasFocus: Boolean, searchText: String) {
         if (hasFocus && searchText.isEmpty()) {
