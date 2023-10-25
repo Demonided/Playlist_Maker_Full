@@ -13,13 +13,7 @@ interface PlayerRepository {
         statusObserver: PlayerInteractor.StatusObserver
     )
 
-    fun startTimer()
-
-    fun playbackControl()
-
-    fun playerStateReporter(): PlayerState
-
-    fun transferTime(): String
+    fun currentPosition(): Int
 
     fun release()
 }
