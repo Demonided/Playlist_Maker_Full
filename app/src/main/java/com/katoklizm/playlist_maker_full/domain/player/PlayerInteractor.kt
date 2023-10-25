@@ -9,15 +9,9 @@ interface PlayerInteractor {
 
     fun preparePlayer(track: Track?, completion: () -> Unit, statusObserver: StatusObserver)
 
-    fun startTimer()
-
-    fun playerStateListener(): PlayerState
-
-    fun playbackControl()
-
-    fun transferTime(): String
-
     fun release()
+
+    fun currentPosition(): Int
 
     interface StatusObserver {
         fun onPrepared()

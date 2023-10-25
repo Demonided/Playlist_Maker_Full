@@ -22,24 +22,12 @@ class PlayerInteractorImpl : PlayerInteractor {
         return repository.preparePlayer(track, completion, statusObserver)
     }
 
-    override fun startTimer() {
-        return repository.startTimer()
-    }
-
-    override fun playbackControl() {
-        return repository.playbackControl()
-    }
-
-    override fun playerStateListener(): PlayerState {
-        return repository.playerStateReporter()
-    }
-
-    override fun transferTime(): String {
-        return repository.transferTime()
-    }
-
     override fun release() {
         repository.release()
+    }
+
+    override fun currentPosition(): Int {
+        return repository.currentPosition()
     }
 
 }

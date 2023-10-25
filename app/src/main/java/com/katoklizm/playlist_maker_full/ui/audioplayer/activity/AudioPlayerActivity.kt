@@ -3,7 +3,6 @@ package com.katoklizm.playlist_maker_full.ui.audioplayer.activity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -68,17 +67,13 @@ class AudioPlayerActivity : AppCompatActivity() {
             renderState(it)
         }
 
-//        audioPlayerViewModel.timerState.observe(this) {
-//            binding?.audioPlayerTime?.text = SimpleDateFormat(
-//        "mm:ss", Locale.getDefault()
-//            ).format(it)
-//        }
+        audioPlayerViewModel.timerState.observe(this) {
+            binding?.audioPlayerTime?.text = SimpleDateFormat(
+        "mm:ss", Locale.getDefault()
+            ).format(it)
+        }
 
         mainThreadHandler = Handler(Looper.getMainLooper())
-
-        mainThreadHandler?.post(
-            updateTimer()
-        )
 
         audioPlayerViewModel.preparePlayer(track){
             // доработать в процесе отображения не активной кнопки
@@ -95,7 +90,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        if (playerState == PlayerState.STATE_PLAYING) {
+        if (audioPlayerViewModel.playerStateListener() == PlayerState.STATE_PLAYING) {
             audioPlayerViewModel.pausePlayer()
             binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
         }
@@ -104,7 +99,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (playerState == PlayerState.STATE_PLAYING) {
+        if (audioPlayerViewModel.playerStateListener() == PlayerState.STATE_PLAYING) {
             audioPlayerViewModel.startPlayer()
         }
     }
@@ -119,7 +114,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (playerState == PlayerState.STATE_PLAYING) {
+        if (audioPlayerViewModel.playerStateListener() == PlayerState.STATE_PLAYING) {
             audioPlayerViewModel.pausePlayer()
         }
         super.onBackPressed()
@@ -129,22 +124,18 @@ class AudioPlayerActivity : AppCompatActivity() {
         when (state) {
             PlayerState.STATE_PLAYING -> {
                 binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_pause_song)
-                Log.d("StatePlayer", "Статус 1 в Активити")
             }
 
             PlayerState.STATE_PREPARED -> {
                 binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
-                Log.d("StatePlayer", "Статус 2 в Активити")
             }
 
             PlayerState.STATE_PAUSED -> {
                 binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
-                Log.d("StatePlayer", "Статус 3 в Активити")
             }
 
-            else -> {
+            PlayerState.STATE_DEFAULT -> {
                 binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
-                audioPlayerViewModel.pausePlayer()
             }
         }
     }
@@ -152,17 +143,5 @@ class AudioPlayerActivity : AppCompatActivity() {
     fun preparePlayer() {
         binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
         binding?.audioPlayerPlaySong?.isEnabled = true
-    }
-
-    private fun updateTimer(): Runnable {
-        val updatedTimer = Runnable {
-            binding?.audioPlayerTime?.text = audioPlayerViewModel.transferTime()
-            mainThreadHandler?.postDelayed(updateTimer(), DELAY)
-        }
-        return updatedTimer
-    }
-
-    companion object {
-        const val DELAY = 100L
     }
 }

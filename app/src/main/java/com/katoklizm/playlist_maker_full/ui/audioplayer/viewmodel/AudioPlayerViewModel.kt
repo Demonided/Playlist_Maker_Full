@@ -1,6 +1,7 @@
 package com.katoklizm.playlist_maker_full.ui.audioplayer.viewmodel
 
-import android.util.Log
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,20 +18,29 @@ class AudioPlayerViewModel(
     private val _statePlayer = MutableLiveData(PlayerState.STATE_DEFAULT)
     val statePlayer: LiveData<PlayerState> = _statePlayer
 
-    private val _timerState = MutableLiveData<String>()
-    val timerState: LiveData<String> = _timerState
+    private val _timerState = MutableLiveData(0)
+    val timerState: LiveData<Int> = _timerState
 
+    private val handler = Handler(Looper.getMainLooper())
+    private val runnable = object : Runnable {
+        override fun run() {
+            _timerState.postValue(
+                playerInteractor.currentPosition()
+            )
+            handler.postDelayed(this, DELAY)
+        }
+    }
 
     fun startPlayer() {
         playerInteractor.startPlayer()
         _statePlayer.value = PlayerState.STATE_PLAYING
-        _timerState.postValue(playerInteractor.transferTime())
+
+        handler.post(runnable)
     }
 
     fun pausePlayer() {
         playerInteractor.pausePlayer()
         _statePlayer.value = PlayerState.STATE_PAUSED
-        _timerState.postValue(playerInteractor.transferTime())
     }
 
     fun preparePlayer(track: Track?, completion: () -> Unit) {
@@ -42,7 +52,8 @@ class AudioPlayerViewModel(
 
                 override fun onCompletion() {
                     _statePlayer.postValue(PlayerState.STATE_PREPARED)
-//                    _timerState.postValue("00:00")
+                    handler.removeCallbacks(runnable)
+                    _timerState.postValue(0)
                 }
 
             })
@@ -52,32 +63,24 @@ class AudioPlayerViewModel(
         when (playerStateListener()) {
             PlayerState.STATE_PLAYING -> {
                 pausePlayer()
-                Log.d("StatePlayer", "Статус 1 во вьюМоделе")
             }
 
             PlayerState.STATE_PREPARED -> {
                 startPlayer()
-                Log.d("StatePlayer", "Статус 2 во вьюМоделе")
             }
 
             PlayerState.STATE_PAUSED -> {
                 startPlayer()
-                Log.d("StatePlayer", "Статус 2 во вьюМоделе")
             }
 
-            else -> {
+            PlayerState.STATE_DEFAULT -> {
                 pausePlayer()
-                Log.d("StatePlayer", "Статус 3 во вьюМоделе")
             }
         }
     }
 
-    fun transferTime(): String {
-        return playerInteractor.transferTime()
-    }
-
     fun playerStateListener(): PlayerState {
-        return playerInteractor.playerStateListener()
+        return statePlayer.value ?: PlayerState.STATE_DEFAULT
     }
 
     fun release() {
@@ -85,6 +88,7 @@ class AudioPlayerViewModel(
     }
 
     companion object {
+        const val DELAY = 300L
         fun getViewModelFactory(): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
