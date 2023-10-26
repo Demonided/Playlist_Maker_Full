@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.audioplayer.AudioPlayerActivity">
+    tools:context=".ui.audioplayer.activity.AudioPlayerActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/left_guideline"
@@ -120,7 +120,7 @@
 
     <TextView
         android:id="@+id/audio_player_time"
-        style="@style/AudioPlayerTextStyleMiniDark"
+        style="@style/AudioPlayerTextStyleMiddleDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
@@ -133,11 +133,11 @@
 
     <TextView
         android:id="@+id/audio_player_textView_time"
+        style="@style/AudioPlayerRightTextStyleMiniDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:text="@string/track_trackTimeMillis"
-        android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@id/audio_player_textView_track_name"
         app:layout_constraintEnd_toStartOf="@id/audio_player_barrier"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
@@ -159,11 +159,11 @@
 
     <TextView
         android:id="@+id/audio_player_textView_track_name"
+        style="@style/AudioPlayerRightTextStyleMiniDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:text="@string/track_trackName"
-        android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@id/audio_player_textView_year"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/audio_player_textView_time" />
@@ -183,11 +183,11 @@
 
     <TextView
         android:id="@+id/audio_player_textView_year"
+        style="@style/AudioPlayerRightTextStyleMiniDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:text="@string/track_releaseDate"
-        android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@id/audio_player_textView_genre"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/audio_player_textView_track_name" />
@@ -206,11 +206,11 @@
 
     <TextView
         android:id="@+id/audio_player_textView_genre"
+        style="@style/AudioPlayerRightTextStyleMiniDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:text="@string/track_primaryGenreName"
-        android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@id/audio_player_textView_country"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/audio_player_textView_year" />
@@ -229,12 +229,12 @@
 
     <TextView
         android:id="@+id/audio_player_textView_country"
+        style="@style/AudioPlayerRightTextStyleMiniDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:padding="8dp"
         android:text="@string/track_country"
-        android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/audio_player_textView_genre" />

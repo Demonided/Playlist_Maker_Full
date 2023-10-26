@@ -1,19 +1,21 @@
 package com.katoklizm.playlist_maker_full.domain.player
 
-import com.katoklizm.playlist_maker_full.data.dto.TrackDto
-import com.katoklizm.playlist_maker_full.data.player.PlayerState
-import com.katoklizm.playlist_maker_full.domain.model.Track
+import com.katoklizm.playlist_maker_full.domain.search.model.Track
 
 interface PlayerInteractor {
     fun startPlayer()
 
     fun pausePlayer()
 
-    fun preparePlayer(track: Track?)
+    fun preparePlayer(track: Track?, completion: () -> Unit, statusObserver: StatusObserver)
 
-    fun startTimer()
+    fun release()
 
-    fun playbackControl()
+    fun currentPosition(): Int
 
-    fun playerStateListener(): PlayerState
+    interface StatusObserver {
+        fun onPrepared()
+
+        fun onCompletion()
+    }
 }
