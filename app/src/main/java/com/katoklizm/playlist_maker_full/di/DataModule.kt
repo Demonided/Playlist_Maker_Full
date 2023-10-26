@@ -5,6 +5,7 @@ import com.katoklizm.playlist_maker_full.app.App
 import com.katoklizm.playlist_maker_full.data.NetworkClient
 import com.katoklizm.playlist_maker_full.data.search.network.ITunesSearchApi
 import com.katoklizm.playlist_maker_full.data.search.network.RetrofitNetworkClient
+import com.katoklizm.playlist_maker_full.data.search.track.HistoryTrackManager
 import com.katoklizm.playlist_maker_full.data.setting.impl.ThemeSettingsImpl
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeSettings
 import org.koin.android.ext.koin.androidContext
@@ -29,6 +30,10 @@ val dataModule = module {
 
     single<NetworkClient> {
         RetrofitNetworkClient(androidContext())
+    }
+
+    single {
+        HistoryTrackManager(get())
     }
 
 

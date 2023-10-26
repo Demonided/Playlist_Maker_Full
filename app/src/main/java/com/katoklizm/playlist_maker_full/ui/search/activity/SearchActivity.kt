@@ -21,6 +21,7 @@ import com.katoklizm.playlist_maker_full.domain.search.SearchState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.ui.search.viewmodel.SearchViewModel
 import com.katoklizm.playlist_maker_full.ui.search.TrackAdapter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClickListener {
     var binding: ActivitySearchBinding? = null
@@ -34,15 +35,15 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
     private var enteredText: String = ""
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel by viewModel<SearchViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
 
-        viewModel =
-            ViewModelProvider(this, SearchViewModel.getModelFactory())[SearchViewModel::class.java]
+//        viewModel =
+//            ViewModelProvider(this, SearchViewModel.getModelFactory())[SearchViewModel::class.java]
 
         viewModel.observeState().observe(this) {
             render(it)
