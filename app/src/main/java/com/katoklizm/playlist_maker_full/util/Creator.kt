@@ -1,14 +1,12 @@
 package com.katoklizm.playlist_maker_full.util
 
-import android.app.Application
-import android.content.Context
 import com.katoklizm.playlist_maker_full.app.App
 import com.katoklizm.playlist_maker_full.data.search.network.RetrofitNetworkClient
 import com.katoklizm.playlist_maker_full.data.search.network.TrackRepositoryImpl
 import com.katoklizm.playlist_maker_full.data.player.impl.PlayerRepositoryImpl
 import com.katoklizm.playlist_maker_full.data.search.track.HistoryTrackManager
 import com.katoklizm.playlist_maker_full.data.setting.impl.ThemeSettingsImpl
-import com.katoklizm.playlist_maker_full.data.sharing.impl.ExternalNavigatorImpl
+import com.katoklizm.playlist_maker_full.data.sharing.impl.SettingRepositoryImpl
 import com.katoklizm.playlist_maker_full.domain.search.api.TrackInteractor
 import com.katoklizm.playlist_maker_full.domain.search.api.TrackRepository
 import com.katoklizm.playlist_maker_full.domain.search.impl.TrackInteractorImpl
@@ -18,7 +16,7 @@ import com.katoklizm.playlist_maker_full.domain.player.PlayerRepository
 import com.katoklizm.playlist_maker_full.domain.setting.SettingsInteractor
 import com.katoklizm.playlist_maker_full.domain.setting.impl.SettingInteractorImpl
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeSettings
-import com.katoklizm.playlist_maker_full.domain.sharing.ExternalNavigator
+import com.katoklizm.playlist_maker_full.domain.sharing.SettingRepository
 import com.katoklizm.playlist_maker_full.domain.sharing.SharingInteractor
 import com.katoklizm.playlist_maker_full.domain.sharing.impl.SharingInteractorImpl
 
@@ -29,7 +27,7 @@ object Creator {
         this.application = application
     }
 
-    private fun getTrackRepository(): TrackRepository {
+    private fun provideTrackRepository(): TrackRepository {
         return TrackRepositoryImpl(
             RetrofitNetworkClient(application),
             HistoryTrackManager(application)
@@ -37,7 +35,7 @@ object Creator {
     }
 
     fun provideTrackInteractor(): TrackInteractor {
-        return TrackInteractorImpl(getTrackRepository())
+        return TrackInteractorImpl(provideTrackRepository())
     }
 
     fun providePlayerRepository():PlayerRepository {
@@ -50,11 +48,11 @@ object Creator {
 
     //sharing
     fun provideSharingInteractor(): SharingInteractor {
-        return SharingInteractorImpl(provideExternalNavigator())
+        return SharingInteractorImpl(provideSettingRepository())
     }
 
-    fun provideExternalNavigator(): ExternalNavigator {
-        return ExternalNavigatorImpl(application)
+    fun provideSettingRepository(): SettingRepository {
+        return SettingRepositoryImpl(application)
     }
 
     //setting

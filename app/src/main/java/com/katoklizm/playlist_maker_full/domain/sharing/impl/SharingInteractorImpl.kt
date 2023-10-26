@@ -1,11 +1,11 @@
 package com.katoklizm.playlist_maker_full.domain.sharing.impl
 
-import com.katoklizm.playlist_maker_full.domain.sharing.ExternalNavigator
+import com.katoklizm.playlist_maker_full.domain.sharing.SettingRepository
 import com.katoklizm.playlist_maker_full.domain.sharing.SharingInteractor
 import com.katoklizm.playlist_maker_full.domain.sharing.model.EmailData
 
 class SharingInteractorImpl(
-    private val externalNavigator: ExternalNavigator
+    private val externalNavigator: SettingRepository
 ) : SharingInteractor {
     override fun shareApp() {
         externalNavigator.shareLink(getShareAppLink())

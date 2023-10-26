@@ -29,6 +29,7 @@ class HistoryTrackManager(application: Application) {
         prefs.edit()
             .putString(HISTORY_KEY, Gson().toJson(historyTrackList))
             .apply()
+
     }
 
     fun getHistory(): ArrayList<Track> {
@@ -41,7 +42,6 @@ class HistoryTrackManager(application: Application) {
         prefs.edit()
             .putString(HISTORY_KEY, Gson().toJson(searchHistoryTrackList))
             .apply()
-
     }
 
     fun clearSearchHistory() {
