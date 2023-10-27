@@ -7,20 +7,21 @@ import androidx.lifecycle.ViewModelProvider
 import com.katoklizm.playlist_maker_full.databinding.ActivitySettingBinding
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
 import com.katoklizm.playlist_maker_full.ui.setting.view_model.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingBinding
-    private lateinit var settingsViewModel: SettingsViewModel
+    private val settingsViewModel by viewModel<SettingsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        settingsViewModel = ViewModelProvider(
-            this,
-            SettingsViewModel.getViewModelFactory()
-        )[SettingsViewModel::class.java]
+//        settingsViewModel = ViewModelProvider(
+//            this,
+//            SettingsViewModel.getViewModelFactory()
+//        )[SettingsViewModel::class.java]
 
         binding.settingsShareAppText
         binding.settingsWriteSupportText

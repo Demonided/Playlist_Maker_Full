@@ -5,29 +5,29 @@ import com.katoklizm.playlist_maker_full.domain.sharing.SharingInteractor
 import com.katoklizm.playlist_maker_full.domain.sharing.model.EmailData
 
 class SharingInteractorImpl(
-    private val externalNavigator: SettingRepository
+    private val settingRepository: SettingRepository
 ) : SharingInteractor {
     override fun shareApp() {
-        externalNavigator.shareLink(getShareAppLink())
+        settingRepository.shareLink(getShareAppLink())
     }
 
     override fun openTerms() {
-        externalNavigator.openLink(getTermsLink())
+        settingRepository.openLink(getTermsLink())
     }
 
     override fun openSupport() {
-        externalNavigator.openEmail(getSupportEmailData())
+        settingRepository.openEmail(getSupportEmailData())
     }
 
     private fun getShareAppLink(): String {
-        return externalNavigator.getShapeLink()
+        return settingRepository.getShapeLink()
     }
 
     private fun getTermsLink(): String {
-        return externalNavigator.getTermsLink()
+        return settingRepository.getTermsLink()
     }
 
     private fun getSupportEmailData(): EmailData {
-        return externalNavigator.getSupportEmailData()
+        return settingRepository.getSupportEmailData()
     }
 }

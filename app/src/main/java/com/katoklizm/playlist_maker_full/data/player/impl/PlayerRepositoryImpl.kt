@@ -1,14 +1,9 @@
 package com.katoklizm.playlist_maker_full.data.player.impl
 
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import com.katoklizm.playlist_maker_full.domain.player.PlayerInteractor
-import com.katoklizm.playlist_maker_full.domain.player.PlayerState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.domain.player.PlayerRepository
-import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerRepositoryImpl : PlayerRepository {

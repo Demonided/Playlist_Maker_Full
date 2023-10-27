@@ -20,24 +20,15 @@ class SettingsViewModel(
     private val _stateChecked = MutableLiveData<Boolean>()
     val stateChecked:LiveData<Boolean> = _stateChecked
 
-    init {
-        sharingInteractor = Creator.provideSharingInteractor()
-        settingsInteractor = Creator.provideSettingInteractor()
-
-        _themeStateSetting.postValue(settingsInteractor.getAppTheme())
-        _stateChecked.postValue(settingsInteractor.lookAtThemeBoolean())
-    }
-
     fun themeSetting() {
-        val checkedState = settingsInteractor.lookAtThemeBoolean()
         if (getThemeState() is ThemeState.LightTheme) {
             settingsInteractor.setAppTheme(ThemeState.DarkTheme)
             _themeStateSetting.postValue(ThemeState.DarkTheme)
-            _stateChecked.postValue(!checkedState)
+            _stateChecked.postValue(!getThemeStateBoolean())
         } else {
             settingsInteractor.setAppTheme(ThemeState.LightTheme)
             _themeStateSetting.postValue(ThemeState.LightTheme)
-            _stateChecked.postValue(!checkedState)
+            _stateChecked.postValue(!getThemeStateBoolean())
         }
     }
 
@@ -59,18 +50,5 @@ class SettingsViewModel(
 
     fun settingTermUse() {
         sharingInteractor.openTerms()
-    }
-
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SettingsViewModel(
-                        Creator.provideSharingInteractor(),
-                        Creator.provideSettingInteractor()
-                    ) as T
-                }
-            }
     }
 }
