@@ -14,6 +14,7 @@ import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
 import com.katoklizm.playlist_maker_full.domain.player.PlayerState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.ui.audioplayer.viewmodel.AudioPlayerViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -28,17 +29,17 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private var playerState = PlayerState.STATE_DEFAULT
 
-    lateinit var audioPlayerViewModel: AudioPlayerViewModel
+    private val audioPlayerViewModel by viewModel<AudioPlayerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = AudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
 
-        audioPlayerViewModel = ViewModelProvider(
-            this,
-            AudioPlayerViewModel.getViewModelFactory()
-        )[AudioPlayerViewModel::class.java]
+//        audioPlayerViewModel = ViewModelProvider(
+//            this,
+//            AudioPlayerViewModel.getViewModelFactory()
+//        )[AudioPlayerViewModel::class.java]
 
         track = intent.getParcelableExtra(SAVE_TRACK)
 

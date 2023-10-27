@@ -90,14 +90,14 @@ class AudioPlayerViewModel(
 
     companion object {
         const val DELAY = 300L
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return AudioPlayerViewModel(
-                        Creator.providePlayerInteractor()
-                    ) as T
-                }
-            }
+//        fun getViewModelFactory(): ViewModelProvider.Factory =
+//            object : ViewModelProvider.Factory {
+//                @Suppress("UNCHECKED_CAST")
+//                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//                    return AudioPlayerViewModel(
+//                        Creator.providePlayerInteractor()
+//                    ) as T
+//                }
+//            }
     }
 }
