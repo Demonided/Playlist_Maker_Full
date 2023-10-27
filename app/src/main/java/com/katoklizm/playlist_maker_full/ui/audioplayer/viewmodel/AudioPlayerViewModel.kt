@@ -13,6 +13,7 @@ class AudioPlayerViewModel(
     private val playerInteractor: PlayerInteractor
 ) : ViewModel() {
 
+
     private val _statePlayer = MutableLiveData(PlayerState.STATE_DEFAULT)
     val statePlayer: LiveData<PlayerState> = _statePlayer
 
@@ -54,7 +55,6 @@ class AudioPlayerViewModel(
                     handler.removeCallbacks(runnable)
                     _timerState.postValue(0)
                 }
-
             })
     }
 
@@ -73,7 +73,7 @@ class AudioPlayerViewModel(
             }
 
             PlayerState.STATE_DEFAULT -> {
-                pausePlayer()
+
             }
         }
     }
@@ -86,16 +86,12 @@ class AudioPlayerViewModel(
         playerInteractor.release()
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        playerInteractor.release()
+    }
+
     companion object {
         const val DELAY = 300L
-//        fun getViewModelFactory(): ViewModelProvider.Factory =
-//            object : ViewModelProvider.Factory {
-//                @Suppress("UNCHECKED_CAST")
-//                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//                    return AudioPlayerViewModel(
-//                        Creator.providePlayerInteractor()
-//                    ) as T
-//                }
-//            }
     }
 }
