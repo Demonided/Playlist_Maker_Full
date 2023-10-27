@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'com.katoklizm.playlist_maker_full'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.katoklizm.playlist_maker_full"
@@ -37,6 +37,7 @@ android {
 }
 
 dependencies {
+    implementation "io.insert-koin:koin-android:3.3.0"
 
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'

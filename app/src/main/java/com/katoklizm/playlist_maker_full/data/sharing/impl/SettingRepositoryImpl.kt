@@ -4,10 +4,10 @@ import android.content.Intent
 import android.net.Uri
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.app.App
-import com.katoklizm.playlist_maker_full.domain.sharing.ExternalNavigator
+import com.katoklizm.playlist_maker_full.domain.sharing.SettingRepository
 import com.katoklizm.playlist_maker_full.domain.sharing.model.EmailData
 
-class ExternalNavigatorImpl(private val application: App): ExternalNavigator {
+class SettingRepositoryImpl(private val application: App): SettingRepository {
     override fun shareLink(shareAppLink: String) {
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"
