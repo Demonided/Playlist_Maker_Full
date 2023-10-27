@@ -18,15 +18,20 @@ class SettingsViewModel(
     private val _stateChecked = MutableLiveData<Boolean>()
     val stateChecked:LiveData<Boolean> = _stateChecked
 
+    init {
+        _themeStateSetting.postValue(settingsInteractor.getAppTheme())
+        _stateChecked.postValue(settingsInteractor.lookAtThemeBoolean())
+    }
+
     fun themeSetting() {
         if (getThemeState() is ThemeState.LightTheme) {
             settingsInteractor.setAppTheme(ThemeState.DarkTheme)
             _themeStateSetting.postValue(ThemeState.DarkTheme)
-            _stateChecked.postValue(!getThemeStateBoolean())
+            _stateChecked.postValue(getThemeStateBoolean())
         } else {
             settingsInteractor.setAppTheme(ThemeState.LightTheme)
             _themeStateSetting.postValue(ThemeState.LightTheme)
-            _stateChecked.postValue(!getThemeStateBoolean())
+            _stateChecked.postValue(getThemeStateBoolean())
         }
     }
 
