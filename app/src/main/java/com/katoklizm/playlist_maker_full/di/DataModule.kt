@@ -2,6 +2,7 @@ package com.katoklizm.playlist_maker_full.di
 
 import android.content.Context
 import com.katoklizm.playlist_maker_full.app.App
+import com.katoklizm.playlist_maker_full.app.App.Companion.BASE_URL
 import com.katoklizm.playlist_maker_full.data.NetworkClient
 import com.katoklizm.playlist_maker_full.data.search.network.ITunesSearchApi
 import com.katoklizm.playlist_maker_full.data.search.network.RetrofitNetworkClient
@@ -24,7 +25,7 @@ val dataModule = module {
     single<ITunesSearchApi> {
         Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("http://itunes.apple.com")
+            .baseUrl(BASE_URL)
             .build()
             .create(ITunesSearchApi::class.java)
     }
@@ -44,10 +45,6 @@ val dataModule = module {
 
     single<ThemeSettings> {
         ThemeSettingsImpl(get())
-    }
-
-    single {
-
     }
 }
 
