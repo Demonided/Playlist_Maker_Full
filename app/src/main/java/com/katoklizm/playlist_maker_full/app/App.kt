@@ -7,7 +7,6 @@ import com.katoklizm.playlist_maker_full.di.interactorModule
 import com.katoklizm.playlist_maker_full.di.repositoryModule
 import com.katoklizm.playlist_maker_full.di.viewModelModule
 import com.katoklizm.playlist_maker_full.domain.setting.SettingsInteractor
-import com.katoklizm.playlist_maker_full.util.Creator
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin

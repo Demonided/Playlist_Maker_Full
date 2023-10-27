@@ -3,11 +3,9 @@ package com.katoklizm.playlist_maker_full.ui.setting.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.katoklizm.playlist_maker_full.domain.setting.SettingsInteractor
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
 import com.katoklizm.playlist_maker_full.domain.sharing.SharingInteractor
-import com.katoklizm.playlist_maker_full.util.Creator
 
 class SettingsViewModel(
     private var sharingInteractor: SharingInteractor,

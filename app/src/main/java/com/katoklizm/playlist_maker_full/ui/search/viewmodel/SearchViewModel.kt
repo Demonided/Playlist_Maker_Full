@@ -3,11 +3,9 @@ package com.katoklizm.playlist_maker_full.ui.search.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.katoklizm.playlist_maker_full.domain.search.api.TrackInteractor
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.domain.search.SearchState
-import com.katoklizm.playlist_maker_full.util.Creator
 
 class SearchViewModel(
     private val trackInteractor: TrackInteractor
@@ -80,17 +78,5 @@ class SearchViewModel(
                 }
             )
         }
-    }
-
-    companion object {
-//        fun getModelFactory(): ViewModelProvider.Factory =
-//            object : ViewModelProvider.Factory {
-//                @Suppress("UNCHECKED_CAST")
-//                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//                    return SearchViewModel(
-//                        Creator.provideTrackInteractor()
-//                    ) as T
-//                }
-//            }
     }
 }
