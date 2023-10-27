@@ -3,6 +3,8 @@ package com.katoklizm.playlist_maker_full.ui.audioplayer.activity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.PersistableBundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -35,11 +37,6 @@ class AudioPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = AudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
-
-//        audioPlayerViewModel = ViewModelProvider(
-//            this,
-//            AudioPlayerViewModel.getViewModelFactory()
-//        )[AudioPlayerViewModel::class.java]
 
         track = intent.getParcelableExtra(SAVE_TRACK)
 
@@ -91,34 +88,12 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
+        super.onPause()
+        Log.d("State_Player", "State ${audioPlayerViewModel.playerStateListener()}")
         if (audioPlayerViewModel.playerStateListener() == PlayerState.STATE_PLAYING) {
             audioPlayerViewModel.pausePlayer()
             binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
         }
-        super.onPause()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (audioPlayerViewModel.playerStateListener() == PlayerState.STATE_PLAYING) {
-            audioPlayerViewModel.startPlayer()
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        audioPlayerViewModel.release()
-        timerRunnable?.let {
-            mainThreadHandler?.removeCallbacks(it)
-            timerRunnable = null
-        }
-    }
-
-    override fun onBackPressed() {
-        if (audioPlayerViewModel.playerStateListener() == PlayerState.STATE_PLAYING) {
-            audioPlayerViewModel.pausePlayer()
-        }
-        super.onBackPressed()
     }
 
     private fun renderState(state: PlayerState) {

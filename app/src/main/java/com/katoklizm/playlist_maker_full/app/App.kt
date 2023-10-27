@@ -37,5 +37,6 @@ class App : Application() {
 
     companion object {
         const val APP_SHARED = "app_shared"
+        const val BASE_URL = "http://itunes.apple.com"
     }
 }
