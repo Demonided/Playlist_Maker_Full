@@ -11,19 +11,17 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
-import com.katoklizm.playlist_maker_full.ui.audioplayer.activity.AudioPlayerActivity
 import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
+import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
 import com.katoklizm.playlist_maker_full.domain.search.SearchState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
-import com.katoklizm.playlist_maker_full.ui.search.viewmodel.SearchViewModel
+import com.katoklizm.playlist_maker_full.ui.audioplayer.activity.AudioPlayerActivity
+import com.katoklizm.playlist_maker_full.ui.common.BaseActivity
 import com.katoklizm.playlist_maker_full.ui.search.TrackAdapter
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.katoklizm.playlist_maker_full.ui.search.viewmodel.SearchViewModel
 
-class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClickListener {
+class SearchActivity : BaseActivity<SearchState, SearchViewModel>(), TrackAdapter.OnSaveTrackManagersClickListener {
     var binding: ActivitySearchBinding? = null
 
     private val handler = Handler(Looper.getMainLooper())
@@ -35,19 +33,11 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
     private var enteredText: String = ""
 
-    private val viewModel by viewModel<SearchViewModel>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
 
-//        viewModel =
-//            ViewModelProvider(this, SearchViewModel.getModelFactory())[SearchViewModel::class.java]
-
-        viewModel.observeState().observe(this) {
-            render(it)
-        }
 
         binding?.searchRecyclerMusicTrack?.layoutManager = LinearLayoutManager(this)
         binding?.searchRecyclerMusicTrack?.adapter = trackAdapter
@@ -105,7 +95,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         outState.putString(SEARCH_TEXT, enteredText)
     }
 
-    private fun render(state: SearchState) {
+    override fun renderState(state: SearchState) {
         when(state) {
             is SearchState.Loading -> showLoading()
             is SearchState.Empty -> showEmpty()
@@ -141,11 +131,13 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     }
 
     private fun showLoading() {
-        binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
-        binding?.searchErrorImage?.visibility = View.GONE
-        binding?.searchNothingFound?.visibility = View.GONE
-        binding?.searchRecyclerMusicTrack?.visibility = View.GONE
-        binding?.searchProgressBar?.visibility = View.VISIBLE
+        binding?.apply {
+            searchLinerLayoutHistoryTrack.visibility = View.GONE
+            searchErrorImage.visibility = View.GONE
+            searchNothingFound.visibility = View.GONE
+            searchRecyclerMusicTrack.visibility = View.GONE
+            searchProgressBar.visibility = View.VISIBLE
+        }
     }
 
     private fun showEmpty() {
@@ -178,6 +170,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
         trackAdapter.notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun showContentListSaveTrack(trackHistory: List<Track>) {
         binding?.searchLinerLayoutHistoryTrack?.visibility = View.VISIBLE
         binding?.searchErrorImage?.visibility = View.GONE
