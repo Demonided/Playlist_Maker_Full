@@ -1,6 +1,7 @@
 package com.katoklizm.playlist_maker_full.di
 
 import android.content.Context
+import android.media.MediaPlayer
 import com.katoklizm.playlist_maker_full.app.App
 import com.katoklizm.playlist_maker_full.app.App.Companion.BASE_URL
 import com.katoklizm.playlist_maker_full.data.NetworkClient
@@ -45,6 +46,10 @@ val dataModule = module {
 
     single<ThemeSettings> {
         ThemeSettingsImpl(get())
+    }
+
+    factory {
+        MediaPlayer()
     }
 }
 
