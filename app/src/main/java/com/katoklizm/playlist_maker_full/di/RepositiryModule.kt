@@ -19,7 +19,7 @@ val repositoryModule = module {
     }
 
     factory<PlayerRepository> {
-        PlayerRepositoryImpl()
+        PlayerRepositoryImpl(get())
     }
 
 }
