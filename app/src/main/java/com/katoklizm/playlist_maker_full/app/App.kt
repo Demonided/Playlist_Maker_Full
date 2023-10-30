@@ -2,20 +2,28 @@ package com.katoklizm.playlist_maker_full.app
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.katoklizm.playlist_maker_full.util.Creator
+import com.katoklizm.playlist_maker_full.di.dataModule
+import com.katoklizm.playlist_maker_full.di.interactorModule
+import com.katoklizm.playlist_maker_full.di.repositoryModule
+import com.katoklizm.playlist_maker_full.di.viewModelModule
+import com.katoklizm.playlist_maker_full.domain.setting.SettingsInteractor
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class App : Application() {
     var currentTheme: Boolean = false
-    private var themeChanged = false
 
     override fun onCreate() {
         super.onCreate()
-        instance = this
-        Creator.init(this)
+        startKoin {
+            androidContext(this@App)
+            modules(dataModule, repositoryModule, interactorModule, viewModelModule)
+        }
 
-        val settingInteractor = Creator.provideSettingInteractor()
-        currentTheme = settingInteractor.lookAtThemeBoolean()
+        val settingsInteractor : SettingsInteractor by inject()
 
+        currentTheme = settingsInteractor.lookAtThemeBoolean()
         render(currentTheme)
     }
 
@@ -28,7 +36,7 @@ class App : Application() {
     }
 
     companion object {
-        lateinit var instance: App
-            private set
+        const val APP_SHARED = "app_shared"
+        const val BASE_URL = "http://itunes.apple.com"
     }
 }
