@@ -1,4 +1,4 @@
-package com.katoklizm.playlist_maker_full.ui.search.viewmodel
+package com.katoklizm.playlist_maker_full.presentation.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

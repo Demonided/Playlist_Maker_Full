@@ -1,4 +1,4 @@
-package com.katoklizm.playlist_maker_full.ui.audioplayer.viewmodel
+package com.katoklizm.playlist_maker_full.presentation.audioplayer
 
 import android.os.Handler
 import android.os.Looper

@@ -9,7 +9,8 @@ import com.katoklizm.playlist_maker_full.data.search.dto.TrackSearchRequest
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitNetworkClient(private val context: Context) : NetworkClient {
+class RetrofitNetworkClient(
+    private val context: Context) : NetworkClient {
 
     private val imdbBaseUrl = "https://itunes.apple.com"
 

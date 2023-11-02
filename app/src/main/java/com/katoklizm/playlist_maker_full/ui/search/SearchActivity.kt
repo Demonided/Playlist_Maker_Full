@@ -1,4 +1,4 @@
-package com.katoklizm.playlist_maker_full.ui.search.activity
+package com.katoklizm.playlist_maker_full.ui.search
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,15 +12,13 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
-import com.katoklizm.playlist_maker_full.ui.audioplayer.activity.AudioPlayerActivity
+import com.katoklizm.playlist_maker_full.ui.audioplayer.AudioPlayerActivity
 import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
 import com.katoklizm.playlist_maker_full.domain.search.SearchState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
-import com.katoklizm.playlist_maker_full.ui.search.viewmodel.SearchViewModel
-import com.katoklizm.playlist_maker_full.ui.search.TrackAdapter
+import com.katoklizm.playlist_maker_full.presentation.search.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClickListener {
