@@ -1,12 +1,11 @@
-package com.katoklizm.playlist_maker_full.ui.setting.activity
+package com.katoklizm.playlist_maker_full.ui.setting
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.ViewModelProvider
 import com.katoklizm.playlist_maker_full.databinding.ActivitySettingBinding
 import com.katoklizm.playlist_maker_full.domain.setting.model.ThemeState
-import com.katoklizm.playlist_maker_full.ui.setting.view_model.SettingsViewModel
+import com.katoklizm.playlist_maker_full.presentation.setting.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingActivity : AppCompatActivity() {

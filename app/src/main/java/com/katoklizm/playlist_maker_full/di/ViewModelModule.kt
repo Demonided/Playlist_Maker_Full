@@ -1,9 +1,9 @@
 package com.katoklizm.playlist_maker_full.di
 
-import com.katoklizm.playlist_maker_full.ui.audioplayer.viewmodel.AudioPlayerViewModel
-import com.katoklizm.playlist_maker_full.ui.medialibrary.MediaLibraryViewModel
-import com.katoklizm.playlist_maker_full.ui.search.viewmodel.SearchViewModel
-import com.katoklizm.playlist_maker_full.ui.setting.view_model.SettingsViewModel
+import com.katoklizm.playlist_maker_full.presentation.audioplayer.AudioPlayerViewModel
+import com.katoklizm.playlist_maker_full.presentation.medialibrary.MediaLibraryViewModel
+import com.katoklizm.playlist_maker_full.presentation.search.SearchViewModel
+import com.katoklizm.playlist_maker_full.presentation.setting.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

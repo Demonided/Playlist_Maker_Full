@@ -1,12 +1,10 @@
-package com.katoklizm.playlist_maker_full.ui.audioplayer.activity
+package com.katoklizm.playlist_maker_full.ui.audioplayer
 
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.PersistableBundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.katoklizm.playlist_maker_full.R
@@ -15,7 +13,7 @@ import com.katoklizm.playlist_maker_full.databinding.AudioPlayerBinding
 import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
 import com.katoklizm.playlist_maker_full.domain.player.PlayerState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
-import com.katoklizm.playlist_maker_full.ui.audioplayer.viewmodel.AudioPlayerViewModel
+import com.katoklizm.playlist_maker_full.presentation.audioplayer.AudioPlayerViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
