@@ -40,6 +40,7 @@
     <string name="playlist">Плейлисты</string>
 
     <string name="media_library_favorite_track_empty">Ваша медиатека пуста</string>
+    <string name="media_library_favorite_track_button_add_playlist">Новый плейлист</string>
     <string name="media_library_playlist_empty">Вы не создали \nни одного плейлиста</string>
 
 </resources>
