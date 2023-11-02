@@ -47,7 +47,7 @@
             android:textColor="@color/black"
             android:textSize="19sp"
             android:fontFamily="@font/ys_text_medium"
-            android:text="Ваша медиатека пуста"/>
+            android:text="@string/media_library_favorite_track_empty"/>
 
     </LinearLayout>
 

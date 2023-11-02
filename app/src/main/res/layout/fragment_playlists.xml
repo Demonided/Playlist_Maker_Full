@@ -61,7 +61,7 @@
             android:textColor="@color/black"
             android:textSize="19sp"
             android:fontFamily="@font/ys_text_medium"
-            android:text="Вы не создали \nни одного плейлиста"/>
+            android:text="@string/media_library_playlist_empty"/>
 
     </LinearLayout>
 
