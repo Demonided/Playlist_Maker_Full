@@ -13,8 +13,8 @@ class MediaLibraryAdapter(fragmentManager: FragmentManager,lifecycle: Lifecycle
 
     override fun createFragment(position: Int): Fragment {
         return when(position) {
-            0 -> FavoriteTrackFragment()
-            else -> PlaylistFragment()
+            0 -> FavoriteTrackFragment.newInstance()
+            else -> PlaylistFragment.newInstance()
         }
     }
 }
