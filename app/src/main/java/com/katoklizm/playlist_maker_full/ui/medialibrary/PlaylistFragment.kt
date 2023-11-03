@@ -32,7 +32,7 @@ class PlaylistFragment: Fragment() {
     companion object {
         private const val PLAYLIST = "playlist"
 
-        fun newInstance() = FavoriteTrackFragment().apply {
+        fun newInstance() = PlaylistFragment().apply {
             arguments = Bundle().apply {
 
             }
