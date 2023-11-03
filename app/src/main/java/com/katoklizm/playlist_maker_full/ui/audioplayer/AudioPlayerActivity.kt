@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AudioPlayerActivity : AppCompatActivity() {
-    var binding: AudioPlayerBinding? = null
+    private var binding: AudioPlayerBinding? = null
 
     private var track: Track? = null
 
