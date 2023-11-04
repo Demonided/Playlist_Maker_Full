@@ -1,12 +1,12 @@
-package com.katoklizm.playlist_maker_full.ui.main.activity
+package com.katoklizm.playlist_maker_full.ui.main
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.katoklizm.playlist_maker_full.databinding.ActivityMainBinding
 import com.katoklizm.playlist_maker_full.ui.medialibrary.MediaLibraryActivity
-import com.katoklizm.playlist_maker_full.ui.search.activity.SearchActivity
-import com.katoklizm.playlist_maker_full.ui.setting.activity.SettingActivity
+import com.katoklizm.playlist_maker_full.ui.search.SearchActivity
+import com.katoklizm.playlist_maker_full.ui.setting.SettingActivity
 
 class MainActivity : AppCompatActivity() {
     private var binding: ActivityMainBinding? = null

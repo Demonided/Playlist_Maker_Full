@@ -1,4 +1,4 @@
-package com.katoklizm.playlist_maker_full.ui.setting.view_model
+package com.katoklizm.playlist_maker_full.presentation.setting
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
