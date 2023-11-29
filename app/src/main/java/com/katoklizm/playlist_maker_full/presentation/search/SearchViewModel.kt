@@ -16,10 +16,17 @@ class SearchViewModel(
     val trackList = ArrayList<Track>()
     val trackHistoryList = ArrayList<Track>()
 
+    private val _isScreenPaused = MutableLiveData<Boolean>()
+    fun isScreenPaused(): LiveData<Boolean> = _isScreenPaused
+
     fun observeState(): LiveData<SearchState> = stateLiveData
 
     private fun renderState(state: SearchState) {
         stateLiveData.postValue(state)
+    }
+
+    fun activeFragment(state: Boolean) {
+        _isScreenPaused.postValue(state)
     }
 
     fun onTextChanged(searchText: String?) {
