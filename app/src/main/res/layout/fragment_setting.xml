@@ -38,6 +38,8 @@
             android:fontFamily="@font/ys_display_regular"
             android:text="@string/setting_night_subject"
             android:textSize="@dimen/settings_text_size"
+            android:thumbTint="@color/grey_blue"
+            android:trackTint="@color/light_grey_blue"
             tools:ignore="UseSwitchCompatOrMaterialXml,TouchTargetSizeCheck" />
     </LinearLayout>
 
