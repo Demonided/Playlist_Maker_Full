@@ -8,6 +8,7 @@ import com.katoklizm.playlist_maker_full.domain.search.SearchState
 import com.katoklizm.playlist_maker_full.domain.search.api.TrackInteractor
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -20,6 +21,7 @@ class SearchViewModel(
     val trackHistoryList = ArrayList<Track>()
 
     private var searchJob: Job? = null
+    private var latestSearchText: String? = null
 
     private val _isScreenPaused = MutableLiveData<Boolean>()
     fun isScreenPaused(): LiveData<Boolean> = _isScreenPaused
@@ -34,15 +36,17 @@ class SearchViewModel(
         _isScreenPaused.postValue(state)
     }
 
-    fun onTextChanged(searchText: String?) {
-        if (searchText.isNullOrBlank()) {
-            if (trackInteractor.readSearchHistory().isNotEmpty()) renderState(
-                SearchState.ContentListSaveTrack(
-                    trackInteractor.readSearchHistory()
-                )
-            ) else {
-                renderState(SearchState.EmptyScreen)
-            }
+    fun onTextChanged(searchText: String) {
+        if (latestSearchText == searchText) {
+            return
+        }
+
+        latestSearchText = searchText
+
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            searchRequest(searchText)
         }
     }
 
@@ -80,24 +84,6 @@ class SearchViewModel(
                         processResult(pair.first, pair.second)
                     }
             }
-
-//            trackInteractor.searchTrack(
-//                searchText, object : TrackInteractor.TrackConsumer {
-//                    override fun consume(foundTrack: List<Track>?, errorMessage: String?) {
-//                        if (foundTrack != null) {
-//                            if (foundTrack.isNotEmpty()) {
-//                                renderState(SearchState.ContentListSearchTrack(foundTrack))
-//                            } else {
-//                                renderState(SearchState.Empty(""))
-//                            }
-//                        }
-//
-//                        if (errorMessage != null) {
-//                            renderState(SearchState.Error(errorMessage))
-//                        }
-//                    }
-//                }
-//            )
         }
     }
 
@@ -120,5 +106,9 @@ class SearchViewModel(
                 renderState(SearchState.ContentListSearchTrack(track = track))
             }
         }
+    }
+
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }

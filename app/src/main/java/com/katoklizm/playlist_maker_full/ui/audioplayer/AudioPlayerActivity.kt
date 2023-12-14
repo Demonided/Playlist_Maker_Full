@@ -40,10 +40,11 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         binding?.audioPlayerNameSong?.text = track?.trackName
 
-       binding?.audioPlayerNameMusician?.text = track?.artistName
+        binding?.audioPlayerNameMusician?.text = track?.artistName
 
         binding?.audioPlayerTextViewTrackNameRead?.text = track?.trackName
-        binding?.audioPlayerTextViewYearRead?.text = track?.releaseDate?.let { ConstTrack.formatDate(it) }
+        binding?.audioPlayerTextViewYearRead?.text =
+            track?.releaseDate?.let { ConstTrack.formatDate(it) }
         binding?.audioPlayerTextViewGenreRead?.text = track?.primaryGenreName
         binding?.audioPlayerTextViewCountryRead?.text = track?.country
 
@@ -65,13 +66,13 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         audioPlayerViewModel.timerState.observe(this) {
             binding?.audioPlayerTime?.text = SimpleDateFormat(
-        "mm:ss", Locale.getDefault()
+                "mm:ss", Locale.getDefault()
             ).format(it)
         }
 
         mainThreadHandler = Handler(Looper.getMainLooper())
 
-        audioPlayerViewModel.preparePlayer(track){
+        audioPlayerViewModel.preparePlayer(track) {
             // доработать в процесе отображения не активной кнопки
             preparePlayer()
         }
