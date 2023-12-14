@@ -53,6 +53,7 @@ class AudioPlayerViewModel(
 
                 override fun onCompletion() {
                     _statePlayer.postValue(PlayerState.STATE_PREPARED)
+                    timerJob?.cancel()
                     _timerState.postValue(0)
                 }
             })
