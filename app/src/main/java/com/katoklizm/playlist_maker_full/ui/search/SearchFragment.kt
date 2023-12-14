@@ -8,21 +8,28 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.katoklizm.playlist_maker_full.databinding.ActivitySearchBinding
 import com.katoklizm.playlist_maker_full.ui.audioplayer.AudioPlayerActivity
 import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
+import com.katoklizm.playlist_maker_full.databinding.FragmentSearchBinding
 import com.katoklizm.playlist_maker_full.domain.search.SearchState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.presentation.search.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.math.log
 
-class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClickListener {
-    var binding: ActivitySearchBinding? = null
+class SearchFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickListener {
+
+    private var _binding: FragmentSearchBinding? = null
+    private val binding: FragmentSearchBinding
+        get() = _binding!!
 
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { searchTrack() }
@@ -35,44 +42,48 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
 
     private val viewModel by viewModel<SearchViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding!!.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
 
-//        viewModel =
-//            ViewModelProvider(this, SearchViewModel.getModelFactory())[SearchViewModel::class.java]
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        viewModel.observeState().observe(this) {
+        viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
 
-        binding?.searchRecyclerMusicTrack?.layoutManager = LinearLayoutManager(this)
-        binding?.searchRecyclerMusicTrack?.adapter = trackAdapter
-        trackAdapter.tracks = viewModel.trackHistoryList
+        viewModel.isScreenPaused().observe(viewLifecycleOwner) {
 
-        binding?.settingBack?.setOnClickListener {
-            finish()
         }
+
+        binding.searchRecyclerMusicTrack.layoutManager = LinearLayoutManager(requireContext())
+        binding.searchRecyclerMusicTrack.adapter = trackAdapter
+        trackAdapter.tracks = viewModel.trackHistoryList
 
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding?.searchClearButton?.visibility = clearButtonVisibility(s)
+                binding.searchClearButton.visibility = clearButtonVisibility(s)
                 viewModel.onTextChanged(s.toString())
                 searchDebounce()
             }
 
             override fun afterTextChanged(s: Editable?) {
-                enteredText = binding?.searchEditText?.text.toString()
+                enteredText = binding.searchEditText.text.toString()
             }
         }
 
-        binding?.searchEditText?.addTextChangedListener(textWatcher)
+        binding.searchEditText.addTextChangedListener(textWatcher)
 
-        binding?.searchEditText?.setOnEditorActionListener { _, actionId, _ ->
+        binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchTrack()
                 true
@@ -80,27 +91,45 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
             false
         }
 
-        binding?.searchEditText?.setOnFocusChangeListener { _, hasFocus ->
-            viewModel.onFocusChanged(hasFocus, binding?.searchEditText?.text.toString())
+        binding.searchEditText.setOnFocusChangeListener { _, hasFocus ->
+            viewModel.onFocusChanged(hasFocus, binding.searchEditText.text.toString())
         }
 
-        binding?.searchClearButton?.setOnClickListener {
-            binding?.searchEditText?.text?.clear()
+        binding.searchClearButton.setOnClickListener {
+            binding.searchEditText.text?.clear()
             closeKeyboard()
         }
 
-        binding?.searchUpdatePage?.setOnClickListener {
+        binding.searchUpdatePage.setOnClickListener {
             viewModel.refreshSearchButton(enteredText)
         }
 
-        binding?.searchClearHistory?.setOnClickListener {
+        binding.searchClearHistory.setOnClickListener {
             viewModel.clearSearchHistory()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_TEXT, enteredText)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.refreshSearchButton("")
+        viewModel.activeFragment(false)
+        Log.d("LogStateFragment", "Статус сейчас ${viewModel.isScreenPaused()}")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.activeFragment(true)
+        Log.d("LogStateFragment", "Статус сейчас ${viewModel.isScreenPaused()}")
     }
 
     private fun render(state: SearchState) {
@@ -115,8 +144,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     }
 
     private fun closeKeyboard() {
-        val imputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imputMethodManager.hideSoftInputFromWindow(binding?.searchEditText?.windowToken, 0)
+        val imputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imputMethodManager.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -139,35 +168,35 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     }
 
     private fun showLoading() {
-        binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
-        binding?.searchErrorImage?.visibility = View.GONE
-        binding?.searchNothingFound?.visibility = View.GONE
-        binding?.searchRecyclerMusicTrack?.visibility = View.GONE
-        binding?.searchProgressBar?.visibility = View.VISIBLE
+        binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
+        binding.searchErrorImage.visibility = View.GONE
+        binding.searchNothingFound.visibility = View.GONE
+        binding.searchRecyclerMusicTrack.visibility = View.GONE
+        binding.searchProgressBar.visibility = View.VISIBLE
     }
 
     private fun showEmpty() {
-        binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
-        binding?.searchErrorImage?.visibility = View.GONE
-        binding?.searchNothingFound?.visibility = View.VISIBLE
-        binding?.searchRecyclerMusicTrack?.visibility = View.GONE
-        binding?.searchProgressBar?.visibility = View.GONE
+        binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
+        binding.searchErrorImage.visibility = View.GONE
+        binding.searchNothingFound.visibility = View.VISIBLE
+        binding.searchRecyclerMusicTrack.visibility = View.GONE
+        binding.searchProgressBar.visibility = View.GONE
     }
 
     private fun showError() {
-        binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
-        binding?.searchErrorImage?.visibility = View.VISIBLE
-        binding?.searchNothingFound?.visibility = View.GONE
-        binding?.searchRecyclerMusicTrack?.visibility = View.GONE
-        binding?.searchProgressBar?.visibility = View.GONE
+        binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
+        binding.searchErrorImage.visibility = View.VISIBLE
+        binding.searchNothingFound.visibility = View.GONE
+        binding.searchRecyclerMusicTrack.visibility = View.GONE
+        binding.searchProgressBar.visibility = View.GONE
     }
 
     private fun showContentListSearchTrack(track: List<Track>) {
-        binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
-        binding?.searchErrorImage?.visibility = View.GONE
-        binding?.searchNothingFound?.visibility = View.GONE
-        binding?.searchRecyclerMusicTrack?.visibility = View.VISIBLE
-        binding?.searchProgressBar?.visibility = View.GONE
+        binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
+        binding.searchErrorImage.visibility = View.GONE
+        binding.searchNothingFound.visibility = View.GONE
+        binding.searchRecyclerMusicTrack.visibility = View.VISIBLE
+        binding.searchProgressBar.visibility = View.GONE
 
         viewModel.trackList.clear()
         viewModel.trackList.addAll(track)
@@ -177,11 +206,11 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     }
 
     private fun showContentListSaveTrack(trackHistory: List<Track>) {
-        binding?.searchLinerLayoutHistoryTrack?.visibility = View.VISIBLE
-        binding?.searchErrorImage?.visibility = View.GONE
-        binding?.searchNothingFound?.visibility = View.GONE
-        binding?.searchRecyclerMusicTrack?.visibility = View.VISIBLE
-        binding?.searchProgressBar?.visibility = View.GONE
+        binding.searchLinerLayoutHistoryTrack.visibility = View.VISIBLE
+        binding.searchErrorImage.visibility = View.GONE
+        binding.searchNothingFound.visibility = View.GONE
+        binding.searchRecyclerMusicTrack.visibility = View.VISIBLE
+        binding.searchProgressBar.visibility = View.GONE
 
         trackAdapter.tracks = trackHistory as ArrayList<Track>
         trackAdapter.updateTrackList(trackHistory)
@@ -189,11 +218,11 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     }
 
     private fun showEmptyScreen() {
-        binding?.searchLinerLayoutHistoryTrack?.visibility = View.GONE
-        binding?.searchErrorImage?.visibility = View.GONE
-        binding?.searchNothingFound?.visibility = View.GONE
-        binding?.searchRecyclerMusicTrack?.visibility = View.GONE
-        binding?.searchProgressBar?.visibility = View.GONE
+        binding.searchLinerLayoutHistoryTrack.visibility = View.GONE
+        binding.searchErrorImage.visibility = View.GONE
+        binding.searchNothingFound.visibility = View.GONE
+        binding.searchRecyclerMusicTrack.visibility = View.GONE
+        binding.searchProgressBar.visibility = View.GONE
     }
 
     private fun clickDebounce(): Boolean {
@@ -206,7 +235,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.OnSaveTrackManagersClic
     }
 
     private fun openAudioPlayer(track: Track) {
-        val intent = Intent(this, AudioPlayerActivity::class.java)
+        val intent = Intent(requireContext(), AudioPlayerActivity::class.java)
         intent.putExtra(SAVE_TRACK, track)
         startActivity(intent)
     }
