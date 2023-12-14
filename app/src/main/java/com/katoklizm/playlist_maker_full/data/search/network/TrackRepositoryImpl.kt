@@ -7,36 +7,41 @@ import com.katoklizm.playlist_maker_full.data.search.track.HistoryTrackManager
 import com.katoklizm.playlist_maker_full.domain.search.api.TrackRepository
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.util.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class TrackRepositoryImpl(
     private val networkClient: NetworkClient,
     private val localStorage: HistoryTrackManager
 ) : TrackRepository {
-    override fun searchTrack(term: String): Resource<List<Track>> {
+    override fun searchTrack(term: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TrackSearchRequest(term = term))
 
-        return when(response.resultCode) {
+        when(response.resultCode) {
             -1 -> {
-                Resource.Error("Проверьте подключение к интернету")
+                emit(Resource.Error("Проверьте подключение к интернету"))
             }
             200 -> {
-                Resource.Success((response as TrackSearchResponse).results.map {
-                    Track(
-                        it.id,
-                        it.trackName,
-                        it.artistName,
-                        it.trackTimeMillis,
-                        it.artworkUrl100,
-                        it.collectionName,
-                        it.releaseDate,
-                        it.primaryGenreName,
-                        it.country,
-                        it.previewUrl,
-                    )
-                })
+                with(response as TrackSearchResponse){
+                    val data = results.map {
+                        Track(
+                            it.id,
+                            it.trackName,
+                            it.artistName,
+                            it.trackTimeMillis,
+                            it.artworkUrl100,
+                            it.collectionName,
+                            it.releaseDate,
+                            it.primaryGenreName,
+                            it.country,
+                            it.previewUrl,
+                        )
+                    }
+                    emit(Resource.Success(data))
+                }
             }
             else -> {
-                Resource.Error("Ошибка сервера")
+                emit(Resource.Error("Ошибка сервера"))
             }
         }
     }

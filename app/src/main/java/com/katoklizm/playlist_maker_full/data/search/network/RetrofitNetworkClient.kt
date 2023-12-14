@@ -6,6 +6,8 @@ import android.net.NetworkCapabilities
 import com.katoklizm.playlist_maker_full.data.NetworkClient
 import com.katoklizm.playlist_maker_full.data.search.dto.Response
 import com.katoklizm.playlist_maker_full.data.search.dto.TrackSearchRequest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -20,7 +22,7 @@ class RetrofitNetworkClient(
         .build()
 
     private val iTunesService = retrofit.create(ITunesSearchApi::class.java)
-    override fun doRequest(dto: Any): Response {
+    override suspend fun doRequest(dto: Any): Response {
         if (isConnected() == false) {
             return Response().apply { resultCode = -1 }
         }
@@ -28,12 +30,13 @@ class RetrofitNetworkClient(
             return Response().apply { resultCode = 400 }
         }
 
-        val resp = iTunesService.search(dto.term).execute()
-        val body = resp.body() ?: Response()
-        return if (body != null) {
-            body.apply { resultCode = resp.code() }
-        } else {
-            Response().apply { resultCode = resp.code() }
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = iTunesService.search(dto.term)
+                response.apply { resultCode = 200 }
+            } catch (e: Throwable) {
+                Response().apply { resultCode = 500 }
+            }
         }
     }
 
