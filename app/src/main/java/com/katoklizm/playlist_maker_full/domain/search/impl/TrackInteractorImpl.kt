@@ -6,18 +6,33 @@ import com.katoklizm.playlist_maker_full.domain.search.api.TrackInteractor
 import com.katoklizm.playlist_maker_full.domain.search.api.TrackRepository
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.util.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class TrackInteractorImpl(private val repository: TrackRepository) : TrackInteractor {
 
-    private val executor = Executors.newCachedThreadPool()
-    override fun searchTrack(term: String, consumer: TrackInteractor.TrackConsumer) {
-        executor.execute {
-            when(val resource = repository.searchTrack(term)) {
-                is Resource.Success -> { consumer.consume(resource.data, null)}
-                is Resource.Error ->{ consumer.consume(null, resource.message)}
+    override fun searchTrack(term: String): Flow<Pair<List<Track>?, String?>> {
+        return repository.searchTrack(term).map { result ->
+            when(result) {
+                is Resource.Success -> {
+                    Pair(result.data, null)
+                }
+                is Resource.Error -> {
+                    Pair(null, result.message)
+                }
             }
         }
     }
+
+//    private val executor = Executors.newCachedThreadPool()
+//    override fun searchTrack(term: String, consumer: TrackInteractor.TrackConsumer) {
+//        executor.execute {
+//            when(val resource = repository.searchTrack(term)) {
+//                is Resource.Success -> { consumer.consume(resource.data, null)}
+//                is Resource.Error ->{ consumer.consume(null, resource.message)}
+//            }
+//        }
+//    }
 
     override fun readSearchHistory(): ArrayList<Track> {
         return repository.readSearchHistory()
