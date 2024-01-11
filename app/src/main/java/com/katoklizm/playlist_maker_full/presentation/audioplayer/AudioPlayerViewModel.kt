@@ -1,7 +1,5 @@
 package com.katoklizm.playlist_maker_full.presentation.audioplayer
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,7 +29,7 @@ class AudioPlayerViewModel(
 
         timerJob = viewModelScope.launch {
             while (_statePlayer.value ==  PlayerState.STATE_PLAYING) {
-                delay(DELAY)
+                delay(PLAYBACK_DELAY_MILLIS)
                 _timerState.postValue(playerInteractor.currentPosition())
             }
         }
@@ -90,9 +88,10 @@ class AudioPlayerViewModel(
     override fun onCleared() {
         super.onCleared()
         playerInteractor.release()
+        timerJob?.cancel()
     }
 
     companion object {
-        const val DELAY = 300L
+        const val PLAYBACK_DELAY_MILLIS = 300L
     }
 }

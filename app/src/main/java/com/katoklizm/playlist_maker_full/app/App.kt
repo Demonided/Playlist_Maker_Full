@@ -1,7 +1,11 @@
 package com.katoklizm.playlist_maker_full.app
 
 import android.app.Application
+import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import com.katoklizm.playlist_maker_full.data.db.AppDatabase
+import com.katoklizm.playlist_maker_full.data.db.entity.TrackEntity
+import com.katoklizm.playlist_maker_full.data.search.network.ITunesSearchApi
 import com.katoklizm.playlist_maker_full.di.dataModule
 import com.katoklizm.playlist_maker_full.di.interactorModule
 import com.katoklizm.playlist_maker_full.di.repositoryModule
@@ -21,10 +25,25 @@ class App : Application() {
             modules(dataModule, repositoryModule, interactorModule, viewModelModule)
         }
 
-        val settingsInteractor : SettingsInteractor by inject()
+        val settingsInteractor: SettingsInteractor by inject()
 
         currentTheme = settingsInteractor.lookAtThemeBoolean()
         render(currentTheme)
+
+        baseDatabase = AppDatabase.getInstance(applicationContext)
+//        baseDatabase.trackDao().getTrackJob(
+//            TrackEntity(
+//                1,
+//                "Привет",
+//                "Привет",
+//                "Привет",
+//                "Привет",
+//                "Привет",
+//                "Привет",
+//                "Привет",
+//                "Привет",
+//            )
+//        )
     }
 
     private fun render(state: Boolean) {
@@ -35,8 +54,18 @@ class App : Application() {
         }
     }
 
+//    private fun initService() {
+//        va
+//    }
+
     companion object {
         const val APP_SHARED = "app_shared"
         const val BASE_URL = "http://itunes.apple.com"
+
+        lateinit var baseDatabase: AppDatabase
+            private set
+
+        lateinit var serviceApi: ITunesSearchApi
+            private set
     }
 }

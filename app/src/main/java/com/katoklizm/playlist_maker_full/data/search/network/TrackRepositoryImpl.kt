@@ -15,11 +15,11 @@ class TrackRepositoryImpl(
     private val localStorage: HistoryTrackManager
 ) : TrackRepository {
     override fun searchTrack(term: String): Flow<Resource<List<Track>>> = flow {
-        val response = networkClient.doRequest(TrackSearchRequest(term = term))
+        val response = networkClient.executeNetworkRequest(TrackSearchRequest(term = term))
 
         when(response.resultCode) {
             -1 -> {
-                emit(Resource.Error("Проверьте подключение к интернету"))
+                emit(Resource.Error(ERROR_MESSAGE_1))
             }
             200 -> {
                 with(response as TrackSearchResponse){
@@ -41,7 +41,7 @@ class TrackRepositoryImpl(
                 }
             }
             else -> {
-                emit(Resource.Error("Ошибка сервера"))
+                emit(Resource.Error(ERROR_MESSAGE_2))
             }
         }
     }
@@ -56,5 +56,10 @@ class TrackRepositoryImpl(
 
     override fun clearSearchHistory() {
         localStorage.clearSearchHistory()
+    }
+
+    companion object {
+        const val ERROR_MESSAGE_1 = "Проверьте подключение к интернету"
+        const val ERROR_MESSAGE_2 = "Ошибка сервера"
     }
 }

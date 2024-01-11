@@ -1,5 +1,6 @@
 package com.katoklizm.playlist_maker_full.di
 
+import com.katoklizm.playlist_maker_full.data.converters.TrackDbConverters
 import com.katoklizm.playlist_maker_full.data.player.impl.PlayerRepositoryImpl
 import com.katoklizm.playlist_maker_full.data.search.network.TrackRepositoryImpl
 import com.katoklizm.playlist_maker_full.data.sharing.impl.SettingRepositoryImpl
@@ -22,4 +23,5 @@ val repositoryModule = module {
         PlayerRepositoryImpl(get())
     }
 
+    factory { TrackDbConverters() }
 }

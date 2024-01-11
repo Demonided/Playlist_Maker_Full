@@ -8,5 +8,5 @@ class FavoriteTrackViewModel: ViewModel() {
 
     private val _favoriteTrackState = MutableLiveData<FavoriteTrackState>()
 
-    fun favoriteTrackState(): LiveData<FavoriteTrackState> = _favoriteTrackState
+    fun favoriteTrackState(loading: FavoriteTrackState.Loading): LiveData<FavoriteTrackState> = _favoriteTrackState
 }

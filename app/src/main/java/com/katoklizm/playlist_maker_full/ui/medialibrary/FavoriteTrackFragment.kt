@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.katoklizm.playlist_maker_full.databinding.FragmentFavoriteTrackBinding
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.favorite_track.FavoriteTrackViewModel
@@ -28,6 +29,12 @@ class FavoriteTrackFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     companion object {
@@ -35,13 +42,8 @@ class FavoriteTrackFragment: Fragment() {
 
         fun newInstance() = FavoriteTrackFragment().apply {
             arguments = Bundle().apply {
-
+//                Toast.makeText(requireContext(), "Hello", Toast.LENGTH_LONG).show()
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 }

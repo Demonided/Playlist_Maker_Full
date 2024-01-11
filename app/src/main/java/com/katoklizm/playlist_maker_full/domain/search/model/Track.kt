@@ -16,7 +16,8 @@ data class Track(
     val releaseDate: Date?, // Год релиза трека
     val primaryGenreName: String?, // Жанр трека
     val country: String?, // Страна
-    val previewUrl: String? // 30сек проигрывание трека
+    val previewUrl: String?, // 30сек проигрывание трека
+    var isFavorite: Boolean = false
 ): Parcelable {
 
     val artworkUrl512
