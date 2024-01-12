@@ -3,6 +3,7 @@ package com.katoklizm.playlist_maker_full.data.search.network
 import com.katoklizm.playlist_maker_full.data.NetworkClient
 import com.katoklizm.playlist_maker_full.data.search.dto.TrackSearchRequest
 import com.katoklizm.playlist_maker_full.data.search.dto.TrackSearchResponse
+import com.katoklizm.playlist_maker_full.data.search.dto.getDataRelease
 import com.katoklizm.playlist_maker_full.data.search.track.HistoryTrackManager
 import com.katoklizm.playlist_maker_full.domain.search.api.TrackRepository
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
@@ -25,16 +26,16 @@ class TrackRepositoryImpl(
                 with(response as TrackSearchResponse){
                     val data = results.map {
                         Track(
-                            it.id,
-                            it.trackName,
-                            it.artistName,
-                            it.trackTimeMillis,
-                            it.artworkUrl100,
-                            it.collectionName,
-                            it.releaseDate,
-                            it.primaryGenreName,
-                            it.country,
-                            it.previewUrl,
+                            id = it.id,
+                            trackName = it.trackName,
+                            artistName = it.artistName,
+                            trackTimeMillis = it.trackTimeMillis,
+                            artworkUrl100 = it.artworkUrl100,
+                            collectionName = it.getDataRelease(),
+                            releaseDate = it.releaseDate,
+                            primaryGenreName = it.primaryGenreName,
+                            country = it.country,
+                            previewUrl = it.previewUrl,
                         )
                     }
                     emit(Resource.Success(data))

@@ -12,21 +12,4 @@ import com.katoklizm.playlist_maker_full.data.db.entity.TrackEntity
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun trackDao(): TrackDao
-
-    companion object {
-        @Volatile
-        private lateinit var instance: AppDatabase
-
-        fun getInstance(context: Context): AppDatabase {
-            synchronized(this) {
-                if (!Companion::instance.isInitialized) {
-                    instance = Room.databaseBuilder(
-                        context,
-                        AppDatabase::class.java, "get_track_database"
-                    ).allowMainThreadQueries().build()
-                }
-                return instance
-            }
-        }
-    }
 }

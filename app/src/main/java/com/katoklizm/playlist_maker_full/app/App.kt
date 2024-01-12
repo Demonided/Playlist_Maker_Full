@@ -29,21 +29,6 @@ class App : Application() {
 
         currentTheme = settingsInteractor.lookAtThemeBoolean()
         render(currentTheme)
-
-        baseDatabase = AppDatabase.getInstance(applicationContext)
-//        baseDatabase.trackDao().getTrackJob(
-//            TrackEntity(
-//                1,
-//                "Привет",
-//                "Привет",
-//                "Привет",
-//                "Привет",
-//                "Привет",
-//                "Привет",
-//                "Привет",
-//                "Привет",
-//            )
-//        )
     }
 
     private fun render(state: Boolean) {
@@ -54,18 +39,8 @@ class App : Application() {
         }
     }
 
-//    private fun initService() {
-//        va
-//    }
-
     companion object {
         const val APP_SHARED = "app_shared"
         const val BASE_URL = "http://itunes.apple.com"
-
-        lateinit var baseDatabase: AppDatabase
-            private set
-
-        lateinit var serviceApi: ITunesSearchApi
-            private set
     }
 }

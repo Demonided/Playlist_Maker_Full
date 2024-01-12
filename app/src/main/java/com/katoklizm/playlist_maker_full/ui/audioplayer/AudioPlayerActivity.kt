@@ -44,8 +44,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding?.audioPlayerNameMusician?.text = track?.artistName
 
         binding?.audioPlayerTextViewTrackNameRead?.text = track?.trackName
-        binding?.audioPlayerTextViewYearRead?.text =
-            track?.releaseDate?.let { ConstTrack.formatDate(it) }
+        binding?.audioPlayerTextViewYearRead?.text = track?.releaseDate
         binding?.audioPlayerTextViewGenreRead?.text = track?.primaryGenreName
         binding?.audioPlayerTextViewCountryRead?.text = track?.country
 
