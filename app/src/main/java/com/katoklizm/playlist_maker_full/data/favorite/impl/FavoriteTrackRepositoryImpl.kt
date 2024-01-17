@@ -12,19 +12,16 @@ class FavoriteTrackRepositoryImpl(
     val appDatabase: AppDatabase,
     val dbConverters: TrackDbConverters
 ) : FavoriteTrackRepository {
+
     override suspend fun addTrackFavorite(track: Track) {
-        if (track.isFavorite) {
-            appDatabase.trackDao().getTrack(track.id)
-        }
+
     }
 
     override suspend fun deleteTrackFavorite(track: Track) {
-        if (track.isFavorite) {
-            appDatabase.trackDao().deleteTrack(track.id)
-        }
+
     }
 
-    override fun getTrackFavorite(): Flow<List<Track>> {
+    override fun getTrackFavorite(): Flow<List<Track>>  {
         return appDatabase.trackDao().getAllTrack().map { listTrack ->
             listTrack.map {
                 dbConverters.map(it)
