@@ -6,8 +6,9 @@ import com.katoklizm.playlist_maker_full.domain.search.model.Track
 
 class TrackDbConverters {
 
-    fun map(track: TrackDto): TrackEntity {
-        return TrackEntity(id = track.id,
+    fun map(track: Track): TrackEntity {
+        return TrackEntity(
+            id = track.id,
             trackName = track.trackName,
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,
@@ -17,7 +18,8 @@ class TrackDbConverters {
             primaryGenreName = track.primaryGenreName,
             country = track.country,
             previewUrl = track.previewUrl,
-            isFavorite = track.isFavorite)
+            isFavorite = track.isFavorite
+        )
     }
 
     fun map(trackEntity: TrackEntity): Track {
@@ -32,6 +34,8 @@ class TrackDbConverters {
             primaryGenreName = trackEntity.primaryGenreName,
             country = trackEntity.country,
             previewUrl = trackEntity.previewUrl
-            )
+        )
     }
+
+    fun map(listTrack: List<TrackEntity>): List<Track> = listTrack.map(::map)
 }

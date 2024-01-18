@@ -86,13 +86,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
 
         binding?.audioPlayerLikeMusicTrack?.setOnClickListener {
-            if (track!!.isFavorite) {
-                binding?.audioPlayerLikeMusicTrack?.setImageResource(R.drawable.audio_player_like_off)
-                track?.isFavorite = false
-            } else {
-                binding?.audioPlayerLikeMusicTrack?.setImageResource(R.drawable.audio_player_like_on)
-                track?.isFavorite = true
-            }
+            prepareFavoriteTrack()
         }
     }
 
@@ -122,6 +116,16 @@ class AudioPlayerActivity : AppCompatActivity() {
             PlayerState.STATE_DEFAULT -> {
                 binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
             }
+        }
+    }
+
+    fun prepareFavoriteTrack() {
+        if (track!!.isFavorite) {
+            binding?.audioPlayerLikeMusicTrack?.setImageResource(R.drawable.audio_player_like_off)
+            track?.isFavorite = false
+        } else {
+            binding?.audioPlayerLikeMusicTrack?.setImageResource(R.drawable.audio_player_like_on)
+            track?.isFavorite = true
         }
     }
 

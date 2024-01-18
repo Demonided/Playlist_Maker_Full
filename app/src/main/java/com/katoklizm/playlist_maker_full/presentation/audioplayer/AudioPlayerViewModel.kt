@@ -4,15 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.katoklizm.playlist_maker_full.domain.favorite.FavoriteTrackInteractor
 import com.katoklizm.playlist_maker_full.domain.player.PlayerState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.domain.player.PlayerInteractor
+import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerScreenState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class AudioPlayerViewModel(
-    private val playerInteractor: PlayerInteractor
+    private val playerInteractor: PlayerInteractor,
+    private val favoriteInteractor: FavoriteTrackInteractor
 ) : ViewModel() {
 
     private var timerJob: Job? = null
@@ -22,6 +25,15 @@ class AudioPlayerViewModel(
 
     private val _timerState = MutableLiveData(0)
     val timerState: LiveData<Int> = _timerState
+
+    private val _playerState = MutableLiveData<PlayerScreenState>()
+    val playerState: LiveData<PlayerScreenState> = _playerState
+
+    override fun onCleared() {
+        super.onCleared()
+        playerInteractor.release()
+        timerJob?.cancel()
+    }
 
     fun startPlayer() {
         playerInteractor.startPlayer()
@@ -85,10 +97,13 @@ class AudioPlayerViewModel(
         playerInteractor.release()
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        playerInteractor.release()
-        timerJob?.cancel()
+    fun onFavoriteClicked() {
+        viewModelScope.launch {
+//            favoriteInteractor.updateTrackFavorite(track = track)
+//            val isFavorite = track.isFavorite
+//            track = track.copy(isFavorite = !isFavorite)
+//            _playerState.postValue(PlayerScreenState.Content(track))
+        }
     }
 
     companion object {

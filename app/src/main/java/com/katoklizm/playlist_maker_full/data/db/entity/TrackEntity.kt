@@ -10,7 +10,7 @@ import java.util.Date
 @Entity(tableName = "track_table")
 data class TrackEntity(
     @PrimaryKey @ColumnInfo(name = "id")
-    val id: Int,
+    val id: Int, // Id трека
     val trackName: String?, // Название композиции
     val artistName: String?, // Имя исполнителя
     val trackTimeMillis: String?, // Продолжительность трека
@@ -21,5 +21,5 @@ data class TrackEntity(
     val primaryGenreName: String?, // Жанр трека
     val country: String?, // Страна
     val previewUrl: String?, // 30сек проигрывание трека
-    val isFavorite: Boolean
+    val isFavorite: Boolean // Добавлен ли трек в избранное
 )
