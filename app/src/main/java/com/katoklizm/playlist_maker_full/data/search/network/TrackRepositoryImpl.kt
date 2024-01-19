@@ -1,6 +1,8 @@
 package com.katoklizm.playlist_maker_full.data.search.network
 
+import android.util.Log
 import com.katoklizm.playlist_maker_full.data.NetworkClient
+import com.katoklizm.playlist_maker_full.data.db.AppDatabase
 import com.katoklizm.playlist_maker_full.data.search.dto.TrackSearchRequest
 import com.katoklizm.playlist_maker_full.data.search.dto.TrackSearchResponse
 import com.katoklizm.playlist_maker_full.data.search.dto.getDataRelease
@@ -13,8 +15,10 @@ import kotlinx.coroutines.flow.flow
 
 class TrackRepositoryImpl(
     private val networkClient: NetworkClient,
-    private val localStorage: HistoryTrackManager
+    private val localStorage: HistoryTrackManager,
+    private val appDatabase: AppDatabase
 ) : TrackRepository {
+
     override fun searchTrack(term: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.executeNetworkRequest(TrackSearchRequest(term = term))
 
@@ -24,6 +28,8 @@ class TrackRepositoryImpl(
             }
             200 -> {
                 with(response as TrackSearchResponse){
+                    val favoriteTrackIds = appDatabase.trackDao().getAllFavoriteTrackIds()
+
                     val data = results.map {
                         Track(
                             id = it.id,
@@ -36,8 +42,10 @@ class TrackRepositoryImpl(
                             primaryGenreName = it.primaryGenreName,
                             country = it.country,
                             previewUrl = it.previewUrl,
+                            isFavorite = it.id in favoriteTrackIds
                         )
                     }
+                    Log.d("MyDatabase", "Треки с которыми мы зашли ${ data.map { it.id } } = ${data!!.map { it.isFavorite }}")
                     emit(Resource.Success(data))
                 }
             }

@@ -66,6 +66,8 @@ class SearchFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickListener
         binding.searchRecyclerMusicTrack.adapter = trackAdapter
         trackAdapter.tracks = viewModel.trackHistoryList
 
+        val saveTrack = viewModel.trackHistoryList
+
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -98,6 +100,7 @@ class SearchFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickListener
         binding.searchClearButton.setOnClickListener {
             binding.searchEditText.text?.clear()
             closeKeyboard()
+            showContentListSaveTrack(saveTrack)
         }
 
         binding.searchUpdatePage.setOnClickListener {
@@ -123,13 +126,11 @@ class SearchFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickListener
         super.onPause()
         viewModel.refreshSearchButton("")
         viewModel.activeFragment(false)
-        Log.d("LogStateFragment", "Статус сейчас ${viewModel.isScreenPaused()}")
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.activeFragment(true)
-        Log.d("LogStateFragment", "Статус сейчас ${viewModel.isScreenPaused()}")
     }
 
     private fun render(state: SearchState) {
@@ -146,6 +147,8 @@ class SearchFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickListener
     private fun closeKeyboard() {
         val imputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imputMethodManager.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
+
+
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {

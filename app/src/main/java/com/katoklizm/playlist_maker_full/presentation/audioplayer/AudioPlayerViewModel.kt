@@ -18,6 +18,10 @@ class AudioPlayerViewModel(
     private val favoriteInteractor: FavoriteTrackInteractor
 ) : ViewModel() {
 
+    private val _selectedTrack = MutableLiveData<Track>()
+    val selectedTrack: LiveData<Track>
+        get() = _selectedTrack
+
     private var timerJob: Job? = null
 
     private val _statePlayer = MutableLiveData(PlayerState.STATE_DEFAULT)
@@ -33,6 +37,10 @@ class AudioPlayerViewModel(
         super.onCleared()
         playerInteractor.release()
         timerJob?.cancel()
+    }
+
+    fun setSelectedTrack(track: Track) {
+        _selectedTrack.value = track
     }
 
     fun startPlayer() {
@@ -97,12 +105,12 @@ class AudioPlayerViewModel(
         playerInteractor.release()
     }
 
-    fun onFavoriteClicked() {
+    fun onFavoriteClicked(track: Track) {
         viewModelScope.launch {
-//            favoriteInteractor.updateTrackFavorite(track = track)
-//            val isFavorite = track.isFavorite
-//            track = track.copy(isFavorite = !isFavorite)
-//            _playerState.postValue(PlayerScreenState.Content(track))
+            favoriteInteractor.updateTrackFavorite(track = track)
+            val isFavorite = track.isFavorite
+            val tracks = track.copy(isFavorite = isFavorite)
+            _playerState.postValue(PlayerScreenState.Content(tracks))
         }
     }
 

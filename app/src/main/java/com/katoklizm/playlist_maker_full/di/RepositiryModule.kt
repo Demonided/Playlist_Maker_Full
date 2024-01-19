@@ -15,7 +15,7 @@ import kotlin.math.sin
 val repositoryModule = module {
 
     single<TrackRepository> {
-        TrackRepositoryImpl(get(), get())
+        TrackRepositoryImpl(get(), get(), get())
     }
 
     single<SettingRepository> {

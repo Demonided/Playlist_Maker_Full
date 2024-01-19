@@ -85,6 +85,8 @@ class AudioPlayerActivity : AppCompatActivity() {
             audioPlayerViewModel.playbackControl()
         }
 
+        prepareFavoriteTrack()
+
         binding?.audioPlayerLikeMusicTrack?.setOnClickListener {
             prepareFavoriteTrack()
         }
@@ -120,6 +122,8 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     fun prepareFavoriteTrack() {
+        track?.let { audioPlayerViewModel.onFavoriteClicked(it) }
+
         if (track!!.isFavorite) {
             binding?.audioPlayerLikeMusicTrack?.setImageResource(R.drawable.audio_player_like_off)
             track?.isFavorite = false
@@ -127,6 +131,8 @@ class AudioPlayerActivity : AppCompatActivity() {
             binding?.audioPlayerLikeMusicTrack?.setImageResource(R.drawable.audio_player_like_on)
             track?.isFavorite = true
         }
+
+        Log.d("MyDatabase", "Трек с которым мы зашли = ${track!!.isFavorite}")
     }
 
     fun preparePlayer() {
