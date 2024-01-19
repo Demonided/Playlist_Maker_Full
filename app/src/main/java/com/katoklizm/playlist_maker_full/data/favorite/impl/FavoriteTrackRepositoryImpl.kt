@@ -15,7 +15,7 @@ class FavoriteTrackRepositoryImpl(
 
     override suspend fun updateTrackFavorite(track: Track) {
         val trackFavorite = trackDbConverters.map(track)
-            .copy(isFavorite = !track.isFavorite)
+            .copy(isFavorite = track.isFavorite)
 
         if (track.isFavorite) {
             appDatabase.trackDao().deleteTrack(trackDbConverters.map(track))

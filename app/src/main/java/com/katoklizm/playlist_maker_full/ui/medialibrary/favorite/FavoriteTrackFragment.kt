@@ -1,15 +1,13 @@
-package com.katoklizm.playlist_maker_full.ui.medialibrary
+package com.katoklizm.playlist_maker_full.ui.medialibrary.favorite
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.katoklizm.playlist_maker_full.databinding.FragmentFavoriteTrackBinding
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.favorite_track.FavoriteTrackViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 class FavoriteTrackFragment: Fragment() {
 

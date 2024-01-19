@@ -1,4 +1,4 @@
-package com.katoklizm.playlist_maker_full.ui.medialibrary
+package com.katoklizm.playlist_maker_full.ui.medialibrary.playlist
 
 import android.os.Bundle
 import android.view.LayoutInflater

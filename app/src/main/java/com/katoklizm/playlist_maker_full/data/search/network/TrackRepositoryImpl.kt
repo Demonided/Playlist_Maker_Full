@@ -42,10 +42,10 @@ class TrackRepositoryImpl(
                             primaryGenreName = it.primaryGenreName,
                             country = it.country,
                             previewUrl = it.previewUrl,
-                            isFavorite = it.id in favoriteTrackIds
+                            isFavorite = it.isFavorite
                         )
                     }
-                    Log.d("MyDatabase", "Треки с которыми мы зашли ${ data.map { it.id } } = ${data!!.map { it.isFavorite }}")
+
                     emit(Resource.Success(data))
                 }
             }

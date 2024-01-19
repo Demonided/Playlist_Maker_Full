@@ -108,9 +108,7 @@ class AudioPlayerViewModel(
     fun onFavoriteClicked(track: Track) {
         viewModelScope.launch {
             favoriteInteractor.updateTrackFavorite(track = track)
-            val isFavorite = track.isFavorite
-            val tracks = track.copy(isFavorite = isFavorite)
-            _playerState.postValue(PlayerScreenState.Content(tracks))
+            setSelectedTrack(track)
         }
     }
 

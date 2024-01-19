@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/mediaLibraryFragment"
-        android:name="com.katoklizm.playlist_maker_full.ui.medialibrary.MediaLibraryFragment"
+        android:name="com.katoklizm.playlist_maker_full.ui.medialibrary.playlist.MediaLibraryFragment"
         android:label="fragment_media_library"
         tools:layout="@layout/fragment_media_library" />
     <fragment
