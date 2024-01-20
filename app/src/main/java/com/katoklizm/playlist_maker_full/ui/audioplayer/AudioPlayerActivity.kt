@@ -94,7 +94,6 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        Log.d("State_Player", "State ${audioPlayerViewModel.playerStateListener()}")
         if (audioPlayerViewModel.playerStateListener() == PlayerState.STATE_PLAYING) {
             audioPlayerViewModel.pausePlayer()
             binding?.audioPlayerPlaySong?.setImageResource(R.drawable.audio_player_play_song)
@@ -127,9 +126,11 @@ class AudioPlayerActivity : AppCompatActivity() {
         if (track!!.isFavorite) {
             binding?.audioPlayerLikeMusicTrack?.setImageResource(R.drawable.audio_player_like_off)
             track?.isFavorite = false
+            Toast.makeText(applicationContext, "Вы удалили трек из избранного", Toast.LENGTH_LONG).show()
         } else {
             binding?.audioPlayerLikeMusicTrack?.setImageResource(R.drawable.audio_player_like_on)
             track?.isFavorite = true
+            Toast.makeText(applicationContext, "Вы добавили трек в избранное", Toast.LENGTH_LONG).show()
         }
     }
 

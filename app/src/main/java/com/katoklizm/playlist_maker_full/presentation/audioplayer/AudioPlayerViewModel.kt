@@ -39,10 +39,6 @@ class AudioPlayerViewModel(
         timerJob?.cancel()
     }
 
-    fun setSelectedTrack(track: Track) {
-        _selectedTrack.value = track
-    }
-
     fun startPlayer() {
         playerInteractor.startPlayer()
         _statePlayer.value = PlayerState.STATE_PLAYING
@@ -108,7 +104,7 @@ class AudioPlayerViewModel(
     fun onFavoriteClicked(track: Track) {
         viewModelScope.launch {
             favoriteInteractor.updateTrackFavorite(track = track)
-            setSelectedTrack(track)
+
         }
     }
 
