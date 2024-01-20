@@ -1,5 +1,6 @@
 package com.katoklizm.playlist_maker_full.di
 
+import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.presentation.audioplayer.AudioPlayerViewModel
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.favorite_track.FavoriteTrackViewModel
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.MediaLibraryViewModel
@@ -16,7 +17,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        AudioPlayerViewModel(get())
+        AudioPlayerViewModel(get(), get())
     }
 
     viewModel {
@@ -29,7 +30,7 @@ val viewModelModule = module {
 
     // Fragment Media_library с которой в дальнейшем будем работать
     viewModel {
-        FavoriteTrackViewModel()
+        FavoriteTrackViewModel(get())
     }
 
     // Fragment Media_library с которой в дальнейшем будем работать

@@ -1,8 +1,11 @@
 package com.katoklizm.playlist_maker_full.data.search.network
 
+import android.util.Log
 import com.katoklizm.playlist_maker_full.data.NetworkClient
+import com.katoklizm.playlist_maker_full.data.db.AppDatabase
 import com.katoklizm.playlist_maker_full.data.search.dto.TrackSearchRequest
 import com.katoklizm.playlist_maker_full.data.search.dto.TrackSearchResponse
+import com.katoklizm.playlist_maker_full.data.search.dto.getDataRelease
 import com.katoklizm.playlist_maker_full.data.search.track.HistoryTrackManager
 import com.katoklizm.playlist_maker_full.domain.search.api.TrackRepository
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
@@ -12,36 +15,42 @@ import kotlinx.coroutines.flow.flow
 
 class TrackRepositoryImpl(
     private val networkClient: NetworkClient,
-    private val localStorage: HistoryTrackManager
+    private val localStorage: HistoryTrackManager,
+    private val appDatabase: AppDatabase
 ) : TrackRepository {
+
     override fun searchTrack(term: String): Flow<Resource<List<Track>>> = flow {
-        val response = networkClient.doRequest(TrackSearchRequest(term = term))
+        val response = networkClient.executeNetworkRequest(TrackSearchRequest(term = term))
 
         when(response.resultCode) {
             -1 -> {
-                emit(Resource.Error("Проверьте подключение к интернету"))
+                emit(Resource.Error(ERROR_MESSAGE_1))
             }
             200 -> {
                 with(response as TrackSearchResponse){
+                    val favoriteTrackIds = appDatabase.trackDao().getAllFavoriteTrackIds()
+
                     val data = results.map {
                         Track(
-                            it.id,
-                            it.trackName,
-                            it.artistName,
-                            it.trackTimeMillis,
-                            it.artworkUrl100,
-                            it.collectionName,
-                            it.releaseDate,
-                            it.primaryGenreName,
-                            it.country,
-                            it.previewUrl,
+                            id = it.id,
+                            trackName = it.trackName,
+                            artistName = it.artistName,
+                            trackTimeMillis = it.trackTimeMillis,
+                            artworkUrl100 = it.artworkUrl100,
+                            collectionName = it.getDataRelease(),
+                            releaseDate = it.releaseDate,
+                            primaryGenreName = it.primaryGenreName,
+                            country = it.country,
+                            previewUrl = it.previewUrl,
+                            isFavorite = it.isFavorite
                         )
                     }
+
                     emit(Resource.Success(data))
                 }
             }
             else -> {
-                emit(Resource.Error("Ошибка сервера"))
+                emit(Resource.Error(ERROR_MESSAGE_2))
             }
         }
     }
@@ -56,5 +65,10 @@ class TrackRepositoryImpl(
 
     override fun clearSearchHistory() {
         localStorage.clearSearchHistory()
+    }
+
+    companion object {
+        const val ERROR_MESSAGE_1 = "Проверьте подключение к интернету"
+        const val ERROR_MESSAGE_2 = "Ошибка сервера"
     }
 }

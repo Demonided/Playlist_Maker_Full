@@ -22,7 +22,7 @@ class RetrofitNetworkClient(
         .build()
 
     private val iTunesService = retrofit.create(ITunesSearchApi::class.java)
-    override suspend fun doRequest(dto: Any): Response {
+    override suspend fun executeNetworkRequest(dto: Any): Response {
         if (isConnected() == false) {
             return Response().apply { resultCode = -1 }
         }

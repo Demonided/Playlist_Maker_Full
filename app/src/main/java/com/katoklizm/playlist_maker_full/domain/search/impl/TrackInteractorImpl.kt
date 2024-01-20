@@ -24,16 +24,6 @@ class TrackInteractorImpl(private val repository: TrackRepository) : TrackIntera
         }
     }
 
-//    private val executor = Executors.newCachedThreadPool()
-//    override fun searchTrack(term: String, consumer: TrackInteractor.TrackConsumer) {
-//        executor.execute {
-//            when(val resource = repository.searchTrack(term)) {
-//                is Resource.Success -> { consumer.consume(resource.data, null)}
-//                is Resource.Error ->{ consumer.consume(null, resource.message)}
-//            }
-//        }
-//    }
-
     override fun readSearchHistory(): ArrayList<Track> {
         return repository.readSearchHistory()
     }

@@ -1,21 +1,26 @@
 package com.katoklizm.playlist_maker_full.presentation.audioplayer
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.katoklizm.playlist_maker_full.domain.favorite.FavoriteTrackInteractor
 import com.katoklizm.playlist_maker_full.domain.player.PlayerState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.domain.player.PlayerInteractor
+import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerScreenState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class AudioPlayerViewModel(
-    private val playerInteractor: PlayerInteractor
+    private val playerInteractor: PlayerInteractor,
+    private val favoriteInteractor: FavoriteTrackInteractor
 ) : ViewModel() {
+
+    private val _selectedTrack = MutableLiveData<Track>()
+    val selectedTrack: LiveData<Track>
+        get() = _selectedTrack
 
     private var timerJob: Job? = null
 
@@ -25,13 +30,26 @@ class AudioPlayerViewModel(
     private val _timerState = MutableLiveData(0)
     val timerState: LiveData<Int> = _timerState
 
+    private val _playerState = MutableLiveData<PlayerScreenState>()
+    val playerState: LiveData<PlayerScreenState> = _playerState
+
+    override fun onCleared() {
+        super.onCleared()
+        playerInteractor.release()
+        timerJob?.cancel()
+    }
+
+    fun setSelectedTrack(track: Track) {
+        _selectedTrack.value = track
+    }
+
     fun startPlayer() {
         playerInteractor.startPlayer()
         _statePlayer.value = PlayerState.STATE_PLAYING
 
         timerJob = viewModelScope.launch {
             while (_statePlayer.value ==  PlayerState.STATE_PLAYING) {
-                delay(DELAY)
+                delay(PLAYBACK_DELAY_MILLIS)
                 _timerState.postValue(playerInteractor.currentPosition())
             }
         }
@@ -87,12 +105,14 @@ class AudioPlayerViewModel(
         playerInteractor.release()
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        playerInteractor.release()
+    fun onFavoriteClicked(track: Track) {
+        viewModelScope.launch {
+            favoriteInteractor.updateTrackFavorite(track = track)
+            setSelectedTrack(track)
+        }
     }
 
     companion object {
-        const val DELAY = 300L
+        const val PLAYBACK_DELAY_MILLIS = 300L
     }
 }

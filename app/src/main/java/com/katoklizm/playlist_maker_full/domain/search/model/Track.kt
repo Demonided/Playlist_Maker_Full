@@ -13,10 +13,11 @@ data class Track(
     val trackTimeMillis: String?, // Продолжительность трека
     val artworkUrl100: String?, // Ссылка на изображение обложки
     val collectionName: String?, // Название альбома
-    val releaseDate: Date?, // Год релиза трека
+    val releaseDate: String?, // Год релиза трека
     val primaryGenreName: String?, // Жанр трека
     val country: String?, // Страна
-    val previewUrl: String? // 30сек проигрывание трека
+    val previewUrl: String?, // 30сек проигрывание трека
+    var isFavorite: Boolean = false
 ): Parcelable {
 
     val artworkUrl512
@@ -33,7 +34,7 @@ data class Track(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readSerializable() as Date?,
+        parcel.readString(),
         parcel.readString(),
         parcel.readString(),
         parcel.readString()
@@ -51,7 +52,7 @@ data class Track(
         dest.writeString(trackTimeMillis)
         dest.writeString(artworkUrl100)
         dest.writeString(collectionName)
-        dest.writeSerializable(releaseDate)
+        dest.writeString(releaseDate)
         dest.writeString(primaryGenreName)
         dest.writeString(country)
         dest.writeString(previewUrl)
