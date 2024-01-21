@@ -1,41 +1,40 @@
 package com.katoklizm.playlist_maker_full.data.converters
 
 import com.katoklizm.playlist_maker_full.data.db.entity.TrackEntity
-import com.katoklizm.playlist_maker_full.data.search.dto.TrackDto
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 
-class TrackDbConverters {
+object TrackDbConverters {
 
-    fun map(track: Track): TrackEntity {
+    fun Track.mapToEntity(): TrackEntity {
         return TrackEntity(
-            id = track.id,
-            trackName = track.trackName,
-            artistName = track.artistName,
-            trackTimeMillis = track.trackTimeMillis,
-            artworkUrl100 = track.artworkUrl100,
-            collectionName = track.collectionName,
-            releaseDate = track.releaseDate,
-            primaryGenreName = track.primaryGenreName,
-            country = track.country,
-            previewUrl = track.previewUrl,
-            isFavorite = track.isFavorite
+            id = id,
+            trackName = trackName,
+            artistName = artistName,
+            trackTimeMillis = trackTimeMillis,
+            artworkUrl100 = artworkUrl100,
+            collectionName = collectionName,
+            releaseDate = releaseDate,
+            primaryGenreName = primaryGenreName,
+            country = country,
+            previewUrl = previewUrl,
         )
     }
 
-    fun map(trackEntity: TrackEntity): Track {
+    fun TrackEntity.mapToTrack(): Track {
         return Track(
-            id = trackEntity.id,
-            trackName = trackEntity.trackName,
-            artistName = trackEntity.artistName,
-            trackTimeMillis = trackEntity.trackTimeMillis,
-            artworkUrl100 = trackEntity.artworkUrl100,
-            collectionName = trackEntity.collectionName,
-            releaseDate = trackEntity.releaseDate,
-            primaryGenreName = trackEntity.primaryGenreName,
-            country = trackEntity.country,
-            previewUrl = trackEntity.previewUrl
+            id = id,
+            trackName = trackName,
+            artistName = artistName,
+            trackTimeMillis = trackTimeMillis,
+            artworkUrl100 = artworkUrl100,
+            collectionName = collectionName,
+            releaseDate = releaseDate,
+            primaryGenreName = primaryGenreName,
+            country = country,
+            previewUrl = previewUrl,
+            isFavorite = true,
         )
     }
 
-    fun map(listTrack: List<TrackEntity>): List<Track> = listTrack.map(::map)
+    fun List<TrackEntity>.mapToTracks(): List<Track> = map{ it.mapToTrack() }
 }

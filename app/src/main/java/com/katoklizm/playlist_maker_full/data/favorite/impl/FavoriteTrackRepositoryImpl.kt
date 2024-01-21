@@ -1,36 +1,42 @@
 package com.katoklizm.playlist_maker_full.data.favorite.impl
 
-import com.katoklizm.playlist_maker_full.data.converters.TrackDbConverters
+import com.katoklizm.playlist_maker_full.data.converters.TrackDbConverters.mapToEntity
+import com.katoklizm.playlist_maker_full.data.converters.TrackDbConverters.mapToTracks
 import com.katoklizm.playlist_maker_full.data.db.AppDatabase
 import com.katoklizm.playlist_maker_full.domain.favorite.FavoriteTrackRepository
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class FavoriteTrackRepositoryImpl(
-    val appDatabase: AppDatabase,
-    val trackDbConverters: TrackDbConverters
+    private val appDatabase: AppDatabase,
 ) : FavoriteTrackRepository {
 
-    override suspend fun updateTrackFavorite(track: Track) {
-        val trackFavorite = trackDbConverters.map(track)
-            .copy(isFavorite = track.isFavorite)
+    private val trackFlow = MutableStateFlow<List<Track>>(listOf())
+    override suspend fun addTrack(track: Track) {
+        val trackEntity = track.mapToEntity()
+        appDatabase.trackDao().insertTrack(trackEntity)
+        syncTrackList()
+    }
 
-        if (track.isFavorite) {
-            appDatabase.trackDao().deleteTrack(trackDbConverters.map(track))
-            track.isFavorite = false
-        } else {
-            appDatabase.trackDao().insertTrack(track = trackFavorite)
-            track.isFavorite = true
+    override suspend fun deleteTrack(trackId: String) {
+        appDatabase.trackDao().deleteTrack(trackId)
+        syncTrackList()
+    }
+
+    override suspend fun getListTracks(): List<Track> {
+        return appDatabase.trackDao().getAllTrack().mapToTracks().apply {
+            trackFlow.value = this
         }
     }
 
-    override fun getTrackFavorite(): Flow<List<Track>>  {
-        return appDatabase.trackDao().getAllTrack().map { listTrack ->
-            listTrack.map {
-                trackDbConverters.map(it)
-            }
-        }
+    override suspend fun getListTrackIds(): List<String> {
+        return appDatabase.trackDao().getAllFavoriteTrackIds()
     }
+
+    private suspend fun syncTrackList() {
+        trackFlow.value = appDatabase.trackDao().getAllTrack().mapToTracks()
+    }
+
+    override fun getListTracksFlow(): Flow<List<Track>> = trackFlow
 }

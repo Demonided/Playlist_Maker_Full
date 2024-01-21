@@ -1,6 +1,5 @@
 package com.katoklizm.playlist_maker_full.presentation.medialibrary.favorite_track
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,7 +16,7 @@ class FavoriteTrackViewModel(
     fun favoriteTrackState(): LiveData<FavoriteTrackState> = _favoriteTrackState
 
     fun fillData() {
-renderState(FavoriteTrackState.Loading)
+        renderState(FavoriteTrackState.Loading)
         viewModelScope.launch {
             favoriteTrackInteractor.getTrackFavorite()
                 .collect { track ->

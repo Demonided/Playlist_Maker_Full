@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.katoklizm.playlist_maker_full.domain.favorite.FavoriteTrackInteractor
-import com.katoklizm.playlist_maker_full.domain.player.PlayerState
+import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerStatus
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.domain.player.PlayerInteractor
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerScreenState
@@ -18,14 +18,7 @@ class AudioPlayerViewModel(
     private val favoriteInteractor: FavoriteTrackInteractor
 ) : ViewModel() {
 
-    private val _selectedTrack = MutableLiveData<Track>()
-    val selectedTrack: LiveData<Track>
-        get() = _selectedTrack
-
     private var timerJob: Job? = null
-
-    private val _statePlayer = MutableLiveData(PlayerState.STATE_DEFAULT)
-    val statePlayer: LiveData<PlayerState> = _statePlayer
 
     private val _timerState = MutableLiveData(0)
     val timerState: LiveData<Int> = _timerState
@@ -33,84 +26,119 @@ class AudioPlayerViewModel(
     private val _playerState = MutableLiveData<PlayerScreenState>()
     val playerState: LiveData<PlayerScreenState> = _playerState
 
+    private var favoritesTrackIds = listOf<String>()
+
+    init {
+        subscribe()
+    }
+
+    fun initState(track: Track) {
+        val initState = PlayerScreenState.Ready(
+            track.copy(isFavorite = favoritesTrackIds.contains(track.id)),
+            PlayerStatus.DEFAULT
+        )
+        _playerState.postValue(initState)
+    }
+    private fun subscribe() {
+        viewModelScope.launch {
+            favoriteInteractor.getTrackFavorite().collect { favoriteTracks ->
+                favoritesTrackIds = favoriteTracks.map { it.id }
+                _playerState.value?.getCurrentIfReady()?.let { currentState ->
+                    val track = currentState.track.copy(
+                        isFavorite = favoritesTrackIds.contains(currentState.track.id)
+                    )
+                    _playerState.postValue(currentState.copy(track = track))
+                }
+            }
+        }
+    }
     override fun onCleared() {
         super.onCleared()
         playerInteractor.release()
         timerJob?.cancel()
     }
 
-    fun setSelectedTrack(track: Track) {
-        _selectedTrack.value = track
-    }
-
     fun startPlayer() {
         playerInteractor.startPlayer()
-        _statePlayer.value = PlayerState.STATE_PLAYING
+        _playerState.value?.getCurrentIfReady()?.let { currentState ->
+            _playerState.postValue(currentState.copy(playerStatus = PlayerStatus.PLAYING))
 
-        timerJob = viewModelScope.launch {
-            while (_statePlayer.value ==  PlayerState.STATE_PLAYING) {
+            timerJob = viewModelScope.launch {
                 delay(PLAYBACK_DELAY_MILLIS)
                 _timerState.postValue(playerInteractor.currentPosition())
             }
         }
     }
 
+
     fun pausePlayer() {
         playerInteractor.pausePlayer()
-        _statePlayer.value = PlayerState.STATE_PAUSED
-
-        timerJob?.cancel()
+        _playerState.value?.getCurrentIfReady()?.let { currentState ->
+            timerJob?.cancel()
+            _playerState.postValue(currentState.copy(playerStatus = PlayerStatus.PAUSED))
+        }
     }
 
     fun preparePlayer(track: Track?, completion: () -> Unit) {
         playerInteractor.preparePlayer(track, completion,
             statusObserver = object : PlayerInteractor.StatusObserver {
                 override fun onPrepared() {
-                    _statePlayer.postValue(PlayerState.STATE_PREPARED)
+                    _playerState.value?.getCurrentIfReady()?.let { currentState ->
+                        _playerState.postValue(currentState.copy(playerStatus = PlayerStatus.PREPARED))
+                    }
                 }
 
                 override fun onCompletion() {
-                    _statePlayer.postValue(PlayerState.STATE_PREPARED)
-                    timerJob?.cancel()
-                    _timerState.postValue(0)
+                    _playerState.value?.getCurrentIfReady()?.let { currentState ->
+                        timerJob?.cancel()
+                        _timerState.postValue(0)
+                        _playerState.postValue(currentState.copy(playerStatus = PlayerStatus.PREPARED))
+                    }
                 }
             })
     }
 
     fun playbackControl() {
         when (playerStateListener()) {
-            PlayerState.STATE_PLAYING -> {
+            PlayerStatus.PLAYING -> {
                 pausePlayer()
             }
 
-            PlayerState.STATE_PREPARED -> {
+            PlayerStatus.PREPARED -> {
                 startPlayer()
             }
 
-            PlayerState.STATE_PAUSED -> {
+            PlayerStatus.PAUSED -> {
                 startPlayer()
             }
 
-            PlayerState.STATE_DEFAULT -> {
+            PlayerStatus.DEFAULT -> {
 
             }
         }
     }
 
-    fun playerStateListener(): PlayerState {
-        return statePlayer.value ?: PlayerState.STATE_DEFAULT
+    fun playerStateListener(): PlayerStatus {
+        return (_playerState.value as? PlayerScreenState.Ready)?.playerStatus ?: PlayerStatus.DEFAULT
     }
 
     fun release() {
         playerInteractor.release()
     }
 
-    fun onFavoriteClicked(track: Track) {
-        viewModelScope.launch {
-            favoriteInteractor.updateTrackFavorite(track = track)
-            setSelectedTrack(track)
+    fun onFavoriteClicked() {
+        _playerState.value?.getCurrentIfReady()?.let { currentState ->
+            viewModelScope.launch {
+                if (currentState.track.isFavorite) {
+                    favoriteInteractor.deleteTrack(currentState.track.id)
+                } else {
+                    favoriteInteractor.addTrack(currentState.track)
+                }
+            }
         }
     }
+
+    private fun PlayerScreenState.getCurrentIfReady(): PlayerScreenState.Ready? = if (this is PlayerScreenState.Ready) this else null
 
     companion object {
         const val PLAYBACK_DELAY_MILLIS = 300L

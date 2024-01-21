@@ -1,6 +1,5 @@
 package com.katoklizm.playlist_maker_full.data.search.network
 
-import android.util.Log
 import com.katoklizm.playlist_maker_full.data.NetworkClient
 import com.katoklizm.playlist_maker_full.data.db.AppDatabase
 import com.katoklizm.playlist_maker_full.data.search.dto.TrackSearchRequest
@@ -30,9 +29,11 @@ class TrackRepositoryImpl(
                 with(response as TrackSearchResponse){
                     val favoriteTrackIds = appDatabase.trackDao().getAllFavoriteTrackIds()
 
+                    // TODO задать вопрос почему все ID нулевые
                     val data = results.map {
                         Track(
-                            id = it.id,
+//                            id = it.id, myTag -> разобраться почему не приходит с бэка
+                            id = it.trackName + it.artistName,
                             trackName = it.trackName,
                             artistName = it.artistName,
                             trackTimeMillis = it.trackTimeMillis,

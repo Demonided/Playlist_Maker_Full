@@ -3,11 +3,10 @@ package com.katoklizm.playlist_maker_full.domain.search.model
 import android.os.Parcel
 import android.os.Parcelable
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 data class Track(
-    val id: Int,
+    val id: String,
     val trackName: String?, // Название композиции
     val artistName: String?, // Имя исполнителя
     val trackTimeMillis: String?, // Продолжительность трека
@@ -17,7 +16,7 @@ data class Track(
     val primaryGenreName: String?, // Жанр трека
     val country: String?, // Страна
     val previewUrl: String?, // 30сек проигрывание трека
-    var isFavorite: Boolean = false
+    val isFavorite: Boolean = false
 ): Parcelable {
 
     val artworkUrl512
@@ -28,7 +27,7 @@ data class Track(
             .format(trackTimeMillis?.toLong())
 
     constructor(parcel: Parcel) : this(
-        parcel.readInt(),
+        parcel.readString() ?: "missing", // myTag -> нужно разобраться
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
@@ -46,7 +45,7 @@ data class Track(
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeInt(id)
+        dest.writeString(id)
         dest.writeString(trackName)
         dest.writeString(artistName)
         dest.writeString(trackTimeMillis)
