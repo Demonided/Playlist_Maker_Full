@@ -17,8 +17,8 @@ interface TrackDao {
     @Delete(entity = TrackEntity::class)
     suspend fun deleteTrack(track: TrackEntity)
 
-//    @Query("SELECT id FROM track_table WHERE isFavorite = 1")
-//    suspend fun getAllFavoriteTrackIds(): List<Int>
+    @Query("SELECT id FROM track_table WHERE isFavorite = 1")
+    suspend fun getAllFavoriteTrackIds(): List<Int>
 
     @Query("SELECT * FROM track_table")
     fun getAllTrack(): Flow<List<TrackEntity>>

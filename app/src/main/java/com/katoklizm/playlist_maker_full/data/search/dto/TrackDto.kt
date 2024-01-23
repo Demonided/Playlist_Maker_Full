@@ -1,7 +1,7 @@
 package com.katoklizm.playlist_maker_full.data.search.dto
 
 data class TrackDto(
-    val id: Int,
+    val trackId: Int,
     val trackName: String?, // Название композиции
     val artistName: String?, // Имя исполнителя
     val trackTimeMillis: String?, // Продолжительность трека

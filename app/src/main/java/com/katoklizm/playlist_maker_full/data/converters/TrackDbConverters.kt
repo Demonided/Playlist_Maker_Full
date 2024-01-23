@@ -1,14 +1,13 @@
 package com.katoklizm.playlist_maker_full.data.converters
 
 import com.katoklizm.playlist_maker_full.data.db.entity.TrackEntity
-import com.katoklizm.playlist_maker_full.data.search.dto.TrackDto
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 
 class TrackDbConverters {
 
     fun map(track: Track): TrackEntity {
         return TrackEntity(
-            id = track.id,
+            id = track.trackId,
             trackName = track.trackName,
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,
@@ -24,7 +23,7 @@ class TrackDbConverters {
 
     fun map(trackEntity: TrackEntity): Track {
         return Track(
-            id = trackEntity.id,
+            trackId = trackEntity.id,
             trackName = trackEntity.trackName,
             artistName = trackEntity.artistName,
             trackTimeMillis = trackEntity.trackTimeMillis,
@@ -33,7 +32,8 @@ class TrackDbConverters {
             releaseDate = trackEntity.releaseDate,
             primaryGenreName = trackEntity.primaryGenreName,
             country = trackEntity.country,
-            previewUrl = trackEntity.previewUrl
+            previewUrl = trackEntity.previewUrl,
+            isFavorite = trackEntity.isFavorite
         )
     }
 

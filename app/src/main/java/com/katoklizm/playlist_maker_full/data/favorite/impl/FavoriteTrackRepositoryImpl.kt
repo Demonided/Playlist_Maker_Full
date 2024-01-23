@@ -5,7 +5,6 @@ import com.katoklizm.playlist_maker_full.data.db.AppDatabase
 import com.katoklizm.playlist_maker_full.domain.favorite.FavoriteTrackRepository
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class FavoriteTrackRepositoryImpl(
@@ -33,7 +32,7 @@ class FavoriteTrackRepositoryImpl(
 
     override suspend fun getTracksIds(): List<Int> {
         return appDatabase.trackDao().getTrackIds().map { trackEntity ->
-            trackDbConverters.map(trackEntity).id
+            trackDbConverters.map(trackEntity).trackId
         }
     }
 
