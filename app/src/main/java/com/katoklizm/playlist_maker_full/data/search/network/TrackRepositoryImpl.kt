@@ -1,5 +1,6 @@
 package com.katoklizm.playlist_maker_full.data.search.network
 
+import android.util.Log
 import com.katoklizm.playlist_maker_full.data.NetworkClient
 import com.katoklizm.playlist_maker_full.data.db.AppDatabase
 import com.katoklizm.playlist_maker_full.data.search.dto.TrackSearchRequest
@@ -47,7 +48,7 @@ class TrackRepositoryImpl(
                             isFavorite = it.isFavorite
                         )
                     }
-
+                    Log.d("Examination", "id = ${data.map { it.id }}")
                     emit(Resource.Success(data))
                 }
             }
