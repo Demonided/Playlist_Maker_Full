@@ -21,6 +21,8 @@ class TrackRepositoryImpl(
 
     override fun searchTrack(term: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.executeNetworkRequest(TrackSearchRequest(term = term))
+        Log.d("Examination", "Данный АПИ в $term" +
+                "\n Из этого данный ")
 
         when(response.resultCode) {
             -1 -> {
@@ -28,7 +30,7 @@ class TrackRepositoryImpl(
             }
             200 -> {
                 with(response as TrackSearchResponse){
-                    val favoriteTrackIds = appDatabase.trackDao().getAllFavoriteTrackIds()
+//                    val favoriteTrackIds = appDatabase.trackDao().getAllFavoriteTrackIds()
 
                     val data = results.map {
                         Track(
@@ -45,6 +47,8 @@ class TrackRepositoryImpl(
                             isFavorite = it.isFavorite
                         )
                     }
+                    Log.d("Examination", "Данный Id в data = ${data.map { it.id }}" +
+                            "\n Из этого данный ")
 
                     emit(Resource.Success(data))
                 }

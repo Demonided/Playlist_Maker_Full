@@ -17,14 +17,12 @@ class FavoriteTrackViewModel(
     fun favoriteTrackState(): LiveData<FavoriteTrackState> = _favoriteTrackState
 
     fun fillData() {
-renderState(FavoriteTrackState.Loading)
+        renderState(FavoriteTrackState.Loading)
         viewModelScope.launch {
-            favoriteTrackInteractor.getTrackFavorite()
-                .collect { track ->
-                    processResult(track)
-                }
+
         }
     }
+
 
     private fun processResult(track: List<Track>) {
         if (track.isEmpty()) {
@@ -35,6 +33,6 @@ renderState(FavoriteTrackState.Loading)
     }
 
     private fun renderState(state: FavoriteTrackState) {
-        _favoriteTrackState.postValue(state)
+
     }
 }

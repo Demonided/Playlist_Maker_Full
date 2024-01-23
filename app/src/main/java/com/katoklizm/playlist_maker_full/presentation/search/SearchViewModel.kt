@@ -103,7 +103,6 @@ class SearchViewModel(
         when {
             errorMessage != null -> {
                 renderState(SearchState.Error(""))
-
             }
             track.isEmpty() -> {
                 renderState(SearchState.Empty(""))
