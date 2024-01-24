@@ -13,7 +13,7 @@ class FavoriteTrackInteractorImpl(
         trackRepository.addTrack(track)
     }
 
-    override suspend fun deleteTrack(trackId: String) {
+    override suspend fun deleteTrack(trackId: Int) {
         trackRepository.deleteTrack(trackId)
     }
 
@@ -21,7 +21,7 @@ class FavoriteTrackInteractorImpl(
         return trackRepository.getListTracksFlow()
     }
 
-    override suspend fun checkTrackIsFavorite(id: String): Boolean {
+    override suspend fun checkTrackIsFavorite(id: Int): Boolean {
             val tracksId = trackRepository.getListTrackIds()
             return tracksId.contains(id)
     }

@@ -26,7 +26,7 @@ class AudioPlayerViewModel(
     private val _playerState = MutableLiveData<PlayerScreenState>()
     val playerState: LiveData<PlayerScreenState> = _playerState
 
-    private var favoritesTrackIds = listOf<String>()
+    private var favoritesTrackIds = listOf<Int>()
 
     init {
         subscribe()
@@ -34,7 +34,7 @@ class AudioPlayerViewModel(
 
     fun initState(track: Track) {
         val initState = PlayerScreenState.Ready(
-            track.copy(isFavorite = favoritesTrackIds.contains(track.id)),
+            track.copy(isFavorite = favoritesTrackIds.contains(track.trackId)),
             PlayerStatus.DEFAULT
         )
         _playerState.postValue(initState)
@@ -42,10 +42,10 @@ class AudioPlayerViewModel(
     private fun subscribe() {
         viewModelScope.launch {
             favoriteInteractor.getTrackFavorite().collect { favoriteTracks ->
-                favoritesTrackIds = favoriteTracks.map { it.id }
+                favoritesTrackIds = favoriteTracks.map { it.trackId }
                 _playerState.value?.getCurrentIfReady()?.let { currentState ->
                     val track = currentState.track.copy(
-                        isFavorite = favoritesTrackIds.contains(currentState.track.id)
+                        isFavorite = favoritesTrackIds.contains(currentState.track.trackId)
                     )
                     _playerState.postValue(currentState.copy(track = track))
                 }
@@ -130,7 +130,7 @@ class AudioPlayerViewModel(
         _playerState.value?.getCurrentIfReady()?.let { currentState ->
             viewModelScope.launch {
                 if (currentState.track.isFavorite) {
-                    favoriteInteractor.deleteTrack(currentState.track.id)
+                    favoriteInteractor.deleteTrack(currentState.track.trackId)
                 } else {
                     favoriteInteractor.addTrack(currentState.track)
                 }

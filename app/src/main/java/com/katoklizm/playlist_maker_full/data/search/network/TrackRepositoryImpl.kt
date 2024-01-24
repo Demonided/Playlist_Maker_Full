@@ -29,11 +29,9 @@ class TrackRepositoryImpl(
                 with(response as TrackSearchResponse){
                     val favoriteTrackIds = appDatabase.trackDao().getAllFavoriteTrackIds()
 
-                    // TODO задать вопрос почему все ID нулевые
                     val data = results.map {
                         Track(
-//                            id = it.id, myTag -> разобраться почему не приходит с бэка
-                            id = it.trackName + it.artistName,
+                            trackId = it.trackId,
                             trackName = it.trackName,
                             artistName = it.artistName,
                             trackTimeMillis = it.trackTimeMillis,

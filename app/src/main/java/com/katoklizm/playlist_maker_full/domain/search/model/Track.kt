@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 data class Track(
-    val id: String,
+    val trackId: Int,
     val trackName: String?, // Название композиции
     val artistName: String?, // Имя исполнителя
     val trackTimeMillis: String?, // Продолжительность трека
@@ -27,7 +27,7 @@ data class Track(
             .format(trackTimeMillis?.toLong())
 
     constructor(parcel: Parcel) : this(
-        parcel.readString() ?: "missing", // myTag -> нужно разобраться
+        parcel.readInt(),
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
@@ -45,7 +45,7 @@ data class Track(
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeString(id)
+        dest.writeInt(trackId)
         dest.writeString(trackName)
         dest.writeString(artistName)
         dest.writeString(trackTimeMillis)

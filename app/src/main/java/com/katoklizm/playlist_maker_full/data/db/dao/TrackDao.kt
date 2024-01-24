@@ -16,11 +16,11 @@ interface TrackDao {
     @Delete(entity = TrackEntity::class)
     suspend fun deleteTrack(track: TrackEntity)
 
-    @Query("DELETE FROM track_table WHERE id = :trackId")
-    suspend fun deleteTrack(trackId: String)
+    @Query("DELETE FROM track_table WHERE trackId = :trackId")
+    suspend fun deleteTrack(trackId: Int)
 
-    @Query("SELECT id FROM track_table")
-    suspend fun getAllFavoriteTrackIds(): List<String>
+    @Query("SELECT trackId FROM track_table")
+    suspend fun getAllFavoriteTrackIds(): List<Int>
 
 //    @Query("SELECT * FROM track_table")
 //    fun getAllTracksFlow(): Flow<List<TrackEntity>>
@@ -28,6 +28,6 @@ interface TrackDao {
     @Query("SELECT * FROM track_table")
     suspend fun getAllTrack(): List<TrackEntity>
 
-    @Query("SELECT * FROM track_table WHERE id=:trackId")
+    @Query("SELECT * FROM track_table WHERE trackId=:trackId")
     suspend fun getTrack(trackId: String): TrackEntity
 }

@@ -19,7 +19,7 @@ class FavoriteTrackRepositoryImpl(
         syncTrackList()
     }
 
-    override suspend fun deleteTrack(trackId: String) {
+    override suspend fun deleteTrack(trackId: Int) {
         appDatabase.trackDao().deleteTrack(trackId)
         syncTrackList()
     }
@@ -30,7 +30,7 @@ class FavoriteTrackRepositoryImpl(
         }
     }
 
-    override suspend fun getListTrackIds(): List<String> {
+    override suspend fun getListTrackIds(): List<Int> {
         return appDatabase.trackDao().getAllFavoriteTrackIds()
     }
 

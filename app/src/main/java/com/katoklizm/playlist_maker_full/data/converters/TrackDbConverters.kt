@@ -7,7 +7,7 @@ object TrackDbConverters {
 
     fun Track.mapToEntity(): TrackEntity {
         return TrackEntity(
-            id = id,
+            trackId = trackId,
             trackName = trackName,
             artistName = artistName,
             trackTimeMillis = trackTimeMillis,
@@ -22,7 +22,7 @@ object TrackDbConverters {
 
     fun TrackEntity.mapToTrack(): Track {
         return Track(
-            id = id,
+            trackId = trackId,
             trackName = trackName,
             artistName = artistName,
             trackTimeMillis = trackTimeMillis,
