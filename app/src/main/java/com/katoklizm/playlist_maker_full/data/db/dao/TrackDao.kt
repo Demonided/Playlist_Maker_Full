@@ -23,6 +23,6 @@ interface TrackDao {
     @Query("SELECT * FROM track_table")
     fun getAllTrack(): Flow<List<TrackEntity>>
 
-    @Query("SELECT id FROM track_table WHERE isFavorite=1")
+    @Query("SELECT id FROM track_table")
     suspend fun getAllTrackIds(): List<Int>
 }

@@ -47,6 +47,7 @@ class TrackRepositoryImpl(
                             isFavorite = isFavorite
                         )
                     }
+                    Log.d("Examination", "TrackAll = true ${data.map { it.isFavorite }} ")
                     emit(Resource.Success(data))
                 }
             }

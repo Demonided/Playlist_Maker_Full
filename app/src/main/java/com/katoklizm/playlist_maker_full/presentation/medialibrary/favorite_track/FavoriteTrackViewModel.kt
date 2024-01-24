@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.katoklizm.playlist_maker_full.domain.favorite.FavoriteTrackInteractor
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class FavoriteTrackViewModel(
@@ -19,7 +20,10 @@ class FavoriteTrackViewModel(
     fun fillData() {
         renderState(FavoriteTrackState.Loading)
         viewModelScope.launch {
-
+            favoriteTrackInteractor.getAllTracksIsFavorite()
+                .collect { track ->
+                    processResult(track)
+                }
         }
     }
 
@@ -33,6 +37,6 @@ class FavoriteTrackViewModel(
     }
 
     private fun renderState(state: FavoriteTrackState) {
-
+        _favoriteTrackState.postValue(state)
     }
 }
