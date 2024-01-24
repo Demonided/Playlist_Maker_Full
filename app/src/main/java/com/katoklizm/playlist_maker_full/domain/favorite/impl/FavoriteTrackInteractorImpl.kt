@@ -6,7 +6,6 @@ import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import kotlinx.coroutines.flow.Flow
 
 class FavoriteTrackInteractorImpl(val trackRepository: FavoriteTrackRepository): FavoriteTrackInteractor {
-
     override suspend fun addTrack(track: Track) {
         trackRepository.addTrack(track)
     }
@@ -15,15 +14,9 @@ class FavoriteTrackInteractorImpl(val trackRepository: FavoriteTrackRepository):
         trackRepository.deleteTrack(track)
     }
 
-    override fun getListTracks(): Flow<List<Track>> {
-        return trackRepository.getListTracks()
+    override fun gelAllTracksIsFavorite(): Flow<List<Track>> {
+        return trackRepository.gelAllTracksIsFavorite()
     }
 
-    override suspend fun getTracksIds(): List<Int> {
-        return trackRepository.getTracksIds()
-    }
 
-    override fun getTracksFlow(): Flow<List<Track>> {
-        return trackRepository.getTracksFlow()
-    }
 }

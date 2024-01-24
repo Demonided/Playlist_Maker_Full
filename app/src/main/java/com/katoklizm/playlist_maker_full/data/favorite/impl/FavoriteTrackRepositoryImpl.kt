@@ -11,37 +11,22 @@ class FavoriteTrackRepositoryImpl(
     val appDatabase: AppDatabase,
     val trackDbConverters: TrackDbConverters
 ) : FavoriteTrackRepository {
-
     override suspend fun addTrack(track: Track) {
-        val traks = trackDbConverters.map(track)
-        appDatabase.trackDao().insertTrack(traks)
+        val tracks = trackDbConverters.map(track)
+        appDatabase.trackDao().insertTrack(track = tracks)
     }
 
     override suspend fun deleteTrack(track: Track) {
-        val tracks = trackDbConverters.map(track)
-        appDatabase.trackDao().deleteTrack(tracks)
+        appDatabase.trackDao().deleteTrack(track.trackId)
     }
 
-    override fun getListTracks(): Flow<List<Track>> {
-        return appDatabase.trackDao().getAllTrack().map {listTrack ->
+    override fun gelAllTracksIsFavorite(): Flow<List<Track>> {
+        return appDatabase.trackDao().getAllTrack().map { listTrack ->
             listTrack.map {
                 trackDbConverters.map(it)
             }
         }
     }
 
-    override suspend fun getTracksIds(): List<Int> {
-        return appDatabase.trackDao().getTrackIds().map { trackEntity ->
-            trackDbConverters.map(trackEntity).trackId
-        }
-    }
 
-    override fun getTracksFlow(): Flow<List<Track>> {
-        return appDatabase.trackDao().getAllTrack().map { listTrack ->
-            listTrack
-                .map {
-                    trackDbConverters.map(it)
-                }
-        }
-    }
 }
