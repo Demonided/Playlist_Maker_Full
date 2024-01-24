@@ -29,6 +29,7 @@ class TrackRepositoryImpl(
             200 -> {
                 with(response as TrackSearchResponse){
                     val favoriteTrackIds = appDatabase.trackDao().getAllTrackIds()
+                    Log.d("Examination", "all Trach where isFavorite = true $favoriteTrackIds ")
 
                     val data = results.map {
                         val isFavorite = it.trackId in favoriteTrackIds

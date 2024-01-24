@@ -103,10 +103,16 @@ class AudioPlayerViewModel(
 
     fun onFavoriteClicked(track: Track) {
         viewModelScope.launch {
-            if (!track.isFavorite) {
-                favoriteInteractor.addTrack(track)
+            val tracks = track.copy(
+                isFavorite = track.isFavorite
+            )
+
+            if (!tracks.isFavorite) {
+                tracks.isFavorite = true
+                favoriteInteractor.addTrack(tracks)
             } else {
-                favoriteInteractor.deleteTrack(track)
+                tracks.isFavorite = false
+                favoriteInteractor.deleteTrack(tracks)
             }
         }
     }

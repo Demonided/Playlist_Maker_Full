@@ -125,11 +125,9 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         if (track!!.isFavorite) {
             binding?.audioPlayerLikeMusicTrack?.setImageResource(R.drawable.audio_player_like_off)
-            track?.isFavorite = false
             Toast.makeText(applicationContext, "Вы удалили трек из избранного", Toast.LENGTH_LONG).show()
         } else {
             binding?.audioPlayerLikeMusicTrack?.setImageResource(R.drawable.audio_player_like_on)
-            track?.isFavorite = true
             Toast.makeText(applicationContext, "Вы добавили трек в избранное", Toast.LENGTH_LONG).show()
         }
     }
