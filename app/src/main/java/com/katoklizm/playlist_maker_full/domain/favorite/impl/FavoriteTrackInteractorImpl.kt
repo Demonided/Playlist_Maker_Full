@@ -17,6 +17,4 @@ class FavoriteTrackInteractorImpl(val trackRepository: FavoriteTrackRepository):
     override fun gelAllTracksIsFavorite(): Flow<List<Track>> {
         return trackRepository.gelAllTracksIsFavorite()
     }
-
-
 }

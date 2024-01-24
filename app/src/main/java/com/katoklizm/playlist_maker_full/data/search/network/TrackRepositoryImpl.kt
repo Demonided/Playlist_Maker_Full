@@ -31,7 +31,7 @@ class TrackRepositoryImpl(
                     val favoriteTrackIds = appDatabase.trackDao().getAllTrackIds()
 
                     val data = results.map {
-//                        val isFavorite = it.trackId in favoriteTrackIds
+                        val isFavorite = it.trackId in favoriteTrackIds
                         Track(
                             trackId = it.trackId,
                             trackName = it.trackName,
@@ -43,7 +43,7 @@ class TrackRepositoryImpl(
                             primaryGenreName = it.primaryGenreName,
                             country = it.country,
                             previewUrl = it.previewUrl,
-                            isFavorite = it.isFavorite
+                            isFavorite = isFavorite
                         )
                     }
                     emit(Resource.Success(data))
