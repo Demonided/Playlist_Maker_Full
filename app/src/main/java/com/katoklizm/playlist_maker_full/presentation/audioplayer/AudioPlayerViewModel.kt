@@ -39,6 +39,7 @@ class AudioPlayerViewModel(
         )
         _playerState.postValue(initState)
     }
+
     private fun subscribe() {
         viewModelScope.launch {
             favoriteInteractor.getTrackFavorite().collect { favoriteTracks ->
@@ -57,6 +58,7 @@ class AudioPlayerViewModel(
             }
         }
     }
+
     override fun onCleared() {
         super.onCleared()
         playerInteractor.release()
@@ -68,14 +70,13 @@ class AudioPlayerViewModel(
         _playerState.value?.getCurrentIfReady()?.let { currentState ->
             _playerState.postValue(currentState.copy(playerStatus = PlayerStatus.PLAYING))
 
-            while (_statePlayer.value ==  PlayerState.STATE_PLAYING) {
-                delay(PLAYBACK_DELAY_MILLIS)
-                _timerState.postValue(playerInteractor.currentPosition())
-            }
+
 
             timerJob = viewModelScope.launch {
-                delay(PLAYBACK_DELAY_MILLIS)
-                _timerState.postValue(playerInteractor.currentPosition())
+                while (_statePlayer.value == PlayerState.STATE_PLAYING) {
+                    delay(PLAYBACK_DELAY_MILLIS)
+                    _timerState.postValue(playerInteractor.currentPosition())
+                }
             }
         }
     }
@@ -129,7 +130,8 @@ class AudioPlayerViewModel(
     }
 
     fun playerStateListener(): PlayerStatus {
-        return (_playerState.value as? PlayerScreenState.Ready)?.playerStatus ?: PlayerStatus.DEFAULT
+        return (_playerState.value as? PlayerScreenState.Ready)?.playerStatus
+            ?: PlayerStatus.DEFAULT
     }
 
     fun release() {
@@ -148,7 +150,8 @@ class AudioPlayerViewModel(
         }
     }
 
-    private fun PlayerScreenState.getCurrentIfReady(): PlayerScreenState.Ready? = if (this is PlayerScreenState.Ready) this else null
+    private fun PlayerScreenState.getCurrentIfReady(): PlayerScreenState.Ready? =
+        if (this is PlayerScreenState.Ready) this else null
 
     companion object {
         const val PLAYBACK_DELAY_MILLIS = 300L
