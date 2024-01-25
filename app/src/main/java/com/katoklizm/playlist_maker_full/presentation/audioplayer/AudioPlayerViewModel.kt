@@ -71,7 +71,7 @@ class AudioPlayerViewModel(
             _playerState.postValue(currentState.copy(playerStatus = PlayerStatus.PLAYING))
 
 
-
+            _statePlayer.value = PlayerState.STATE_PLAYING
             timerJob = viewModelScope.launch {
                 while (_statePlayer.value == PlayerState.STATE_PLAYING) {
                     delay(PLAYBACK_DELAY_MILLIS)
