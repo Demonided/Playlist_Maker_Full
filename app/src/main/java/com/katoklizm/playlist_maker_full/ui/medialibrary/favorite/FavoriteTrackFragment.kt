@@ -1,5 +1,7 @@
 package com.katoklizm.playlist_maker_full.ui.medialibrary.favorite
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,17 +11,22 @@ import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.katoklizm.playlist_maker_full.data.ConstTrack
 import com.katoklizm.playlist_maker_full.databinding.FragmentFavoriteTrackBinding
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.favorite_track.FavoriteTrackState
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.favorite_track.FavoriteTrackViewModel
+import com.katoklizm.playlist_maker_full.ui.audioplayer.AudioPlayerActivity
 import com.katoklizm.playlist_maker_full.ui.search.SearchFragment
+import com.katoklizm.playlist_maker_full.ui.search.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FavoriteTrackFragment : Fragment() {
+class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickListener {
 
     private var _binding: FragmentFavoriteTrackBinding? = null
     private val binding get() = _binding!!
+
+    private var isClickAllowed = true
 
     private val favoriteTrackViewModel: FavoriteTrackViewModel by viewModel()
     private var adapter: FavoriteTrackAdapter? = null
@@ -27,8 +34,6 @@ class FavoriteTrackFragment : Fragment() {
     private lateinit var favorite_track_progressBar: ProgressBar
     private lateinit var favorite_track_recycler: RecyclerView
     private lateinit var favorite_track_empty: LinearLayout
-
-    private var isClickAllowed = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -103,7 +108,18 @@ class FavoriteTrackFragment : Fragment() {
         return current
     }
 
+    private fun openAudioPlayer(track: Track) {
+        val intent = Intent(requireContext(), AudioPlayerActivity::class.java)
+        intent.putExtra(ConstTrack.SAVE_TRACK, track)
+        startActivity(intent)
+    }
 
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onButtonRecyclerViewSaveTrack(track: Track) {
+        if (clickDebounce()) {
+            openAudioPlayer(track)
+        }
+    }
 
     companion object {
         private const val FAVORITE_TRACK = "favorite_track"
@@ -116,4 +132,6 @@ class FavoriteTrackFragment : Fragment() {
             }
         }
     }
+
+
 }

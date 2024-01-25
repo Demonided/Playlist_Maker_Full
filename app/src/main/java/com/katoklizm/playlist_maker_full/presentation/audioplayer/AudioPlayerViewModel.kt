@@ -11,6 +11,7 @@ import com.katoklizm.playlist_maker_full.domain.player.PlayerInteractor
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerScreenState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class AudioPlayerViewModel(
@@ -106,14 +107,17 @@ class AudioPlayerViewModel(
     }
 
     fun prepareFavoriteTrack(track: Track) {
-        val tracks = favoriteInteractor.getAllTracksIsFavorite()
+        val favoriteTrack = favoriteInteractor.getAllTracksIsFavorite().map { listTrack ->
+            listTrack.map {
+                it.trackId
+            }
+        }
 
     }
 
     fun onFavoriteClicked(track: Track) {
         viewModelScope.launch {
             val tracks = favoriteInteractor.getAllTracksIsFavorite()
-
 
             if (!track.isFavorite) {
                 favoriteInteractor.addTrack(track)
