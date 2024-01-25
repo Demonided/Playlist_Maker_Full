@@ -48,7 +48,12 @@ class AudioPlayerViewModel(
                         isFavorite = favoritesTrackIds.contains(currentState.track.trackId)
                     )
                     _playerState.postValue(currentState.copy(track = track))
+
                 }
+            }
+            timerJob = viewModelScope.launch {
+                delay(PLAYBACK_DELAY_MILLIS)
+                _timerState.postValue(playerInteractor.currentPosition())
             }
         }
     }
