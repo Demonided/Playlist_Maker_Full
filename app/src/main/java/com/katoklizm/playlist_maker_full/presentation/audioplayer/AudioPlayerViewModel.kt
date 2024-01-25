@@ -70,13 +70,9 @@ class AudioPlayerViewModel(
         _playerState.value?.getCurrentIfReady()?.let { currentState ->
             _playerState.postValue(currentState.copy(playerStatus = PlayerStatus.PLAYING))
 
-
-            _statePlayer.value = PlayerState.STATE_PLAYING
             timerJob = viewModelScope.launch {
-                while (_statePlayer.value == PlayerState.STATE_PLAYING) {
-                    delay(PLAYBACK_DELAY_MILLIS)
-                    _timerState.postValue(playerInteractor.currentPosition())
-                }
+                delay(PLAYBACK_DELAY_MILLIS)
+                _timerState.postValue(playerInteractor.currentPosition())
             }
         }
     }
