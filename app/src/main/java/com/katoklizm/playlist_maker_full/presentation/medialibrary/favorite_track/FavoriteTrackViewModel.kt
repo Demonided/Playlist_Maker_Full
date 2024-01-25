@@ -5,11 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.katoklizm.playlist_maker_full.domain.favorite.FavoriteTrackInteractor
+import com.katoklizm.playlist_maker_full.domain.search.api.TrackInteractor
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import kotlinx.coroutines.launch
 
 class FavoriteTrackViewModel(
-    private val favoriteTrackInteractor: FavoriteTrackInteractor
+    private val favoriteTrackInteractor: FavoriteTrackInteractor,
+    private val favoriteInteractor: FavoriteTrackInteractor,
+    private val trackInteractor: TrackInteractor
 ) : ViewModel() {
 
     private val _favoriteTrackState = MutableLiveData<FavoriteTrackState>()

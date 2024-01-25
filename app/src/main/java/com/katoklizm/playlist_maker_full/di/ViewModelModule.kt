@@ -31,7 +31,7 @@ val viewModelModule = module {
 
     // Fragment Media_library с которой в дальнейшем будем работать
     viewModel {
-        FavoriteTrackViewModel(get())
+        FavoriteTrackViewModel(get(), get(), get())
     }
 
     // Fragment Media_library с которой в дальнейшем будем работать

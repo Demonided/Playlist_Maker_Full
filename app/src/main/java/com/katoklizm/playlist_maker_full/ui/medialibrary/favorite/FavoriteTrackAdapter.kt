@@ -18,6 +18,5 @@ class FavoriteTrackAdapter() :
     override fun onBindViewHolder(holder: FavoriteTrackViewHolder, position: Int) {
         holder.bind(tracks.get(position))
     }
-
 }
 

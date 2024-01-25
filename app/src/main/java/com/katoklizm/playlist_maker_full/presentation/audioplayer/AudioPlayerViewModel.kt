@@ -34,12 +34,6 @@ class AudioPlayerViewModel(
     init {
         subscribe()
 
-//        while (true) {
-//            timerJob = viewModelScope.launch {
-//                delay(PLAYBACK_DELAY_MILLIS)
-//                _timerState.postValue(playerInteractor.currentPosition())
-//            }
-//        }
     }
 
     fun initState(track: Track) {

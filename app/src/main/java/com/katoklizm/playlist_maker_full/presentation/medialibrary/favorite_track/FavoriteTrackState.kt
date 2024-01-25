@@ -11,7 +11,4 @@ sealed interface FavoriteTrackState {
     data class Content(
         val tracks: List<Track>
     ) : FavoriteTrackState
-
-    data class Error(val code: Int) : FavoriteTrackState
-
 }
