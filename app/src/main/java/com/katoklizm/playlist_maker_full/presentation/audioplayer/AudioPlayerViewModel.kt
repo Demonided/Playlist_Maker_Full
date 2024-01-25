@@ -1,19 +1,22 @@
 package com.katoklizm.playlist_maker_full.presentation.audioplayer
 
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.katoklizm.playlist_maker_full.domain.favorite.FavoriteTrackInteractor
-import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerStatus
-import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.domain.player.PlayerInteractor
+import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerScreenState
+import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerStatus
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class AudioPlayerViewModel(
+    private val context: Context,
     private val playerInteractor: PlayerInteractor,
     private val favoriteInteractor: FavoriteTrackInteractor
 ) : ViewModel() {
@@ -30,6 +33,13 @@ class AudioPlayerViewModel(
 
     init {
         subscribe()
+
+//        while (true) {
+//            timerJob = viewModelScope.launch {
+//                delay(PLAYBACK_DELAY_MILLIS)
+//                _timerState.postValue(playerInteractor.currentPosition())
+//            }
+//        }
     }
 
     fun initState(track: Track) {
@@ -49,12 +59,7 @@ class AudioPlayerViewModel(
                         isFavorite = favoritesTrackIds.contains(currentState.track.trackId)
                     )
                     _playerState.postValue(currentState.copy(track = track))
-
                 }
-            }
-            timerJob = viewModelScope.launch {
-                delay(PLAYBACK_DELAY_MILLIS)
-                _timerState.postValue(playerInteractor.currentPosition())
             }
         }
     }
@@ -71,12 +76,13 @@ class AudioPlayerViewModel(
             _playerState.postValue(currentState.copy(playerStatus = PlayerStatus.PLAYING))
 
             timerJob = viewModelScope.launch {
-                delay(PLAYBACK_DELAY_MILLIS)
-                _timerState.postValue(playerInteractor.currentPosition())
+                while (true) {
+                    delay(PLAYBACK_DELAY_MILLIS)
+                    _timerState.postValue(playerInteractor.currentPosition())
+                }
             }
         }
     }
-
 
     fun pausePlayer() {
         playerInteractor.pausePlayer()
@@ -139,8 +145,10 @@ class AudioPlayerViewModel(
             viewModelScope.launch {
                 if (currentState.track.isFavorite) {
                     favoriteInteractor.deleteTrack(currentState.track.trackId)
+                    Toast.makeText(context, "Вы удалили трек из избранного", Toast.LENGTH_LONG).show()
                 } else {
                     favoriteInteractor.addTrack(currentState.track)
+                    Toast.makeText(context, "Вы добавили трек в избранное", Toast.LENGTH_LONG).show()
                 }
             }
         }

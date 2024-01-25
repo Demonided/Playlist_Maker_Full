@@ -5,16 +5,19 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.data.ConstTrack
-import com.katoklizm.playlist_maker_full.databinding.AudioPlayerBinding
 import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
-import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerStatus
+import com.katoklizm.playlist_maker_full.databinding.AudioPlayerBinding
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.presentation.audioplayer.AudioPlayerViewModel
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerScreenState
+import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerStatus
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -84,8 +87,6 @@ class AudioPlayerActivity : AppCompatActivity() {
             audioPlayerViewModel.playbackControl()
         }
 
-
-
         binding?.audioPlayerLikeMusicTrack?.setOnClickListener {
             prepareFavoriteTrack()
         }
@@ -110,7 +111,8 @@ class AudioPlayerActivity : AppCompatActivity() {
                 processingPlayerStatus(state.playerStatus)
                 // TODO need processing handle selected track
 
-                val newImageRes = if (state.track.isFavorite) R.drawable.audio_player_like_on else R.drawable.audio_player_like_off
+                val newImageRes =
+                    if (state.track.isFavorite) R.drawable.audio_player_like_on else R.drawable.audio_player_like_off
                 binding?.audioPlayerLikeMusicTrack?.setImageResource(newImageRes)
             }
         }
