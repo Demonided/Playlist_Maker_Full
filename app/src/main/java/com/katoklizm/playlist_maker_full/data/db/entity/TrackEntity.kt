@@ -21,5 +21,6 @@ data class TrackEntity(
     val primaryGenreName: String?, // Жанр трека
     val country: String?, // Страна
     val previewUrl: String?, // 30сек проигрывание трека
-    val isFavorite: Boolean // Добавлен ли трек в избранное
+    val isFavorite: Boolean, // Добавлен ли трек в избранное
+    val insertionTime: Long
 )

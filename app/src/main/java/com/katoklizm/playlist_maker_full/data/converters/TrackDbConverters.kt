@@ -2,6 +2,7 @@ package com.katoklizm.playlist_maker_full.data.converters
 
 import com.katoklizm.playlist_maker_full.data.db.entity.TrackEntity
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
+import java.util.Calendar
 
 class TrackDbConverters {
 
@@ -17,7 +18,8 @@ class TrackDbConverters {
             primaryGenreName = track.primaryGenreName,
             country = track.country,
             previewUrl = track.previewUrl,
-            isFavorite = true
+            isFavorite = true,
+            insertionTime = Calendar.getInstance().time.time
         )
     }
 
