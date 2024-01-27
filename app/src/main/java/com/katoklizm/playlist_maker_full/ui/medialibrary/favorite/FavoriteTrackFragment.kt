@@ -59,7 +59,7 @@ class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickL
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         favorite_track_recycler.adapter = adapter
 
-//        favoriteTrackViewModel.fillData()
+        favoriteTrackViewModel.fillData()
 
         favoriteTrackViewModel.favoriteTrackState().observe(viewLifecycleOwner) {
             render(it)
