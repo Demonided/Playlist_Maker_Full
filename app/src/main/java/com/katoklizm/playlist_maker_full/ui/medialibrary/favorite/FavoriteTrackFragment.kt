@@ -1,6 +1,5 @@
 package com.katoklizm.playlist_maker_full.ui.medialibrary.favorite
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -19,11 +18,10 @@ import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.favorite_track.FavoriteTrackState
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.favorite_track.FavoriteTrackViewModel
 import com.katoklizm.playlist_maker_full.ui.audioplayer.AudioPlayerActivity
-import com.katoklizm.playlist_maker_full.ui.search.SearchFragment
 import com.katoklizm.playlist_maker_full.ui.search.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FavoriteTrackFragment : Fragment() {
+class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickListener  {
 
     private var _binding: FragmentFavoriteTrackBinding? = null
     private val binding get() = _binding!!
@@ -31,15 +29,13 @@ class FavoriteTrackFragment : Fragment() {
     private var isClickAllowed = true
 
     private val favoriteTrackViewModel: FavoriteTrackViewModel by viewModel()
-    private var adapter: FavoriteTrackAdapter? = null
+    private var adapter: TrackAdapter? = null
 
     private lateinit var favorite_track_progressBar: ProgressBar
     private lateinit var favorite_track_recycler: RecyclerView
     private lateinit var favorite_track_empty: LinearLayout
 
     private val handler = Handler(Looper.getMainLooper())
-
-    private lateinit var onTrackClickDebounced: (Track) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,7 +49,7 @@ class FavoriteTrackFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = FavoriteTrackAdapter()
+        adapter = TrackAdapter(this)
 
         favorite_track_progressBar = binding.favoriteTrackProgressBar
         favorite_track_recycler = binding.favoriteTrackRecycler
@@ -63,13 +59,18 @@ class FavoriteTrackFragment : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         favorite_track_recycler.adapter = adapter
 
-        favoriteTrackViewModel.fillData()
+//        favoriteTrackViewModel.fillData()
 
         favoriteTrackViewModel.favoriteTrackState().observe(viewLifecycleOwner) {
             render(it)
         }
     }
 
+    override fun onButtonRecyclerViewSaveTrack(track: Track) {
+        if (clickDebounce()) {
+            openAudioPlayer(track)
+        }
+    }
 
     override fun onDestroy() {
         super.onDestroy()

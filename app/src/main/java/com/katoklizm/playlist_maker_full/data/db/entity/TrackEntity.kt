@@ -18,4 +18,5 @@ data class TrackEntity(
     val primaryGenreName: String?, // Жанр трека
     val country: String?, // Страна
     val previewUrl: String?, // 30сек проигрывание трека
+    val insertionTime: Long // Время вставки
 )

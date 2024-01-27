@@ -11,12 +11,14 @@ import kotlinx.coroutines.launch
 
 class FavoriteTrackViewModel(
     private val favoriteTrackInteractor: FavoriteTrackInteractor,
-    private val favoriteInteractor: FavoriteTrackInteractor,
-    private val trackInteractor: TrackInteractor
 ) : ViewModel() {
 
     private val _favoriteTrackState = MutableLiveData<FavoriteTrackState>()
     fun favoriteTrackState(): LiveData<FavoriteTrackState> = _favoriteTrackState
+
+    init {
+        fillData()
+    }
 
     fun fillData() {
         renderState(FavoriteTrackState.Loading)

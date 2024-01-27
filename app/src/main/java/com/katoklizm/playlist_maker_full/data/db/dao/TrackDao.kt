@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.katoklizm.playlist_maker_full.data.db.entity.TrackEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TrackDao {
@@ -22,10 +23,10 @@ interface TrackDao {
     @Query("SELECT trackId FROM track_table")
     suspend fun getAllFavoriteTrackIds(): List<Int>
 
-//    @Query("SELECT * FROM track_table")
-//    fun getAllTracksFlow(): Flow<List<TrackEntity>>
+    @Query("SELECT * FROM track_table order by insertionTime desc")
+    suspend fun getAllTracksFlow(): List<TrackEntity>
 
-    @Query("SELECT * FROM track_table")
+    @Query("SELECT * FROM track_table order by insertionTime desc")
     suspend fun getAllTrack(): List<TrackEntity>
 
     @Query("SELECT * FROM track_table WHERE trackId=:trackId")

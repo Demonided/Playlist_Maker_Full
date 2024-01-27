@@ -7,6 +7,7 @@ import com.katoklizm.playlist_maker_full.domain.favorite.FavoriteTrackRepository
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 
 class FavoriteTrackRepositoryImpl(
     private val appDatabase: AppDatabase,
@@ -38,5 +39,8 @@ class FavoriteTrackRepositoryImpl(
         trackFlow.value = appDatabase.trackDao().getAllTrack().mapToTracks()
     }
 
-    override fun getListTracksFlow(): Flow<List<Track>> = trackFlow
+    override fun getListTracksFlow(): Flow<List<Track>> = flow {
+        val track = appDatabase.trackDao().getAllTracksFlow()
+        emit(track.mapToTracks())
+    }
 }

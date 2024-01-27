@@ -33,7 +33,6 @@ class AudioPlayerViewModel(
 
     init {
         subscribe()
-
     }
 
     fun initState(track: Track) {

@@ -89,6 +89,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         binding?.audioPlayerLikeMusicTrack?.setOnClickListener {
             prepareFavoriteTrack()
+
         }
     }
 
@@ -104,12 +105,11 @@ class AudioPlayerActivity : AppCompatActivity() {
     private fun renderState(state: PlayerScreenState) {
         when (state) {
             is PlayerScreenState.Loading -> {
-                // TODO need realization loading screen
+
             }
 
             is PlayerScreenState.Ready -> {
                 processingPlayerStatus(state.playerStatus)
-                // TODO need processing handle selected track
 
                 val newImageRes =
                     if (state.track.isFavorite) R.drawable.audio_player_like_on else R.drawable.audio_player_like_off
