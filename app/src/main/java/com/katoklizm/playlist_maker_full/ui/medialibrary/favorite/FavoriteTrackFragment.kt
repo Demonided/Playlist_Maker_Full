@@ -123,9 +123,7 @@ class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickL
     }
 
     companion object {
-        private const val FAVORITE_TRACK = "favorite_track"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
 
         fun newInstance() = FavoriteTrackFragment().apply {
             arguments = Bundle().apply {

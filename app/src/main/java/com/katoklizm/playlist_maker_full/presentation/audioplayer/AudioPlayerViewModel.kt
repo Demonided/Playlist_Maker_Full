@@ -138,9 +138,11 @@ class AudioPlayerViewModel(
             viewModelScope.launch {
                 if (currentState.track.isFavorite) {
                     favoriteInteractor.deleteTrack(currentState.track.trackId)
+                    _playerState.postValue(PlayerScreenState.Ready(currentState.track.copy(isFavorite = false), currentState.playerStatus))
                     Toast.makeText(context, "Вы удалили трек из избранного", Toast.LENGTH_LONG).show()
                 } else {
                     favoriteInteractor.addTrack(currentState.track)
+                    _playerState.postValue(PlayerScreenState.Ready(currentState.track.copy(isFavorite = true), currentState.playerStatus))
                     Toast.makeText(context, "Вы добавили трек в избранное", Toast.LENGTH_LONG).show()
                 }
             }
