@@ -25,7 +25,7 @@ class TrackAdapter(val onSaveTrackManagersClickListener: OnSaveTrackManagersClic
             }
 
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return tracks[oldItemPosition].id == newTrack[newItemPosition].id
+                return tracks[oldItemPosition].trackId == newTrack[newItemPosition].trackId
             }
 
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

@@ -2,14 +2,10 @@ package com.katoklizm.playlist_maker_full.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.commit
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.databinding.ActivityRootBinding
-import com.katoklizm.playlist_maker_full.ui.medialibrary.MediaLibraryFragment
-import com.katoklizm.playlist_maker_full.ui.search.SearchFragment
-import com.katoklizm.playlist_maker_full.ui.setting.SettingFragment
 
 class RootActivity : AppCompatActivity() {
 

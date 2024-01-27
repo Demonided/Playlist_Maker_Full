@@ -1,7 +1,11 @@
 package com.katoklizm.playlist_maker_full.app
 
 import android.app.Application
+import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import com.katoklizm.playlist_maker_full.data.db.AppDatabase
+import com.katoklizm.playlist_maker_full.data.db.entity.TrackEntity
+import com.katoklizm.playlist_maker_full.data.search.network.ITunesSearchApi
 import com.katoklizm.playlist_maker_full.di.dataModule
 import com.katoklizm.playlist_maker_full.di.interactorModule
 import com.katoklizm.playlist_maker_full.di.repositoryModule
@@ -21,7 +25,7 @@ class App : Application() {
             modules(dataModule, repositoryModule, interactorModule, viewModelModule)
         }
 
-        val settingsInteractor : SettingsInteractor by inject()
+        val settingsInteractor: SettingsInteractor by inject()
 
         currentTheme = settingsInteractor.lookAtThemeBoolean()
         render(currentTheme)

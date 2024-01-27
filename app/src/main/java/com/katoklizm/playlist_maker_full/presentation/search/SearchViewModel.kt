@@ -24,6 +24,12 @@ class SearchViewModel(
     private var latestSearchText: String? = null
 
     private val _isScreenPaused = MutableLiveData<Boolean>()
+
+    override fun onCleared() {
+        super.onCleared()
+        searchJob?.cancel()
+    }
+
     fun isScreenPaused(): LiveData<Boolean> = _isScreenPaused
 
     fun observeState(): LiveData<SearchState> = stateLiveData
@@ -45,7 +51,7 @@ class SearchViewModel(
 
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            delay(SEARCH_DEBOUNCE_DELAY)
+            delay(SEARCH_DEBOUNCE_DELAY_MILLIS)
             searchRequest(searchText)
         }
     }
@@ -109,6 +115,6 @@ class SearchViewModel(
     }
 
     companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
     }
 }

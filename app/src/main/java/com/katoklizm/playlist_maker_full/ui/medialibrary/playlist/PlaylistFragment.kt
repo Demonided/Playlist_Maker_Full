@@ -1,4 +1,4 @@
-package com.katoklizm.playlist_maker_full.ui.medialibrary
+package com.katoklizm.playlist_maker_full.ui.medialibrary.playlist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import com.katoklizm.playlist_maker_full.databinding.FragmentPlaylistsBinding
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlaylistViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 class PlaylistFragment: Fragment() {
 
