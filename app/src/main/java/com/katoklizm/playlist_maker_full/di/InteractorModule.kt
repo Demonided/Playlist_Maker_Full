@@ -1,5 +1,7 @@
 package com.katoklizm.playlist_maker_full.di
 
+import com.katoklizm.playlist_maker_full.domain.favorite.FavoriteTrackInteractor
+import com.katoklizm.playlist_maker_full.domain.favorite.impl.FavoriteTrackInteractorImpl
 import com.katoklizm.playlist_maker_full.domain.player.PlayerInteractor
 import com.katoklizm.playlist_maker_full.domain.player.PlayerInteractorImpl
 import com.katoklizm.playlist_maker_full.domain.search.api.TrackInteractor
@@ -26,5 +28,9 @@ val interactorModule = module {
 
     factory<PlayerInteractor> {
         PlayerInteractorImpl(get())
+    }
+
+    single<FavoriteTrackInteractor> {
+        FavoriteTrackInteractorImpl(get())
     }
 }
