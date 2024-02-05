@@ -31,9 +31,9 @@ class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickL
     private val favoriteTrackViewModel: FavoriteTrackViewModel by viewModel()
     private var adapter: TrackAdapter? = null
 
-    private lateinit var favorite_track_progressBar: ProgressBar
-    private lateinit var favorite_track_recycler: RecyclerView
-    private lateinit var favorite_track_empty: LinearLayout
+    private lateinit var favoriteTrackProgressBar: ProgressBar
+    private lateinit var favoriteTrackRecycler: RecyclerView
+    private lateinit var favoriteTrackEmpty: LinearLayout
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -51,13 +51,13 @@ class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickL
 
         adapter = TrackAdapter(this)
 
-        favorite_track_progressBar = binding.favoriteTrackProgressBar
-        favorite_track_recycler = binding.favoriteTrackRecycler
-        favorite_track_empty = binding.favoriteTrackEmpty
+        favoriteTrackProgressBar = binding.favoriteTrackProgressBar
+        favoriteTrackRecycler = binding.favoriteTrackRecycler
+        favoriteTrackEmpty = binding.favoriteTrackEmpty
 
-        favorite_track_recycler.layoutManager =
+        favoriteTrackRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        favorite_track_recycler.adapter = adapter
+        favoriteTrackRecycler.adapter = adapter
 
         favoriteTrackViewModel.fillData()
 
@@ -86,9 +86,9 @@ class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickL
     }
 
     private fun showContent(track: List<Track>) {
-        favorite_track_empty.visibility = View.GONE
-        favorite_track_recycler.visibility = View.VISIBLE
-        favorite_track_progressBar.visibility = View.GONE
+        favoriteTrackEmpty.visibility = View.GONE
+        favoriteTrackRecycler.visibility = View.VISIBLE
+        favoriteTrackProgressBar.visibility = View.GONE
 
         adapter?.tracks?.clear()
         adapter?.tracks?.addAll(track)
@@ -96,15 +96,15 @@ class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickL
     }
 
     private fun showEmpty() {
-        favorite_track_empty.visibility = View.VISIBLE
-        favorite_track_recycler.visibility = View.GONE
-        favorite_track_progressBar.visibility = View.GONE
+        favoriteTrackEmpty.visibility = View.VISIBLE
+        favoriteTrackRecycler.visibility = View.GONE
+        favoriteTrackProgressBar.visibility = View.GONE
     }
 
     private fun showLoading() {
-        favorite_track_empty.visibility = View.GONE
-        favorite_track_recycler.visibility = View.GONE
-        favorite_track_progressBar.visibility = View.VISIBLE
+        favoriteTrackEmpty.visibility = View.GONE
+        favoriteTrackRecycler.visibility = View.GONE
+        favoriteTrackProgressBar.visibility = View.VISIBLE
     }
 
     private fun clickDebounce(): Boolean {

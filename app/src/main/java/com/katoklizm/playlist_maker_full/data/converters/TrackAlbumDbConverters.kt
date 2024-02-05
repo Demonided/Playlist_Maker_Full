@@ -1,13 +1,13 @@
 package com.katoklizm.playlist_maker_full.data.converters
 
-import com.katoklizm.playlist_maker_full.data.db.entity.TrackEntity
-import com.katoklizm.playlist_maker_full.domain.search.model.Track
+import com.katoklizm.playlist_maker_full.data.db.entity.TrackAlbumPlaylistEntity
+import com.katoklizm.playlist_maker_full.domain.album.model.TrackAlbumPlaylist
 import java.util.Calendar
 
-object TrackDbConverters {
+object TrackAlbumDbConverters {
 
-    fun Track.mapToEntity(): TrackEntity {
-        return TrackEntity(
+    fun TrackAlbumPlaylist.mapAlbumTrackPlaylistEntity(): TrackAlbumPlaylistEntity {
+        return TrackAlbumPlaylistEntity(
             trackId = trackId,
             trackName = trackName,
             artistName = artistName,
@@ -22,8 +22,8 @@ object TrackDbConverters {
         )
     }
 
-    fun TrackEntity.mapToTrack(): Track {
-        return Track(
+    fun TrackAlbumPlaylistEntity.mapAlbumTrackPlaylist(): TrackAlbumPlaylist {
+        return TrackAlbumPlaylist(
             trackId = trackId,
             trackName = trackName,
             artistName = artistName,
@@ -34,9 +34,9 @@ object TrackDbConverters {
             primaryGenreName = primaryGenreName,
             country = country,
             previewUrl = previewUrl,
-            isFavorite = true,
+
         )
     }
 
-    fun List<TrackEntity>.mapToTracks(): List<Track> = map { it.mapToTrack() }
+    fun List<TrackAlbumPlaylistEntity>.mapAlbumTrackPlaylist(): List<TrackAlbumPlaylist> = map { it.mapAlbumTrackPlaylist() }
 }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/album_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:layout_marginVertical="8dp"
+        android:layout_marginHorizontal="8dp"
+        android:background="@drawable/album_image"
+        android:clipToOutline="true"
+        app:layout_constraintDimensionRatio="H, 1:1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/album_title"
+        />
+
+    <TextView
+        android:id="@+id/album_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:paddingHorizontal="6dp"
+        android:paddingVertical="2dp"
+        android:textColor="@color/white_black"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/ys_display_regular"
+
+        app:layout_constraintTop_toBottomOf="@id/album_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/album_quantity"
+        tools:text="Title"
+        />
+
+    <TextView
+        android:id="@+id/album_quantity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/white_black"
+        android:paddingHorizontal="6dp"
+        android:layout_marginHorizontal="8dp"
+        android:paddingVertical="2dp"
+        android:fontFamily="@font/ys_display_regular"
+        app:layout_constraintTop_toBottomOf="@id/album_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="Quantity_Track"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
