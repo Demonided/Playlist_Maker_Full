@@ -10,14 +10,16 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.data.ConstTrack
 import com.katoklizm.playlist_maker_full.databinding.FragmentFavoriteTrackBinding
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.favorite_track.FavoriteTrackState
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.favorite_track.FavoriteTrackViewModel
-import com.katoklizm.playlist_maker_full.ui.audioplayer.AudioPlayerActivity
+import com.katoklizm.playlist_maker_full.ui.audioplayer.AudioPlayerFragment
 import com.katoklizm.playlist_maker_full.ui.search.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -117,9 +119,10 @@ class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickL
     }
 
     private fun openAudioPlayer(track: Track) {
-        val intent = Intent(requireContext(), AudioPlayerActivity::class.java)
-        intent.putExtra(ConstTrack.SAVE_TRACK, track)
-        startActivity(intent)
+        findNavController().navigate(
+            R.id.action_mediaLibraryFragment_to_audioPlayerFragment,
+            AudioPlayerFragment.createArgs(track)
+        )
     }
 
     companion object {
