@@ -4,6 +4,7 @@ import com.katoklizm.playlist_maker_full.presentation.audioplayer.AudioPlayerVie
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.MediaLibraryViewModel
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.favorite_track.FavoriteTrackViewModel
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlaylistViewModel
+import com.katoklizm.playlist_maker_full.presentation.newplaylist.NewPlaylistViewModel
 import com.katoklizm.playlist_maker_full.presentation.search.SearchViewModel
 import com.katoklizm.playlist_maker_full.presentation.setting.SettingsViewModel
 import org.koin.android.ext.koin.androidContext
@@ -17,7 +18,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        AudioPlayerViewModel(androidContext(), get(), get())
+        AudioPlayerViewModel(androidContext(), get(), get(), get(), get())
     }
 
     viewModel {
@@ -35,6 +36,11 @@ val viewModelModule = module {
 
     // Fragment Media_library с которой в дальнейшем будем работать
     viewModel {
-        PlaylistViewModel()
+        PlaylistViewModel(get())
+    }
+
+    //
+    viewModel {
+        NewPlaylistViewModel(get())
     }
 }

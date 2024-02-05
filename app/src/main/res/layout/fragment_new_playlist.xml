@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="50dp" />
+
+    <ImageButton
+        android:id="@+id/new_player_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/arrow_back"
+        style="@style/BtnBack"
+        app:layout_constraintBottom_toTopOf="@id/top_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/media_library_favorite_track_button_add_playlist"
+        style="@style/TextStyleMenu"
+        app:layout_constraintStart_toEndOf="@id/new_player_back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/top_guideline"
+        />
+
+    <ImageView
+        android:id="@+id/new_playlist_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="26dp"
+        android:background="@drawable/add_image_new_playlist"
+        android:scaleType="centerCrop"
+        android:clipToOutline="true"
+        app:layout_constraintDimensionRatio="H, 1:1"
+        app:layout_constraintBottom_toTopOf="@id/new_playlist_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_guideline"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <EditText
+        android:id="@+id/new_playlist_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
+        android:paddingStart="16dp"
+        android:paddingVertical="15dp"
+        android:hint="Название*"
+        android:background="@drawable/new_playlist_rounded_rectangle"
+        app:layout_constraintTop_toBottomOf="@id/new_playlist_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/new_playlist_description"
+        tools:ignore="RtlSymmetry" />
+
+    <EditText
+        android:id="@+id/new_playlist_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
+        android:paddingStart="16dp"
+        android:paddingVertical="15dp"
+        android:hint="Описание"
+        android:background="@drawable/new_playlist_rounded_rectangle"
+        app:layout_constraintTop_toBottomOf="@id/new_playlist_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/new_player_create"
+        tools:ignore="RtlSymmetry" />
+
+    <Button
+        android:id="@+id/new_player_create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Создать"
+        android:textAllCaps="false"
+        android:layout_margin="16dp"
+        android:fontFamily="@font/ys_display_medium"
+        android:textSize="16sp"
+        android:padding="13dp"
+        android:background="@drawable/action_and_no_action_button_click"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

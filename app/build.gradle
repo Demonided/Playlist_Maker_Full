@@ -61,4 +61,6 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.6.1' // библиотека Room
     kapt 'androidx.room:room-compiler:2.6.1' // Kotlin-кодогенератор
     implementation 'androidx.room:room-ktx:2.6.1' // поддержка корутин
+
+    implementation 'com.markodevcic:peko:3.0.4' // Библиотека Peko для разрешения
 }
