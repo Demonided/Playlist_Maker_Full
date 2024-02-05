@@ -8,22 +8,24 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.katoklizm.playlist_maker_full.ui.audioplayer.AudioPlayerActivity
+import com.katoklizm.playlist_maker_full.R
+import com.katoklizm.playlist_maker_full.ui.audioplayer.AudioPlayerFragment
 import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
 import com.katoklizm.playlist_maker_full.databinding.FragmentSearchBinding
 import com.katoklizm.playlist_maker_full.domain.search.SearchState
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.presentation.search.SearchViewModel
+import com.katoklizm.playlist_maker_full.ui.medialibrary.playlist.PlaylistFragment
+import com.katoklizm.playlist_maker_full.ui.newplalist.NewPlaylistFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.math.log
 
 class SearchFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickListener {
 
@@ -238,9 +240,10 @@ class SearchFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickListener
     }
 
     private fun openAudioPlayer(track: Track) {
-        val intent = Intent(requireContext(), AudioPlayerActivity::class.java)
-        intent.putExtra(SAVE_TRACK, track)
-        startActivity(intent)
+        findNavController().navigate(
+            R.id.action_searchFragment_to_audioPlayerFragment,
+            AudioPlayerFragment.createArgs(track)
+            )
     }
 
     @SuppressLint("NotifyDataSetChanged")

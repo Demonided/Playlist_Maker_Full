@@ -23,7 +23,7 @@ class RootActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id) {
-                R.id.newPlaylistFragment -> {
+                R.id.newPlaylistFragment, R.id.audioPlayerFragment -> {
                     binding.bottomNavigationView.visibility = View.GONE
                 }
                 else -> {
@@ -32,21 +32,5 @@ class RootActivity : AppCompatActivity() {
 
             }
         }
-
-//        supportFragmentManager.commit {
-//            add(R.id.rootFragmentContainerView, MainActivity())
-//        }
-
-//        supportFragmentManager.commit {
-//            add(R.id.rootFragmentContainerView, SearchFragment())
-//        }
-//
-//        supportFragmentManager.commit {
-//            add(R.id.rootFragmentContainerView, MediaLibraryFragment())
-//        }
-//
-//        supportFragmentManager.commit {
-//            add(R.id.rootFragmentContainerView, SettingFragment())
-//        }
     }
 }

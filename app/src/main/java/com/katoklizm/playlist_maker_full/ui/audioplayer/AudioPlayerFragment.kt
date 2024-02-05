@@ -4,15 +4,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ActionOnlyNavDirections
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -23,23 +22,18 @@ import com.katoklizm.playlist_maker_full.data.ConstTrack
 import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
 import com.katoklizm.playlist_maker_full.databinding.AudioPlayerBinding
 import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
-import com.katoklizm.playlist_maker_full.domain.album.model.TrackAlbumPlaylist
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.presentation.audioplayer.AudioPlayerViewModel
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerScreenState
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerStateAlbum
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerStatus
-import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlaylistState
-import com.katoklizm.playlist_maker_full.ui.medialibrary.playlist.PlaylistAdapter
 import com.katoklizm.playlist_maker_full.ui.newplalist.NewPlaylistFragment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Stack
 
-class AudioPlayerActivity : AppCompatActivity() {
+class AudioPlayerFragment : Fragment() {
 
     private val audioPlayerViewModel by viewModel<AudioPlayerViewModel>()
 
@@ -58,13 +52,21 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private val fragmentStack: Stack<Fragment> = Stack()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = AudioPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        return binding.root
+    }
 
-        val selectedTrack: Track? = intent.getParcelableExtra(SAVE_TRACK)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val selectedTrack: Track? = arguments?.getParcelable(SAVE_TRACK)
         selectedTrack?.let { audioPlayerViewModel.initState(it) }
+        Log.d("Selected_Track", "Текущий трек $selectedTrack")
 
         binding.audioPlayerNameSong.text = selectedTrack?.trackName
 
@@ -91,7 +93,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         recyclerView = binding.audioPlayerRecyclerView
 
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = adapter
 
         adapter.itemClickListener = { _, playlist ->
@@ -101,24 +103,24 @@ class AudioPlayerActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
         }
 
-        audioPlayerViewModel.messageTrack.observe(this) { message ->
+        audioPlayerViewModel.messageTrack.observe(viewLifecycleOwner) { message ->
             val toast = Toast.makeText(
-                this,
+                requireContext(),
                 message,
                 Toast.LENGTH_LONG
             )
             toast.show()
         }
 
-        audioPlayerViewModel.albumState.observe(this) {
+        audioPlayerViewModel.albumState.observe(viewLifecycleOwner) {
             render(it)
         }
 
-        audioPlayerViewModel.playerState.observe(this) {
+        audioPlayerViewModel.playerState.observe(viewLifecycleOwner) {
             renderState(it)
         }
 
-        audioPlayerViewModel.timerState.observe(this) {
+        audioPlayerViewModel.timerState.observe(viewLifecycleOwner) {
             binding.audioPlayerTime.text = SimpleDateFormat(
                 "mm:ss", Locale.getDefault()
             ).format(it)
@@ -132,7 +134,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
 
         binding.audioPlayerBack.setOnClickListener {
-            finish()
+            findNavController().popBackStack()
         }
 
         binding.audioPlayerPlaySong.setOnClickListener {
@@ -170,10 +172,14 @@ class AudioPlayerActivity : AppCompatActivity() {
         })
 
         binding.audioPlayerNewPlaylist.setOnClickListener {
-            binding.fragmentContainer.visibility = View.VISIBLE
+//            binding.fragmentContainer.visibility = View.VISIBLE
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-            openNewPlaylistFragment()
+            findNavController().navigate(
+                R.id.action_audioPlayerFragment_to_newPlaylistFragment,
+                NewPlaylistFragment.createArgs("")
+            )
+//            openNewPlaylistFragment()
         }
     }
 
@@ -185,14 +191,14 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun openNewPlaylistFragment() {
-        val fragmentManager = supportFragmentManager
-        val transaction = fragmentManager.beginTransaction()
-        val newPlaylistFragment = NewPlaylistFragment()
-        fragmentStack.push(newPlaylistFragment)
-        transaction.replace(R.id.fragment_container, newPlaylistFragment)
-        transaction.commit()
-    }
+//    private fun openNewPlaylistFragment() {
+//        val fragmentManager = parentFragmentManager
+//        val transaction = fragmentManager.beginTransaction()
+//        val newPlaylistFragment = NewPlaylistFragment()
+//        fragmentStack.push(newPlaylistFragment)
+//        transaction.replace(R.id.fragment_container, newPlaylistFragment)
+//        transaction.commit()
+//    }
 
     private fun render(state: PlayerStateAlbum) {
         when (state) {
@@ -249,5 +255,14 @@ class AudioPlayerActivity : AppCompatActivity() {
     fun preparePlayer() {
         binding.audioPlayerPlaySong.setImageResource(R.drawable.audio_player_play_song)
         binding.audioPlayerPlaySong.isEnabled = true
+    }
+
+    companion object {
+
+        private const val SAVE_TRACK = "SAVE_TRACK"
+
+        fun createArgs(track: Track): Bundle {
+            return bundleOf("SAVE_TRACK" to track)
+        }
     }
 }
