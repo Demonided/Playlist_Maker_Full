@@ -46,4 +46,11 @@
     <string name="response_error_1">Проверьте подключение к интернету</string>
     <string name="response_error_2">Ошибка сервера</string>
 
+    <string name="new_playlist_finish_creating_playlist">Завершить создание плейлиста?</string>
+    <string name="new_playlist_data_loss">Все несохраненные данные будут потеряны</string>
+    <string name="new_playlist_cancellation">Отмена</string>
+    <string name="new_playlist_complete">Завершить</string>
+    <string name="new_playlist_playlist">Плейлист</string>
+    <string name="new_playlist_created">создан</string>
+
 </resources>
