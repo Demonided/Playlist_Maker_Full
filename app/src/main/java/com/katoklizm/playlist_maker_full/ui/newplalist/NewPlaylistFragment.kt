@@ -86,13 +86,13 @@ class NewPlaylistFragment : Fragment() {
 //                Toast.makeText(context, "Мы не можем пока выйти так как у нас какое-то поле заполенено", Toast.LENGTH_LONG).show()
                 lifecycleScope.launch {
                     MaterialAlertDialogBuilder(requireContext())
-                        .setTitle("Завершить создание плейлиста?")
-                        .setMessage("Все несохраненные данные будут потеряны")
-                        .setNegativeButton("Отмена") { dialog, which -> // Добавляет кнопку «Отмена»
+                        .setTitle(R.string.new_playlist_finish_creating_playlist)
+                        .setMessage(R.string.new_playlist_data_loss)
+                        .setNegativeButton(R.string.new_playlist_cancellation) { dialog, which -> // Добавляет кнопку «Отмена»
                             // Действия, выполняемые при нажатии на кнопку «Отмена»
 
                         }
-                        .setPositiveButton("Завершить") { dialog, which -> // Добавляет кнопку «Да»
+                        .setPositiveButton(R.string.new_playlist_complete) { dialog, which -> // Добавляет кнопку «Да»
                             // Действия, выполняемые при нажатии на кнопку «Да»
                             requireActivity().onBackPressed()
                         }
@@ -127,12 +127,16 @@ class NewPlaylistFragment : Fragment() {
             val album = AlbumPlaylist(
                 name = title,
                 description = description,
-                image = if (imageUri != null) imageUri.toString() else R.drawable.vector_plug.toString()
+                image = imageUri.toString()
             )
 
             lifecycleScope.launch {
                 viewModel.addAlbumPlaylist(album)
-                Snackbar.make(binding.root, "Плейлист $title создан", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    binding.root,
+                    "${R.string.new_playlist_playlist} $title ${R.string.new_playlist_created}",
+                    Snackbar.LENGTH_SHORT
+                ).show()
                 requireActivity().onBackPressed()
             }
         }

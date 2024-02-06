@@ -209,9 +209,7 @@ class AudioPlayerFragment : Fragment() {
 
     private fun renderState(state: PlayerScreenState) {
         when (state) {
-            is PlayerScreenState.Loading -> {
-
-            }
+            is PlayerScreenState.Loading -> {}
 
             is PlayerScreenState.Ready -> {
                 processingPlayerStatus(state.playerStatus)

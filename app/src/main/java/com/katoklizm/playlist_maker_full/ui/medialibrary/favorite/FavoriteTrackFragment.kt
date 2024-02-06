@@ -33,10 +33,6 @@ class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickL
     private val favoriteTrackViewModel: FavoriteTrackViewModel by viewModel()
     private var adapter: TrackAdapter? = null
 
-    private lateinit var favoriteTrackProgressBar: ProgressBar
-    private lateinit var favoriteTrackRecycler: RecyclerView
-    private lateinit var favoriteTrackEmpty: LinearLayout
-
     private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreateView(
@@ -53,13 +49,9 @@ class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickL
 
         adapter = TrackAdapter(this)
 
-        favoriteTrackProgressBar = binding.favoriteTrackProgressBar
-        favoriteTrackRecycler = binding.favoriteTrackRecycler
-        favoriteTrackEmpty = binding.favoriteTrackEmpty
-
-        favoriteTrackRecycler.layoutManager =
+        binding.favoriteTrackRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        favoriteTrackRecycler.adapter = adapter
+        binding.favoriteTrackRecycler.adapter = adapter
 
         favoriteTrackViewModel.fillData()
 
@@ -88,9 +80,9 @@ class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickL
     }
 
     private fun showContent(track: List<Track>) {
-        favoriteTrackEmpty.visibility = View.GONE
-        favoriteTrackRecycler.visibility = View.VISIBLE
-        favoriteTrackProgressBar.visibility = View.GONE
+        binding.favoriteTrackEmpty.visibility = View.GONE
+        binding.favoriteTrackRecycler.visibility = View.VISIBLE
+        binding.favoriteTrackProgressBar.visibility = View.GONE
 
         adapter?.tracks?.clear()
         adapter?.tracks?.addAll(track)
@@ -98,15 +90,15 @@ class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickL
     }
 
     private fun showEmpty() {
-        favoriteTrackEmpty.visibility = View.VISIBLE
-        favoriteTrackRecycler.visibility = View.GONE
-        favoriteTrackProgressBar.visibility = View.GONE
+        binding.favoriteTrackEmpty.visibility = View.VISIBLE
+        binding.favoriteTrackRecycler.visibility = View.GONE
+        binding.favoriteTrackProgressBar.visibility = View.GONE
     }
 
     private fun showLoading() {
-        favoriteTrackEmpty.visibility = View.GONE
-        favoriteTrackRecycler.visibility = View.GONE
-        favoriteTrackProgressBar.visibility = View.VISIBLE
+        binding.favoriteTrackEmpty.visibility = View.GONE
+        binding.favoriteTrackRecycler.visibility = View.GONE
+        binding.favoriteTrackProgressBar.visibility = View.VISIBLE
     }
 
     private fun clickDebounce(): Boolean {
