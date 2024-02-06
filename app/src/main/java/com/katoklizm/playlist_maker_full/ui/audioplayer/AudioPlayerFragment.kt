@@ -160,10 +160,16 @@ class AudioPlayerFragment : Fragment() {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.overlay.visibility = View.GONE
+                        binding.audioPlayerLikeMusicTrack.isEnabled = true
+                        binding.audioPlayerPlaySong.isEnabled = true
+                        binding.audioPlayerBack.isEnabled = true
                     }
 
                     else -> {
                         binding.overlay.visibility = View.VISIBLE
+                        binding.audioPlayerLikeMusicTrack.isEnabled = false
+                        binding.audioPlayerPlaySong.isEnabled = false
+                        binding.audioPlayerBack.isEnabled = false
                     }
                 }
             }
@@ -172,14 +178,12 @@ class AudioPlayerFragment : Fragment() {
         })
 
         binding.audioPlayerNewPlaylist.setOnClickListener {
-//            binding.fragmentContainer.visibility = View.VISIBLE
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
             findNavController().navigate(
                 R.id.action_audioPlayerFragment_to_newPlaylistFragment,
                 NewPlaylistFragment.createArgs("")
             )
-//            openNewPlaylistFragment()
         }
     }
 
@@ -190,15 +194,6 @@ class AudioPlayerFragment : Fragment() {
             binding.audioPlayerPlaySong.setImageResource(R.drawable.audio_player_play_song)
         }
     }
-
-//    private fun openNewPlaylistFragment() {
-//        val fragmentManager = parentFragmentManager
-//        val transaction = fragmentManager.beginTransaction()
-//        val newPlaylistFragment = NewPlaylistFragment()
-//        fragmentStack.push(newPlaylistFragment)
-//        transaction.replace(R.id.fragment_container, newPlaylistFragment)
-//        transaction.commit()
-//    }
 
     private fun render(state: PlayerStateAlbum) {
         when (state) {

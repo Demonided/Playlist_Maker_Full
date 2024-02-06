@@ -23,7 +23,12 @@ class AudioPlayerViewHolder(parent: ViewGroup):
 
     fun bind(model: AlbumPlaylist) {
         albumName.text = model.name
-        albumQuantity.text = model.quantity.toString()
+        albumQuantity.text =
+            when(model.quantity % 10) {
+                1 -> "${model.quantity} трек"
+                in 2..4 -> "${model.quantity} трека"
+                else -> "${model.quantity} треков"
+            }
 
         val imageUrl = model.image
 
