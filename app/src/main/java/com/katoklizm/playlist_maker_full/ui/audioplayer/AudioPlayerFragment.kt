@@ -112,6 +112,8 @@ class AudioPlayerFragment : Fragment() {
             toast.show()
         }
 
+        audioPlayerViewModel.addAlbumPlaylist()
+
         audioPlayerViewModel.albumState.observe(viewLifecycleOwner) {
             render(it)
         }
