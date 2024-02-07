@@ -134,7 +134,7 @@ class NewPlaylistFragment : Fragment() {
                 viewModel.addAlbumPlaylist(album)
                 Snackbar.make(
                     binding.root,
-                    "${R.string.new_playlist_playlist} $title ${R.string.new_playlist_created}",
+                    "${getString(R.string.new_playlist_playlist)} $title ${getString(R.string.new_playlist_created)}",
                     Snackbar.LENGTH_SHORT
                 ).show()
                 requireActivity().onBackPressed()
