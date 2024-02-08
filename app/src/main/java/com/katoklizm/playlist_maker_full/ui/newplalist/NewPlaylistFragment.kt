@@ -12,6 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
@@ -79,26 +81,7 @@ class NewPlaylistFragment : Fragment() {
             }
 
         binding.newPlayerBack.setOnClickListener {
-            if (isFieldsEmpty() && !isImageSelected()) {
-//                findNavController().popBackStack()
-                requireActivity().onBackPressed()
-            } else {
-//                Toast.makeText(context, "Мы не можем пока выйти так как у нас какое-то поле заполенено", Toast.LENGTH_LONG).show()
-                lifecycleScope.launch {
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(R.string.new_playlist_finish_creating_playlist)
-                        .setMessage(R.string.new_playlist_data_loss)
-                        .setNegativeButton(R.string.new_playlist_cancellation) { dialog, which -> // Добавляет кнопку «Отмена»
-                            // Действия, выполняемые при нажатии на кнопку «Отмена»
-
-                        }
-                        .setPositiveButton(R.string.new_playlist_complete) { dialog, which -> // Добавляет кнопку «Да»
-                            // Действия, выполняемые при нажатии на кнопку «Да»
-                            requireActivity().onBackPressed()
-                        }
-                        .show()
-                }
-            }
+            onBackPressed()
         }
 
         binding.newPlaylistTitle.addTextChangedListener(object : TextWatcher {
@@ -137,7 +120,33 @@ class NewPlaylistFragment : Fragment() {
                     "${getString(R.string.new_playlist_playlist)} $title ${getString(R.string.new_playlist_created)}",
                     Snackbar.LENGTH_SHORT
                 ).show()
-                requireActivity().onBackPressed()
+                findNavController().popBackStack()
+            }
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            onBackPressed()
+        }
+    }
+
+    fun onBackPressed() {
+        if (isFieldsEmpty() && !isImageSelected()) {
+            findNavController().popBackStack()
+        } else {
+            lifecycleScope.launch {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.new_playlist_finish_creating_playlist)
+                    .setMessage(R.string.new_playlist_data_loss)
+                    .setNegativeButton(R.string.new_playlist_cancellation) { dialog, which -> // Добавляет кнопку «Отмена»
+                        // Действия, выполняемые при нажатии на кнопку «Отмена»
+
+                    }
+                    .setPositiveButton(R.string.new_playlist_complete) { dialog, which -> // Добавляет кнопку «Да»
+                        // Действия, выполняемые при нажатии на кнопку «Да»
+//                            requireActivity().onBackPressed()
+                        findNavController().popBackStack()
+                    }
+                    .show()
             }
         }
     }
