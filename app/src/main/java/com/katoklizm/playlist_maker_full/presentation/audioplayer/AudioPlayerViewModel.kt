@@ -84,11 +84,12 @@ class AudioPlayerViewModel(
         _albumState.postValue(state)
     }
 
-    fun onPlaylistClicked(playlist: AlbumPlaylist, track: Track){
+    fun onPlaylistClicked(playlist: AlbumPlaylist, track: Track, calback: (Boolean) -> Unit){
         val listType: Type = object : TypeToken<ArrayList<Track?>?>() {}.type
         var tracks: ArrayList<Track>? = Gson().fromJson(playlist.track, listType)
         if (tracks?.contains(track) == true) {
             _messageTrack.postValue("Трек уже добавлен в плейлист ${playlist.name}")
+            calback(false)
         }
         else {
             if (tracks != null) {
@@ -103,6 +104,7 @@ class AudioPlayerViewModel(
                 albumPlaylistInteractor.updateAlbumPlaylist(newPlaylist)
                 addAlbumPlaylist()
                 _messageTrack.postValue("Добавлено в плейлист ${playlist.name}")
+                calback(true)
             }
         }
     }

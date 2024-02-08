@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -87,6 +88,11 @@ class AudioPlayerFragment : Fragment() {
             .placeholder(R.drawable.vector_plug)
             .into(binding.audioPlayerImageTrack)
 
+        val bottomSheetContainer = binding.audioPlayerBottomSheet
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
         playerStatus = audioPlayerViewModel.playerStateListener()
 
         adapter = AudioPlayerAdapter()
@@ -97,17 +103,26 @@ class AudioPlayerFragment : Fragment() {
         recyclerView.adapter = adapter
 
         adapter.itemClickListener = { _, playlist ->
+            val selectedTrack: Track? = arguments?.getParcelable(SAVE_TRACK)
             if (selectedTrack != null) {
-                audioPlayerViewModel.onPlaylistClicked(playlist, track = selectedTrack)
+                audioPlayerViewModel.onPlaylistClicked(playlist, selectedTrack) { trackAdded ->
+                    if (trackAdded) {
+                        // Если трек добавлен в альбом, закрываем BottomSheet
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    }
+                }
             }
-            adapter.notifyDataSetChanged()
+//            if (selectedTrack != null) {
+//                audioPlayerViewModel.onPlaylistClicked(playlist, track = selectedTrack)
+//            }
+//            adapter.notifyDataSetChanged()
         }
 
         audioPlayerViewModel.messageTrack.observe(viewLifecycleOwner) { message ->
             val toast = Toast.makeText(
                 requireContext(),
                 message,
-                Toast.LENGTH_LONG
+                Toast.LENGTH_SHORT
             )
             toast.show()
         }
@@ -147,10 +162,7 @@ class AudioPlayerFragment : Fragment() {
             prepareFavoriteTrack()
         }
 
-        val bottomSheetContainer = binding.audioPlayerBottomSheet
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
-            state = BottomSheetBehavior.STATE_HIDDEN
-        }
+
 
         binding.audioPlayerAddMusicTrack.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -186,6 +198,14 @@ class AudioPlayerFragment : Fragment() {
                 R.id.action_audioPlayerFragment_to_newPlaylistFragment,
                 NewPlaylistFragment.createArgs("")
             )
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            } else {
+                findNavController().popBackStack()
+            }
         }
     }
 
