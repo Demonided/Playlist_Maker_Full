@@ -27,6 +27,14 @@ object AlbumDbConverters {
         )
     }
 
+    fun AlbumPlaylist.getTrackQuantityString(): String {
+        return when (quantity % 10) {
+            1 -> "$quantity трек"
+            in 2..4 -> "$quantity трека"
+            else -> "$quantity треков"
+        }
+    }
+
     fun List<AlbumPlaylistEntity>.mapToAlbumPlaylist(): List<AlbumPlaylist> =
         map { it.mapToAlbumPlaylist() }
 

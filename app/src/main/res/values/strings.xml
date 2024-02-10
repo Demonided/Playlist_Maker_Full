@@ -53,4 +53,8 @@
     <string name="new_playlist_playlist">Плейлист</string>
     <string name="new_playlist_created">создан</string>
 
+    <string name="album_playlist_menu_share">Поделиться</string>
+    <string name="album_playlist_menu_edin_information">Редактировать информацию</string>
+    <string name="album_playlist_menu_delete_album">Удалить плейлист</string>
+
 </resources>

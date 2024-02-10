@@ -1,5 +1,6 @@
 package com.katoklizm.playlist_maker_full.di
 
+import com.katoklizm.playlist_maker_full.presentation.albuminfo.AlbumInfoViewModel
 import com.katoklizm.playlist_maker_full.presentation.audioplayer.AudioPlayerViewModel
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.MediaLibraryViewModel
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.favorite_track.FavoriteTrackViewModel
@@ -42,5 +43,9 @@ val viewModelModule = module {
     //
     viewModel {
         NewPlaylistViewModel(get())
+    }
+
+    viewModel {
+        AlbumInfoViewModel(get(), get())
     }
 }

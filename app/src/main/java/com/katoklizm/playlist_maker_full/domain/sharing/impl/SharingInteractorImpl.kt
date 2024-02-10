@@ -1,5 +1,6 @@
 package com.katoklizm.playlist_maker_full.domain.sharing.impl
 
+import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
 import com.katoklizm.playlist_maker_full.domain.sharing.SettingRepository
 import com.katoklizm.playlist_maker_full.domain.sharing.SharingInteractor
 import com.katoklizm.playlist_maker_full.domain.sharing.model.EmailData
@@ -9,6 +10,10 @@ class SharingInteractorImpl(
 ) : SharingInteractor {
     override fun shareApp() {
         settingRepository.shareLink(getShareAppLink())
+    }
+
+    override fun shareAlbum(album: AlbumPlaylist) {
+        settingRepository.shareAlbum(album)
     }
 
     override fun openTerms() {

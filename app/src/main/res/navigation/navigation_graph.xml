@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_mediaLibraryFragment_to_audioPlayerFragment"
             app:destination="@id/audioPlayerFragment" />
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_albumInfoFragment"
+            app:destination="@id/albumInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingFragment"
@@ -35,7 +38,7 @@
         android:id="@+id/audioPlayerFragment"
         android:name="com.katoklizm.playlist_maker_full.ui.audioplayer.AudioPlayerFragment"
         android:label="audio_player"
-        tools:layout="@layout/audio_player" >
+        tools:layout="@layout/fragment_audio_player" >
         <action
             android:id="@+id/action_audioPlayerFragment_to_newPlaylistFragment"
             app:destination="@id/newPlaylistFragment" />
@@ -48,5 +51,17 @@
         <action
             android:id="@+id/action_newPlaylistFragment_to_audioPlayerActivity2"
             app:destination="@id/audioPlayerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/albumInfoFragment"
+        android:name="com.katoklizm.playlist_maker_full.ui.albuminfo.AlbumInfoFragment"
+        android:label="AlbumInfoFragment"
+        tools:layout="@layout/fragment_album_info">
+        <action
+            android:id="@+id/action_albumInfoFragment_to_audioPlayerFragment"
+            app:destination="@id/audioPlayerFragment" />
+        <action
+            android:id="@+id/action_albumInfoFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
     </fragment>
 </navigation>
