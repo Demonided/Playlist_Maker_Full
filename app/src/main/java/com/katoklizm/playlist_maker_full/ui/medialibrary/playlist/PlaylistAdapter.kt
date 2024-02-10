@@ -8,12 +8,20 @@ class PlaylistAdapter :
     RecyclerView.Adapter<PlaylistViewHolder>() {
 
     val albumPlaylist = ArrayList<AlbumPlaylist>()
+
+    var itemClickListener: ((Int, AlbumPlaylist) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder =
         PlaylistViewHolder(parent)
 
     override fun getItemCount(): Int = albumPlaylist.size
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
-        holder.bind(albumPlaylist.get(position))
+        val album = albumPlaylist[position]
+        holder.bind(album)
+
+        holder.itemView.setOnClickListener {
+            itemClickListener?.invoke(position, album)
+        }
     }
 }
+

@@ -16,6 +16,7 @@ import com.katoklizm.playlist_maker_full.databinding.FragmentPlaylistsBinding
 import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlaylistState
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlaylistViewModel
+import com.katoklizm.playlist_maker_full.ui.albuminfo.AlbumInfoFragment
 import com.katoklizm.playlist_maker_full.ui.newplalist.NewPlaylistFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -25,7 +26,7 @@ class PlaylistFragment : Fragment() {
 
     private lateinit var binding: FragmentPlaylistsBinding
 
-    private var adapter: PlaylistAdapter? = null
+    lateinit var adapter: PlaylistAdapter
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var linerLayout: LinearLayout
@@ -57,10 +58,14 @@ class PlaylistFragment : Fragment() {
 
         buttonCreate.setOnClickListener {
             findNavController().navigate(
-                R.id.action_mediaLibraryFragment_to_newPlaylistFragment,
-                NewPlaylistFragment.createArgs(
-                    requireArguments().getString(ARGS_TRACK_ID).orEmpty()
-                )
+                R.id.action_mediaLibraryFragment_to_newPlaylistFragment
+            )
+        }
+
+        adapter.itemClickListener = { _, playlist ->
+            findNavController().navigate(
+                R.id.action_mediaLibraryFragment_to_albumInfoFragment,
+                AlbumInfoFragment.createArgs(playlist)
             )
         }
 
@@ -84,9 +89,9 @@ class PlaylistFragment : Fragment() {
         recyclerView.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
 
-        adapter?.albumPlaylist?.clear()
-        adapter?.albumPlaylist?.addAll(album)
-        adapter?.notifyDataSetChanged()
+        adapter.albumPlaylist.clear()
+        adapter.albumPlaylist.addAll(album)
+        adapter.notifyDataSetChanged()
     }
 
     private fun showEmpty() {
