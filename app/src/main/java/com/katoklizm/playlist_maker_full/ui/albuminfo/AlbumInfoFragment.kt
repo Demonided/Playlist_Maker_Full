@@ -150,7 +150,7 @@ class AlbumInfoFragment : Fragment() {
             binding.albumInfoMenuQuantity.text = calculateTotalTime(trackAlbum)
             adapter.tracksAlbum.clear()
             if (trackAlbum != null) {
-                adapter.tracksAlbum.addAll(trackAlbum)
+                adapter.tracksAlbum.addAll(trackAlbum.reversed())
             }
             adapter.notifyDataSetChanged()
         }
