@@ -45,7 +45,7 @@ class PlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = PlaylistAdapter()
+        adapter = PlaylistAdapter(requireContext())
 
         recyclerView = binding.playlistRecyclerView
         linerLayout = binding.favoriteTrackEmpty

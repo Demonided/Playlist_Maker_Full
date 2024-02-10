@@ -12,6 +12,7 @@ import com.katoklizm.playlist_maker_full.domain.favorite.FavoriteTrackRepository
 import com.katoklizm.playlist_maker_full.domain.player.PlayerRepository
 import com.katoklizm.playlist_maker_full.domain.search.api.TrackRepository
 import com.katoklizm.playlist_maker_full.domain.sharing.SettingRepository
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val repositoryModule = module {
@@ -21,7 +22,7 @@ val repositoryModule = module {
     }
 
     single<SettingRepository> {
-        SettingRepositoryImpl(get())
+        SettingRepositoryImpl(get(), androidContext())
     }
 
     factory<PlayerRepository> {

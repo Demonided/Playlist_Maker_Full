@@ -1,17 +1,20 @@
 package com.katoklizm.playlist_maker_full.ui.audioplayer
 
+import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
 import com.katoklizm.playlist_maker_full.ui.medialibrary.playlist.PlaylistViewHolder
 
-class AudioPlayerAdapter() : RecyclerView.Adapter<AudioPlayerViewHolder>() {
+class AudioPlayerAdapter(
+    private val context: Context
+) : RecyclerView.Adapter<AudioPlayerViewHolder>() {
 
     val albumListPlaylist = ArrayList<AlbumPlaylist>()
 
     var itemClickListener: ((Int, AlbumPlaylist) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AudioPlayerViewHolder =
-        AudioPlayerViewHolder(parent)
+        AudioPlayerViewHolder(parent, context)
 
     override fun getItemCount(): Int = albumListPlaylist.size
 

@@ -27,8 +27,9 @@ class AlbumInfoViewModel(
     val stateAlbum: LiveData<AlbumPlaylist?> = _stateAlbum
 
     init {
-        fillData()
+//        fillData()
     }
+
     fun fillData() {
         viewModelScope.launch {
             albumPlaylistInteractor.getAllAlbumPlaylist()
@@ -39,6 +40,7 @@ class AlbumInfoViewModel(
                 }
         }
     }
+
     fun loadTrackList(selectedAlbum: AlbumPlaylist?) {
         selectedAlbum?.track?.let { trackString ->
             val gson = Gson()

@@ -92,7 +92,7 @@ class AudioPlayerFragment : Fragment() {
 
         playerStatus = audioPlayerViewModel.playerStateListener()
 
-        adapter = AudioPlayerAdapter()
+        adapter = AudioPlayerAdapter(requireContext())
 
         recyclerView = binding.audioPlayerRecyclerView
 

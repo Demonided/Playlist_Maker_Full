@@ -1,6 +1,7 @@
 package com.katoklizm.playlist_maker_full.ui.albuminfo
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.katoklizm.playlist_maker_full.R
+import com.katoklizm.playlist_maker_full.data.converters.AlbumDbConverters.getTrackQuantityString
 import com.katoklizm.playlist_maker_full.databinding.FragmentAlbumInfoBinding
 import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
@@ -61,8 +63,6 @@ class AlbumInfoFragment : Fragment() {
             albumInfoTitle.text = selectedAlbum?.name
             albumInfoDescription.text = selectedAlbum?.description
             albumInfoMenuTitle.text = selectedAlbum?.name
-
-
         }
 
         Glide.with(this)
@@ -129,11 +129,13 @@ class AlbumInfoFragment : Fragment() {
 
         viewModel.loadTrackList(selectedAlbum)
         viewModel.loadAlbum(selectedAlbum)
-        viewModel.fillData()
+//        viewModel.fillData()
 
         viewModel.stateAlbum.observe(viewLifecycleOwner) {
             binding.albumInfoTitle.text = it?.name
             binding.albumInfoDescription.text = it?.description
+            binding.albumInfoQuantity.text = it?.getTrackQuantityString(requireContext())
+            binding.albumInfoMenuQuantity.text = it?.getTrackQuantityString(requireContext())
 
             Glide.with(this)
                 .load(it?.image)
@@ -146,16 +148,15 @@ class AlbumInfoFragment : Fragment() {
 
         viewModel.stateAlbumTrack.observe(viewLifecycleOwner) { trackAlbum ->
             binding.albumInfoTime.text = calculateTotalTime(trackAlbum)
-            binding.albumInfoQuantity.text = quantityTracks(trackAlbum?.size)
             binding.albumInfoMenuQuantity.text = calculateTotalTime(trackAlbum)
+            binding.albumInfoQuantity.text = selectedAlbum?.getTrackQuantityString(requireContext())
+            binding.albumInfoMenuQuantity.text = selectedAlbum?.getTrackQuantityString(requireContext())
             adapter.tracksAlbum.clear()
             if (trackAlbum != null) {
                 adapter.tracksAlbum.addAll(trackAlbum.reversed())
             }
             adapter.notifyDataSetChanged()
         }
-
-
 
         binding.albumInfoShape.setOnClickListener {
             if (track.isNotEmpty()) {
@@ -217,13 +218,6 @@ class AlbumInfoFragment : Fragment() {
         }
     }
 
-    fun quantityTracks(quantity: Int?): String =
-        when (quantity?.rem(10)) {
-            1 -> "$quantity трек"
-            in 2..4 -> "$quantity трека"
-            else -> "$quantity треков"
-        }
-
     fun calculateTotalTime(tracks: List<Track>?): String {
         var totalMilliseconds = 0L
         if (tracks != null) {
@@ -232,8 +226,10 @@ class AlbumInfoFragment : Fragment() {
             }
         }
 
-        val trackTime = SimpleDateFormat("mm", Locale.getDefault())
+        val trackTime = SimpleDateFormat("m", Locale.getDefault())
             .format(totalMilliseconds)
+
+        Log.d("TotalMillisecond", "Текущее время $totalMilliseconds")
 
         return "$trackTime минут"
     }

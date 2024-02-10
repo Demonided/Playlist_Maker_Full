@@ -1,5 +1,6 @@
 package com.katoklizm.playlist_maker_full.data.sharing.impl
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.google.gson.Gson
@@ -12,7 +13,9 @@ import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.domain.sharing.SettingRepository
 import com.katoklizm.playlist_maker_full.domain.sharing.model.EmailData
 
-class SettingRepositoryImpl(private val application: App) : SettingRepository {
+class SettingRepositoryImpl(
+    private val application: App,
+    private val context: Context) : SettingRepository {
     override fun shareLink(shareAppLink: String) {
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"
@@ -33,7 +36,7 @@ class SettingRepositoryImpl(private val application: App) : SettingRepository {
         val gson = Gson()
         val trackListType = object : TypeToken<List<Track>>() {}.type
         val track: List<Track> = gson.fromJson(album.track, trackListType)
-        var stringShareAlbum = "${album.name}\n${album.description}\n${album.getTrackQuantityString()}"
+        var stringShareAlbum = "${album.name}\n${album.description}\n${album.getTrackQuantityString(context)}"
         var count = 1
         for (i in track) {
             stringShareAlbum += "\n  $count. ${i.artistName} - ${i.trackName} (${i.trackTime})"
