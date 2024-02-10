@@ -10,14 +10,16 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.data.ConstTrack
 import com.katoklizm.playlist_maker_full.databinding.FragmentFavoriteTrackBinding
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.favorite_track.FavoriteTrackState
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.favorite_track.FavoriteTrackViewModel
-import com.katoklizm.playlist_maker_full.ui.audioplayer.AudioPlayerActivity
+import com.katoklizm.playlist_maker_full.ui.audioplayer.AudioPlayerFragment
 import com.katoklizm.playlist_maker_full.ui.search.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -30,10 +32,6 @@ class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickL
 
     private val favoriteTrackViewModel: FavoriteTrackViewModel by viewModel()
     private var adapter: TrackAdapter? = null
-
-    private lateinit var favorite_track_progressBar: ProgressBar
-    private lateinit var favorite_track_recycler: RecyclerView
-    private lateinit var favorite_track_empty: LinearLayout
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -51,13 +49,9 @@ class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickL
 
         adapter = TrackAdapter(this)
 
-        favorite_track_progressBar = binding.favoriteTrackProgressBar
-        favorite_track_recycler = binding.favoriteTrackRecycler
-        favorite_track_empty = binding.favoriteTrackEmpty
-
-        favorite_track_recycler.layoutManager =
+        binding.favoriteTrackRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        favorite_track_recycler.adapter = adapter
+        binding.favoriteTrackRecycler.adapter = adapter
 
         favoriteTrackViewModel.fillData()
 
@@ -86,9 +80,9 @@ class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickL
     }
 
     private fun showContent(track: List<Track>) {
-        favorite_track_empty.visibility = View.GONE
-        favorite_track_recycler.visibility = View.VISIBLE
-        favorite_track_progressBar.visibility = View.GONE
+        binding.favoriteTrackEmpty.visibility = View.GONE
+        binding.favoriteTrackRecycler.visibility = View.VISIBLE
+        binding.favoriteTrackProgressBar.visibility = View.GONE
 
         adapter?.tracks?.clear()
         adapter?.tracks?.addAll(track)
@@ -96,15 +90,15 @@ class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickL
     }
 
     private fun showEmpty() {
-        favorite_track_empty.visibility = View.VISIBLE
-        favorite_track_recycler.visibility = View.GONE
-        favorite_track_progressBar.visibility = View.GONE
+        binding.favoriteTrackEmpty.visibility = View.VISIBLE
+        binding.favoriteTrackRecycler.visibility = View.GONE
+        binding.favoriteTrackProgressBar.visibility = View.GONE
     }
 
     private fun showLoading() {
-        favorite_track_empty.visibility = View.GONE
-        favorite_track_recycler.visibility = View.GONE
-        favorite_track_progressBar.visibility = View.VISIBLE
+        binding.favoriteTrackEmpty.visibility = View.GONE
+        binding.favoriteTrackRecycler.visibility = View.GONE
+        binding.favoriteTrackProgressBar.visibility = View.VISIBLE
     }
 
     private fun clickDebounce(): Boolean {
@@ -117,9 +111,10 @@ class FavoriteTrackFragment : Fragment(), TrackAdapter.OnSaveTrackManagersClickL
     }
 
     private fun openAudioPlayer(track: Track) {
-        val intent = Intent(requireContext(), AudioPlayerActivity::class.java)
-        intent.putExtra(ConstTrack.SAVE_TRACK, track)
-        startActivity(intent)
+        findNavController().navigate(
+            R.id.action_mediaLibraryFragment_to_audioPlayerFragment,
+            AudioPlayerFragment.createArgs(track)
+        )
     }
 
     companion object {

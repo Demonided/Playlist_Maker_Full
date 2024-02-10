@@ -1,10 +1,11 @@
-package com.katoklizm.playlist_maker_full.ui.medialibrary.playlist
+package com.katoklizm.playlist_maker_full.ui.medialibrary
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.katoklizm.playlist_maker_full.ui.medialibrary.favorite.FavoriteTrackFragment
+import com.katoklizm.playlist_maker_full.ui.medialibrary.playlist.PlaylistFragment
 
 class MediaLibraryAdapter(fragmentManager: FragmentManager,lifecycle: Lifecycle
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {

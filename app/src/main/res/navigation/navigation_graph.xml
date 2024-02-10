@@ -11,26 +11,42 @@
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" >
         <action
-            android:id="@+id/action_searchFragment_to_audioPlayerActivity"
-            app:destination="@id/audioPlayerActivity"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            android:id="@+id/action_searchFragment_to_audioPlayerFragment"
+            app:destination="@id/audioPlayerFragment" />
     </fragment>
     <fragment
         android:id="@+id/mediaLibraryFragment"
-        android:name="com.katoklizm.playlist_maker_full.ui.medialibrary.playlist.MediaLibraryFragment"
+        android:name="com.katoklizm.playlist_maker_full.ui.medialibrary.MediaLibraryFragment"
         android:label="fragment_media_library"
-        tools:layout="@layout/fragment_media_library" />
+        tools:layout="@layout/fragment_media_library" >
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_audioPlayerFragment"
+            app:destination="@id/audioPlayerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.katoklizm.playlist_maker_full.ui.setting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
-    <activity
-        android:id="@+id/audioPlayerActivity"
-        android:name="com.katoklizm.playlist_maker_full.ui.audioplayer.AudioPlayerActivity"
+    <fragment
+        android:id="@+id/audioPlayerFragment"
+        android:name="com.katoklizm.playlist_maker_full.ui.audioplayer.AudioPlayerFragment"
         android:label="audio_player"
-        tools:layout="@layout/audio_player" />
+        tools:layout="@layout/audio_player" >
+        <action
+            android:id="@+id/action_audioPlayerFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newPlaylistFragment"
+        android:name="com.katoklizm.playlist_maker_full.ui.newplalist.NewPlaylistFragment"
+        android:label="NewPlaylistFragment"
+        tools:layout="@layout/fragment_new_playlist">
+        <action
+            android:id="@+id/action_newPlaylistFragment_to_audioPlayerActivity2"
+            app:destination="@id/audioPlayerFragment" />
+    </fragment>
 </navigation>

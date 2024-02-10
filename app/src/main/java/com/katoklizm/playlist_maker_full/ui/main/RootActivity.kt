@@ -2,6 +2,7 @@ package com.katoklizm.playlist_maker_full.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.katoklizm.playlist_maker_full.R
@@ -20,20 +21,16 @@ class RootActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
-//        supportFragmentManager.commit {
-//            add(R.id.rootFragmentContainerView, MainActivity())
-//        }
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when(destination.id) {
+                R.id.newPlaylistFragment, R.id.audioPlayerFragment -> {
+                    binding.bottomNavigationView.visibility = View.GONE
+                }
+                else -> {
+                    binding.bottomNavigationView.visibility = View.VISIBLE
+                }
 
-//        supportFragmentManager.commit {
-//            add(R.id.rootFragmentContainerView, SearchFragment())
-//        }
-//
-//        supportFragmentManager.commit {
-//            add(R.id.rootFragmentContainerView, MediaLibraryFragment())
-//        }
-//
-//        supportFragmentManager.commit {
-//            add(R.id.rootFragmentContainerView, SettingFragment())
-//        }
+            }
+        }
     }
 }

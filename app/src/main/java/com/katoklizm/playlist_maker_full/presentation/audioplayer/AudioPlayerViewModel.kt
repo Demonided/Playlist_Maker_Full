@@ -6,19 +6,32 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.katoklizm.playlist_maker_full.domain.album.AlbumPlaylistInteractor
+import com.katoklizm.playlist_maker_full.domain.album.TrackAlbumPlaylistInteractor
+import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
+import com.katoklizm.playlist_maker_full.domain.album.model.TrackAlbumPlaylist
 import com.katoklizm.playlist_maker_full.domain.favorite.FavoriteTrackInteractor
 import com.katoklizm.playlist_maker_full.domain.player.PlayerInteractor
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerScreenState
+import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerStateAlbum
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlayerStatus
+import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlaylistState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.lang.reflect.Type
 
 class AudioPlayerViewModel(
     private val context: Context,
     private val playerInteractor: PlayerInteractor,
-    private val favoriteInteractor: FavoriteTrackInteractor
+    private val favoriteInteractor: FavoriteTrackInteractor,
+    private val albumPlaylistInteractor: AlbumPlaylistInteractor,
+    private val trackAlbumPlaylistInteractor: TrackAlbumPlaylistInteractor
 ) : ViewModel() {
 
     private var timerJob: Job? = null
@@ -29,11 +42,73 @@ class AudioPlayerViewModel(
     private val _playerState = MutableLiveData<PlayerScreenState>()
     val playerState: LiveData<PlayerScreenState> = _playerState
 
+    private val _albumState = MutableLiveData<PlayerStateAlbum>()
+    val albumState: LiveData<PlayerStateAlbum> = _albumState
+
+    private val _albumTrackPlaylist = MutableLiveData<List<TrackAlbumPlaylist>>()
+    val albumTrackPlaylist: LiveData<List<TrackAlbumPlaylist>> = _albumTrackPlaylist
+
+    private val _messageTrack = MutableLiveData<String>()
+    val messageTrack: LiveData<String> = _messageTrack
+
     private var favoritesTrackIds = listOf<Int>()
 
     init {
         subscribe()
+        addAlbumPlaylist()
+        getAllTrackAlbumPlaylist()
     }
+
+    fun getAllTrackAlbumPlaylist() {
+        viewModelScope.launch {
+            trackAlbumPlaylistInteractor.getAllTrackAlbum().collect() { trackAlbumPlaylist ->
+                _albumTrackPlaylist.postValue(trackAlbumPlaylist)
+            }
+        }
+    }
+
+    fun addAlbumPlaylist() {
+        viewModelScope.launch {
+            albumPlaylistInteractor.getAllAlbumPlaylist()
+                .collect { album ->
+                    processResult(album)
+                }
+        }
+    }
+
+    private fun processResult(album: List<AlbumPlaylist>) {
+        renderState(PlayerStateAlbum.Content(album))
+    }
+
+    private fun renderState(state: PlayerStateAlbum) {
+        _albumState.postValue(state)
+    }
+
+    fun onPlaylistClicked(playlist: AlbumPlaylist, track: Track, calback: (Boolean) -> Unit){
+        val listType: Type = object : TypeToken<ArrayList<Track?>?>() {}.type
+        var tracks: ArrayList<Track>? = Gson().fromJson(playlist.track, listType)
+        if (tracks?.contains(track) == true) {
+            _messageTrack.postValue("Трек уже добавлен в плейлист ${playlist.name}")
+            calback(false)
+        }
+        else {
+            if (tracks != null) {
+                tracks.add(track)
+            } else {
+                tracks = ArrayList<Track>().apply { add(track) }
+            }
+            val newString = Gson().toJson(tracks)
+            val newPlaylist = AlbumPlaylist(playlist.id, playlist.name, playlist.description, playlist.image,
+                playlist.quantity.plus(1), newString)
+            viewModelScope.launch(Dispatchers.IO) {
+                albumPlaylistInteractor.updateAlbumPlaylist(newPlaylist)
+                addAlbumPlaylist()
+                _messageTrack.postValue("Добавлено в плейлист ${playlist.name}")
+                calback(true)
+            }
+        }
+    }
+
 
     fun initState(track: Track) {
         val initState = PlayerScreenState.Ready(
@@ -138,12 +213,24 @@ class AudioPlayerViewModel(
             viewModelScope.launch {
                 if (currentState.track.isFavorite) {
                     favoriteInteractor.deleteTrack(currentState.track.trackId)
-                    _playerState.postValue(PlayerScreenState.Ready(currentState.track.copy(isFavorite = false), currentState.playerStatus))
-                    Toast.makeText(context, "Вы удалили трек из избранного", Toast.LENGTH_LONG).show()
+                    _playerState.postValue(
+                        PlayerScreenState.Ready(
+                            currentState.track.copy(isFavorite = false),
+                            currentState.playerStatus
+                        )
+                    )
+                    Toast.makeText(context, "Вы удалили трек из избранного", Toast.LENGTH_LONG)
+                        .show()
                 } else {
                     favoriteInteractor.addTrack(currentState.track)
-                    _playerState.postValue(PlayerScreenState.Ready(currentState.track.copy(isFavorite = true), currentState.playerStatus))
-                    Toast.makeText(context, "Вы добавили трек в избранное", Toast.LENGTH_LONG).show()
+                    _playerState.postValue(
+                        PlayerScreenState.Ready(
+                            currentState.track.copy(isFavorite = true),
+                            currentState.playerStatus
+                        )
+                    )
+                    Toast.makeText(context, "Вы добавили трек в избранное", Toast.LENGTH_LONG)
+                        .show()
                 }
             }
         }
