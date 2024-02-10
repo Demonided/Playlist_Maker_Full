@@ -237,7 +237,8 @@ class AlbumInfoFragment : Fragment() {
     companion object {
         const val SAVE_ALBUM = "SAVE_ALBUM"
         fun createArgs(album: AlbumPlaylist): Bundle {
-            return bundleOf(SAVE_ALBUM to album)
+//            return bundleOf(SAVE_ALBUM to album)
+            return bundleOf()
         }
     }
 }

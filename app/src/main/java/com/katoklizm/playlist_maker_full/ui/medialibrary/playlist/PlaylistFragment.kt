@@ -67,6 +67,7 @@ class PlaylistFragment : Fragment() {
                 R.id.action_mediaLibraryFragment_to_albumInfoFragment,
                 AlbumInfoFragment.createArgs(playlist)
             )
+            playlistViewModel.onPlaylistClicked(playlist)
         }
 
         playlistViewModel.fillData()
