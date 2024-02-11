@@ -7,16 +7,21 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.katoklizm.playlist_maker_full.domain.album.AlbumPlaylistInteractor
+import com.katoklizm.playlist_maker_full.domain.album.AlbumPlaylistRepository
+import com.katoklizm.playlist_maker_full.domain.album.SelectPlaylistRepository
 import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.domain.sharing.SharingInteractor
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlaylistState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import java.lang.reflect.Type
 
 class AlbumInfoViewModel(
     private val albumPlaylistInteractor: AlbumPlaylistInteractor,
+    private val selectedRepository: SelectPlaylistRepository,
     private var sharingInteractor: SharingInteractor
 ) : ViewModel() {
 
@@ -25,6 +30,28 @@ class AlbumInfoViewModel(
 
     private val _stateAlbum = MutableLiveData<AlbumPlaylist?>()
     val stateAlbum: LiveData<AlbumPlaylist?> = _stateAlbum
+
+    init {
+        fillData()
+    }
+
+    fun fillData() {
+//        viewModelScope.launch {
+//            albumPlaylistInteractor.getAllAlbumPlaylist()
+//                .collect { album ->
+//                    album.map {
+//                        _stateAlbum.postValue(it)
+//                    }
+//                }
+//        }
+        viewModelScope.launch {
+            selectedRepository.getPlaylist()
+                .filterNotNull()
+                .collect {
+                    _stateAlbum.postValue(it)
+                }
+        }
+    }
 
     fun loadTrackList(selectedAlbum: AlbumPlaylist?) {
         selectedAlbum?.track?.let { trackString ->
@@ -51,9 +78,8 @@ class AlbumInfoViewModel(
             )
             viewModelScope.launch(Dispatchers.IO) {
                 albumPlaylistInteractor.updateAlbumPlaylist(newPlaylist)
-                _stateAlbumTrack.postValue(tracks)
-                _stateAlbum.postValue(newPlaylist)
             }
+            _stateAlbumTrack.postValue(tracks)
         }
     }
 

@@ -5,18 +5,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.katoklizm.playlist_maker_full.domain.album.AlbumPlaylistInteractor
+import com.katoklizm.playlist_maker_full.domain.album.SelectPlaylistRepository
 import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
-import com.katoklizm.playlist_maker_full.domain.search.model.Track
-import com.katoklizm.playlist_maker_full.presentation.medialibrary.favorite_track.FavoriteTrackState
 import kotlinx.coroutines.launch
 
 class PlaylistViewModel(
-    private val albumPlaylistInteractor: AlbumPlaylistInteractor
+    private val albumPlaylistInteractor: AlbumPlaylistInteractor,
+    private val selectRepository: SelectPlaylistRepository
 ): ViewModel() {
 
     private val _playlistState = MutableLiveData<PlaylistState>()
 
     fun playlistState(): LiveData<PlaylistState> = _playlistState
+
+    fun onPlaylistClicked(item: AlbumPlaylist) {
+        selectRepository.setPlaylist(item)
+    }
 
     init {
         fillData()

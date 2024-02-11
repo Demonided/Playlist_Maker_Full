@@ -1,6 +1,7 @@
 package com.katoklizm.playlist_maker_full.di
 
 import com.katoklizm.playlist_maker_full.domain.album.AlbumPlaylistInteractor
+import com.katoklizm.playlist_maker_full.domain.album.SelectPlaylistRepository
 import com.katoklizm.playlist_maker_full.domain.album.TrackAlbumPlaylistInteractor
 import com.katoklizm.playlist_maker_full.domain.album.impl.AlbumPlaylistInteractorImpl
 import com.katoklizm.playlist_maker_full.domain.album.impl.TrackAlbumPlaylistInteractorImpl
@@ -40,6 +41,10 @@ val interactorModule = module {
 
     single<AlbumPlaylistInteractor> {
         AlbumPlaylistInteractorImpl(get())
+    }
+
+    single<SelectPlaylistRepository> {
+        SelectPlaylistRepository()
     }
 
     single<TrackAlbumPlaylistInteractor> {
