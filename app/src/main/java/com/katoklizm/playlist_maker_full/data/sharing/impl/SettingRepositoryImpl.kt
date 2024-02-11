@@ -36,7 +36,7 @@ class SettingRepositoryImpl(
         val gson = Gson()
         val trackListType = object : TypeToken<List<Track>>() {}.type
         val track: List<Track> = gson.fromJson(album.track, trackListType)
-        var stringShareAlbum = "${album.name}\n${album.description}\n${album.getTrackQuantityString(context)}"
+        var stringShareAlbum = "${album.name}\n${album.description}\n${album.getTrackQuantityString()}"
         var count = 1
         for (i in track) {
             stringShareAlbum += "\n  $count. ${i.artistName} - ${i.trackName} (${i.trackTime})"

@@ -102,70 +102,76 @@ class NewPlaylistFragment : Fragment() {
             }
         })
 
-        viewModel.stateAlbumPlaylist.observe(viewLifecycleOwner) {
-            if (it != null) {
+        viewModel.fillData()
+
+        viewModel.stateAlbumPlaylist.observe(viewLifecycleOwner) { albumPlaylist ->
+            if (albumPlaylist != null) {
                 binding.newPlayerPlaylist.text = "Редактировать"
                 binding.newPlayerCreate.text = "Сохранить"
-                val title = selectedAlbum?.name
-                val description = selectedAlbum?.description ?: ""
+                val title = albumPlaylist.name
+                val description = albumPlaylist.description
 
                 binding.newPlaylistTitle.setText(title)
                 binding.newPlaylistDescription.setText(description)
 
                 Glide.with(requireContext())
-                    .load(it.image)
+                    .load(albumPlaylist.image)
                     .into(binding.newPlaylistImage)
             }
+
+            binding.newPlayerCreate.setOnClickListener {
+                if (albumPlaylist != null) {
+                    val title = editTextTitle.text.toString()
+                    val description = editTextDescription.text.toString()
+
+                    val album = AlbumPlaylist(
+                        id = albumPlaylist.id,
+                        name = title,
+                        description = description,
+                        image = imageUri.toString(),
+                        quantity = albumPlaylist.quantity,
+                        track = albumPlaylist.track
+                    )
+
+                    lifecycleScope.launch {
+                        viewModel.updateAlbum(album)
+                        Snackbar.make(
+                            binding.root,
+                            "${getString(R.string.new_playlist_playlist)} $title отредактирован",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                        findNavController().popBackStack()
+                    }
+                } else {
+                    val title = editTextTitle.text.toString()
+                    val description = editTextDescription.text.toString()
+
+                    val album = AlbumPlaylist(
+                        name = title,
+                        description = description,
+                        image = imageUri.toString()
+                    )
+
+                    lifecycleScope.launch {
+                        viewModel.addAlbumPlaylist(album)
+                        Snackbar.make(
+                            binding.root,
+                            "${getString(R.string.new_playlist_playlist)} $title ${getString(R.string.new_playlist_created)}",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                        findNavController().popBackStack()
+                    }
+                }
+            }
         }
+
+
 
         binding.newPlaylistImage.setOnClickListener {
             pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
-        binding.newPlayerCreate.setOnClickListener {
-            if (selectedAlbum != null) {
-                val title = editTextTitle.text.toString()
-                val description = editTextDescription.text.toString()
 
-                val album = AlbumPlaylist(
-                    id = selectedAlbum.id,
-                    name = title,
-                    description = description,
-                    image = imageUri.toString(),
-                    quantity = selectedAlbum.quantity,
-                    track = selectedAlbum.track
-                )
-
-                lifecycleScope.launch {
-                    viewModel.updateAlbum(album)
-                    Snackbar.make(
-                        binding.root,
-                        "${getString(R.string.new_playlist_playlist)} $title отредактирован",
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                    findNavController().popBackStack()
-                }
-            } else {
-                val title = editTextTitle.text.toString()
-                val description = editTextDescription.text.toString()
-
-                val album = AlbumPlaylist(
-                    name = title,
-                    description = description,
-                    image = imageUri.toString()
-                )
-
-                lifecycleScope.launch {
-                    viewModel.addAlbumPlaylist(album)
-                    Snackbar.make(
-                        binding.root,
-                        "${getString(R.string.new_playlist_playlist)} $title ${getString(R.string.new_playlist_created)}",
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                    findNavController().popBackStack()
-                }
-            }
-        }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             onBackPressed()

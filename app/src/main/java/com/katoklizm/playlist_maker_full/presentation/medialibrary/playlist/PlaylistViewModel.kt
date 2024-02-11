@@ -5,21 +5,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.katoklizm.playlist_maker_full.domain.album.AlbumPlaylistInteractor
-import com.katoklizm.playlist_maker_full.domain.album.SelectPlaylistRepository
 import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
+import com.katoklizm.playlist_maker_full.domain.albuminfo.AlbumInfoInteractor
 import kotlinx.coroutines.launch
 
 class PlaylistViewModel(
     private val albumPlaylistInteractor: AlbumPlaylistInteractor,
-    private val selectRepository: SelectPlaylistRepository
+    private val albumInfoInteractor: AlbumInfoInteractor
 ): ViewModel() {
 
     private val _playlistState = MutableLiveData<PlaylistState>()
 
     fun playlistState(): LiveData<PlaylistState> = _playlistState
 
-    fun onPlaylistClicked(item: AlbumPlaylist) {
-        selectRepository.setPlaylist(item)
+    fun onPlaylistClicked(item: AlbumPlaylist?) {
+        albumInfoInteractor.setPlaylist(item)
     }
 
     init {

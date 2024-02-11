@@ -28,7 +28,7 @@ class AudioPlayerViewHolder(
 
     fun bind(model: AlbumPlaylist) {
         albumName.text = model.name
-        albumQuantity.text = model.getTrackQuantityString(context)
+        albumQuantity.text = model.getTrackQuantityString()
 
         val imageUrl = model.image
 

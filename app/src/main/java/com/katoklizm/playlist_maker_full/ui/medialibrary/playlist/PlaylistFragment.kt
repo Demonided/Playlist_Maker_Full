@@ -58,8 +58,9 @@ class PlaylistFragment : Fragment() {
 
         buttonCreate.setOnClickListener {
             findNavController().navigate(
-                R.id.action_mediaLibraryFragment_to_newPlaylistFragment
+                R.id.action_mediaLibraryFragment_to_newPlaylistFragment,
             )
+            playlistViewModel.onPlaylistClicked(null)
         }
 
         adapter.itemClickListener = { _, playlist ->

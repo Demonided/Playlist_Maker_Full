@@ -29,9 +29,19 @@ object AlbumDbConverters {
         )
     }
 
-    fun AlbumPlaylist.getTrackQuantityString(context: Context): String {
-        return context.resources.getQuantityString(R.plurals.track_quantity, quantity, quantity)
-    }
+//    fun AlbumPlaylist.getTrackQuantityString(context: Context): String {
+//        // Попытка через ресурс передать количество правильно отображает только 1 трек, а дальше пошло
+//        // 2 треков, 3 треков. Причину найти не смог
+//        return context.resources.getQuantityString(R.plurals.track_quantity, quantity, quantity)
+//    }
+
+    fun AlbumPlaylist.getTrackQuantityString(): String =
+        when(quantity % 10) {
+            1 -> "$quantity трек"
+            in 2..4 -> "$quantity трека"
+            else -> "$quantity треков"
+        }
+
 
     fun List<AlbumPlaylistEntity>.mapToAlbumPlaylist(): List<AlbumPlaylist> =
         map { it.mapToAlbumPlaylist() }
