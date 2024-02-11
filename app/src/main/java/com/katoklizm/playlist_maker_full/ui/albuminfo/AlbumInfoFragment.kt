@@ -2,6 +2,7 @@ package com.katoklizm.playlist_maker_full.ui.albuminfo
 
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,12 +51,16 @@ class AlbumInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val bottomSheetContainer = binding.albumInfoBottomSheetAlbum
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+        val bottomSheetContainerMenu = binding.albumInfoBottomSheetAlbum
+        val bottomSheetBehaviorMenu = BottomSheetBehavior.from(bottomSheetContainerMenu).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
         }
+        val bottomSheetContainerTrack = binding.albumInfoBottomSheetTrack
+        val bottomSheetBehaviorTrack = BottomSheetBehavior.from(bottomSheetContainerTrack).apply {
+            state = BottomSheetBehavior.STATE_COLLAPSED
+        }
 
-        bottomSheetBehavior.addBottomSheetCallback(object :
+        bottomSheetBehaviorMenu.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
@@ -102,19 +107,19 @@ class AlbumInfoFragment : Fragment() {
                 albumInfoQuantity.text = albumPlaylist?.getTrackQuantityString(requireContext())
                 albumInfoMenuQuantity.text = albumPlaylist?.getTrackQuantityString(requireContext())
 
-                val radiusDp = 10 // значение радиуса в DP
-                val density = resources.displayMetrics.density // получаем плотность экрана в пикселях на дюйм
-                val radiusPx = (radiusDp * density + 0.5f).toInt() // конвертируем DP в пиксели с учетом плотности
+                val dp = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 10F, getResources()
+                        .getDisplayMetrics());
 
                 Glide.with(requireContext())
                     .load(albumPlaylist?.image)
-                    .placeholder(R.drawable.vector_plug)
+                    .placeholder(R.drawable.visible_vector)
                     .into(albumInfoImage)
 
                 Glide.with(requireContext())
                     .load(albumPlaylist?.image)
                     .placeholder(R.drawable.vector_plug)
-                    .transform(CenterCrop(), RoundedCorners(radiusPx))
+                    .transform(CenterCrop(), RoundedCorners(dp.toInt()))
                     .into(albumInfoMenuImage)
             }
 
@@ -142,6 +147,7 @@ class AlbumInfoFragment : Fragment() {
                         R.string.album_info_no_list_track,
                         Toast.LENGTH_LONG
                     ).show()
+                    bottomSheetBehaviorTrack.state = BottomSheetBehavior.STATE_HIDDEN
                 }
             }
 
@@ -154,6 +160,7 @@ class AlbumInfoFragment : Fragment() {
                         R.string.album_info_no_list_track,
                         Toast.LENGTH_SHORT
                     ).show()
+                    bottomSheetBehaviorTrack.state = BottomSheetBehavior.STATE_HIDDEN
                 }
             }
 
@@ -177,7 +184,7 @@ class AlbumInfoFragment : Fragment() {
         }
 
         binding.albumInfoDots.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            bottomSheetBehaviorMenu.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
         binding.albumInfoMenuEdinInformation.setOnClickListener {
@@ -191,16 +198,16 @@ class AlbumInfoFragment : Fragment() {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            if (bottomSheetBehaviorMenu.state != BottomSheetBehavior.STATE_HIDDEN) {
+                bottomSheetBehaviorMenu.state = BottomSheetBehavior.STATE_HIDDEN
             } else {
                 findNavController().popBackStack()
             }
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 

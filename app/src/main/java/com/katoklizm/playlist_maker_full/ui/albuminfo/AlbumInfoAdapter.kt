@@ -13,10 +13,6 @@ class AlbumInfoAdapter(
     var itemClickListener: ((Int, Track) -> Unit)? = null
     var itemLongClickListener: ((Int, Track) -> Unit)? = null
 
-    init {
-//        tracksAlbum.addAll()
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumInfoViewHolder =
         AlbumInfoViewHolder(parent)
 
