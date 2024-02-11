@@ -37,15 +37,15 @@ val viewModelModule = module {
 
     // Fragment Media_library с которой в дальнейшем будем работать
     viewModel {
-        PlaylistViewModel(get())
+        PlaylistViewModel(get(), get())
     }
 
     //
     viewModel {
-        NewPlaylistViewModel(get())
+        NewPlaylistViewModel(get(), get())
     }
 
     viewModel {
-        AlbumInfoViewModel(get(), get())
+        AlbumInfoViewModel(get(), get(), get())
     }
 }

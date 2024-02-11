@@ -67,16 +67,12 @@ class AudioPlayerFragment : Fragment() {
         selectedTrack?.let { audioPlayerViewModel.initState(it) }
 
         binding.audioPlayerNameSong.text = selectedTrack?.trackName
-
         binding.audioPlayerNameMusician.text = selectedTrack?.artistName
-
         binding.audioPlayerTextViewTrackNameRead.text = selectedTrack?.trackName
         binding.audioPlayerTextViewYearRead.text = selectedTrack?.releaseDate
         binding.audioPlayerTextViewGenreRead.text = selectedTrack?.primaryGenreName
         binding.audioPlayerTextViewCountryRead.text = selectedTrack?.country
-
         binding.audioPlayerTime.text = getString(R.string.start_time)
-
         binding.audioPlayerTextViewTimeRead.text = selectedTrack?.trackTime
 
         Glide.with(this)
@@ -92,7 +88,7 @@ class AudioPlayerFragment : Fragment() {
 
         playerStatus = audioPlayerViewModel.playerStateListener()
 
-        adapter = AudioPlayerAdapter()
+        adapter = AudioPlayerAdapter(requireContext())
 
         recyclerView = binding.audioPlayerRecyclerView
 
@@ -207,6 +203,11 @@ class AudioPlayerFragment : Fragment() {
             audioPlayerViewModel.pausePlayer()
             binding.audioPlayerPlaySong.setImageResource(R.drawable.audio_player_play_song)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     private fun render(state: PlayerStateAlbum) {

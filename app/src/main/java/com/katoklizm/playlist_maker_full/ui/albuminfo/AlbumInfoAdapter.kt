@@ -7,7 +7,6 @@ import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 
 class AlbumInfoAdapter(
-    tracks: List<Track>
 ) : RecyclerView.Adapter<AlbumInfoViewHolder>() {
 
     val tracksAlbum = ArrayList<Track>()
@@ -15,7 +14,7 @@ class AlbumInfoAdapter(
     var itemLongClickListener: ((Int, Track) -> Unit)? = null
 
     init {
-        tracksAlbum.addAll(tracks)
+//        tracksAlbum.addAll()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumInfoViewHolder =

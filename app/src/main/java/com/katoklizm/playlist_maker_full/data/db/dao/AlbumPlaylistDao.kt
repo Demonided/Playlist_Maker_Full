@@ -19,6 +19,9 @@ interface AlbumPlaylistDao {
     @Query("SELECT * FROM album_table")
     suspend fun getAllAlbumPlaylistFlow(): List<AlbumPlaylistEntity>
 
+    @Query("SELECT * FROM album_table WHERE id=:albumId")
+    suspend fun getAlbumPlaylist(albumId: Int): AlbumPlaylistEntity
+
     @Update(entity = AlbumPlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateAlbumPlaylist(album: AlbumPlaylistEntity)
 }

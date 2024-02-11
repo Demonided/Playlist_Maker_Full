@@ -8,15 +8,18 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.katoklizm.playlist_maker_full.domain.album.AlbumPlaylistInteractor
 import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
+import com.katoklizm.playlist_maker_full.domain.albuminfo.AlbumInfoInteractor
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.domain.sharing.SharingInteractor
-import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlaylistState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import java.lang.reflect.Type
 
 class AlbumInfoViewModel(
     private val albumPlaylistInteractor: AlbumPlaylistInteractor,
+    private val albumInfoInteractor: AlbumInfoInteractor,
     private var sharingInteractor: SharingInteractor
 ) : ViewModel() {
 
@@ -29,16 +32,25 @@ class AlbumInfoViewModel(
     init {
         fillData()
     }
+
     fun fillData() {
         viewModelScope.launch {
-            albumPlaylistInteractor.getAllAlbumPlaylist()
-                .collect { album ->
-                    album.map {
-                        _stateAlbum.postValue(it)
-                    }
+            albumInfoInteractor.getPlaylist()
+                .filterNotNull()
+                .collect {
+                    val gson = Gson()
+                    val trackListType = object : TypeToken<List<Track>>() {}.type
+                    val track: List<Track> = gson.fromJson(it.track, trackListType) ?: emptyList()
+                    _stateAlbum.postValue(it)
+                    _stateAlbumTrack.postValue(track)
                 }
         }
     }
+
+    fun getAlbumPlaylist() {
+        albumInfoInteractor.getPlaylist()
+    }
+
     fun loadTrackList(selectedAlbum: AlbumPlaylist?) {
         selectedAlbum?.track?.let { trackString ->
             val gson = Gson()
@@ -46,10 +58,6 @@ class AlbumInfoViewModel(
             val tracks: List<Track> = gson.fromJson(trackString, trackListType) ?: emptyList()
             _stateAlbumTrack.postValue(tracks)
         }
-    }
-
-    fun loadAlbum(album: AlbumPlaylist?) {
-        _stateAlbum.postValue(album)
     }
 
     fun deleteTrack(playlist: AlbumPlaylist, selectedTrack: Track) {
@@ -64,6 +72,11 @@ class AlbumInfoViewModel(
             )
             viewModelScope.launch(Dispatchers.IO) {
                 albumPlaylistInteractor.updateAlbumPlaylist(newPlaylist)
+                albumInfoInteractor.setPlaylist(newPlaylist)
+                albumInfoInteractor.getPlaylist()
+                    .collect() {
+                        _stateAlbum.postValue(it)
+                    }
             }
             _stateAlbumTrack.postValue(tracks)
         }

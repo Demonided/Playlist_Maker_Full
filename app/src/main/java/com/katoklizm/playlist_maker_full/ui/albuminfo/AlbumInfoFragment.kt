@@ -1,6 +1,7 @@
 package com.katoklizm.playlist_maker_full.ui.albuminfo
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.katoklizm.playlist_maker_full.R
+import com.katoklizm.playlist_maker_full.data.converters.AlbumDbConverters.getTrackQuantityString
+import com.katoklizm.playlist_maker_full.data.converters.AlbumDbConverters.toMinutes
 import com.katoklizm.playlist_maker_full.databinding.FragmentAlbumInfoBinding
 import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
@@ -51,30 +54,6 @@ class AlbumInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val selectedAlbum: AlbumPlaylist? = arguments?.getParcelable(SAVE_ALBUM)
-        val gson = Gson()
-
-        val trackListType = object : TypeToken<List<Track>>() {}.type
-        val track: List<Track> = gson.fromJson(selectedAlbum?.track, trackListType) ?: emptyList()
-
-        with(binding) {
-            albumInfoTitle.text = selectedAlbum?.name
-            albumInfoDescription.text = selectedAlbum?.description
-            albumInfoMenuTitle.text = selectedAlbum?.name
-
-
-        }
-
-        Glide.with(this)
-            .load(selectedAlbum?.image)
-            .placeholder(R.drawable.vector_plug)
-            .transform(CenterCrop(), RoundedCorners(10))
-            .into(binding.albumInfoMenuImage)
-
-        Glide.with(this)
-            .load(selectedAlbum?.image)
-            .into(binding.albumInfoImage)
-
         val bottomSheetContainer = binding.albumInfoBottomSheetAlbum
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
@@ -102,8 +81,11 @@ class AlbumInfoFragment : Fragment() {
         recyclerView = binding.albumInfoRecyclerView
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        adapter = AlbumInfoAdapter(track)
+        adapter = AlbumInfoAdapter()
         recyclerView.adapter = adapter
+
+        viewModel.getAlbumPlaylist()
+        viewModel.fillData()
 
         adapter.itemClickListener = { _, track ->
             findNavController().navigate(
@@ -112,96 +94,100 @@ class AlbumInfoFragment : Fragment() {
             )
         }
 
-        adapter.itemLongClickListener = { _, tracks ->
-            val reliableDialog = MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Хотите удалить трек?")
-                .setNegativeButton("НЕТ") { dialog, which ->
-                    // Оставляем как есть
-                }.setPositiveButton("ДА") { dialog, which ->
-                    if (selectedAlbum != null) {
-                        viewModel.deleteTrack(selectedAlbum, tracks)
-                        adapter.tracksAlbum.clear()
-                        adapter.tracksAlbum.addAll(track)
+        viewModel.stateAlbum.observe(viewLifecycleOwner) { albumPlaylist ->
+            val gson = Gson()
+            val trackListType = object : TypeToken<List<Track>>() {}.type
+            val tracks: List<Track> = gson.fromJson(albumPlaylist?.track, trackListType) ?: emptyList()
+            with(binding) {
+                albumInfoTitle.text = albumPlaylist?.name
+                albumInfoMenuTitle.text = albumPlaylist?.name
+                albumInfoDescription.text = albumPlaylist?.description
+                albumInfoTime.text = calculateTotalTime(tracks)
+                albumInfoQuantity.text = albumPlaylist?.getTrackQuantityString(requireContext())
+                albumInfoMenuQuantity.text = albumPlaylist?.getTrackQuantityString(requireContext())
+
+                val radiusDp = 10 // значение радиуса в DP
+                val density = resources.displayMetrics.density // получаем плотность экрана в пикселях на дюйм
+                val radiusPx = (radiusDp * density + 0.5f).toInt() // конвертируем DP в пиксели с учетом плотности
+
+                Glide.with(requireContext())
+                    .load(albumPlaylist?.image)
+                    .placeholder(R.drawable.vector_plug)
+                    .into(albumInfoImage)
+
+                Glide.with(requireContext())
+                    .load(albumPlaylist?.image)
+                    .placeholder(R.drawable.vector_plug)
+                    .transform(CenterCrop(), RoundedCorners(radiusPx))
+                    .into(albumInfoMenuImage)
+            }
+
+            adapter.itemLongClickListener = { _, track ->
+                val reliableDialog = MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.album_info_delete_track)
+                    .setNegativeButton(R.string.album_info_delete_no) { dialog, which ->
+                        // Оставляем как есть
+                    }.setPositiveButton(R.string.album_info_delete_yes) { dialog, which ->
+                        if (albumPlaylist != null) {
+                            viewModel.deleteTrack(albumPlaylist, track)
+                            adapter.tracksAlbum.clear()
+                            adapter.tracksAlbum.addAll(tracks)
+                        }
                     }
+                reliableDialog.show()
+            }
+
+            binding.albumInfoShape.setOnClickListener {
+                if (tracks.isNotEmpty()) {
+                    viewModel.shareAlbum(albumPlaylist!!)
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.album_info_no_list_track,
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
-            reliableDialog.show()
+            }
+
+            binding.albumInfoMenuShare.setOnClickListener {
+                if (tracks.isNotEmpty()) {
+                    viewModel.shareAlbum(albumPlaylist!!)
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.album_info_no_list_track,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            binding.albumInfoMenuDeleteAlbum.setOnClickListener {
+                val deleteAlbum = MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("${getString(R.string.album_info_delete_album)} ${albumPlaylist!!.name}?")
+                    .setNegativeButton(R.string.album_info_delete_no) { dialog, which ->
+                        // Оставляем как есть
+                    }.setPositiveButton(R.string.album_info_delete_yes) { dialog, which ->
+                        viewModel.deleteAlbum(albumId = albumPlaylist.id)
+                        findNavController().popBackStack()
+                    }
+                deleteAlbum.show()
+            }
         }
 
-        viewModel.loadTrackList(selectedAlbum)
-        viewModel.loadAlbum(selectedAlbum)
-        viewModel.fillData()
-
-        viewModel.stateAlbum.observe(viewLifecycleOwner) {
-            binding.albumInfoTitle.text = it?.name
-            binding.albumInfoDescription.text = it?.description
-
-            Glide.with(this)
-                .load(it?.image)
-                .into(binding.albumInfoImage)
-
-            Glide.with(this)
-                .load(it?.image)
-                .into(binding.albumInfoMenuImage)
-        }
-
-        viewModel.stateAlbumTrack.observe(viewLifecycleOwner) { trackAlbum ->
-            binding.albumInfoTime.text = calculateTotalTime(trackAlbum)
-            binding.albumInfoQuantity.text = quantityTracks(trackAlbum?.size)
-            binding.albumInfoMenuQuantity.text = calculateTotalTime(trackAlbum)
+        viewModel.stateAlbumTrack.observe(viewLifecycleOwner) {
             adapter.tracksAlbum.clear()
-            if (trackAlbum != null) {
-                adapter.tracksAlbum.addAll(trackAlbum.reversed())
-            }
+            adapter.tracksAlbum.addAll(it?.reversed() ?: emptyList())
             adapter.notifyDataSetChanged()
-        }
-
-
-
-        binding.albumInfoShape.setOnClickListener {
-            if (track.isNotEmpty()) {
-                viewModel.shareAlbum(selectedAlbum!!)
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    "В этом плейлисте нет списка треков, которым можно поделиться",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
         }
 
         binding.albumInfoDots.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
-        binding.albumInfoMenuShare.setOnClickListener {
-            if (track.isNotEmpty()) {
-                viewModel.shareAlbum(selectedAlbum!!)
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    "В этом плейлисте нет списка треков, которым можно поделиться",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-
         binding.albumInfoMenuEdinInformation.setOnClickListener {
             findNavController().navigate(
-                R.id.action_albumInfoFragment_to_newPlaylistFragment,
-                NewPlaylistFragment.createArgs(selectedAlbum)
+                R.id.action_albumInfoFragment_to_newPlaylistFragment
             )
-        }
-
-        binding.albumInfoMenuDeleteAlbum.setOnClickListener {
-            val deleteAlbum = MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Хотите удалить плейлист ${selectedAlbum!!.name}?")
-                .setNegativeButton("НЕТ") { dialog, which ->
-                    // Оставляем как есть
-                }.setPositiveButton("ДА") { dialog, which ->
-                    viewModel.deleteAlbum(selectedAlbum.id)
-                    findNavController().popBackStack()
-                }
-            deleteAlbum.show()
         }
 
         binding.albumInfoBack.setOnClickListener {
@@ -217,14 +203,12 @@ class AlbumInfoFragment : Fragment() {
         }
     }
 
-    fun quantityTracks(quantity: Int?): String =
-        when (quantity?.rem(10)) {
-            1 -> "$quantity трек"
-            in 2..4 -> "$quantity трека"
-            else -> "$quantity треков"
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 
-    fun calculateTotalTime(tracks: List<Track>?): String {
+    fun calculateTotalTime(tracks: List<Track>?): String? {
         var totalMilliseconds = 0L
         if (tracks != null) {
             for (track in tracks) {
@@ -232,16 +216,21 @@ class AlbumInfoFragment : Fragment() {
             }
         }
 
-        val trackTime = SimpleDateFormat("mm", Locale.getDefault())
-            .format(totalMilliseconds)
+        val totalSecond = totalMilliseconds.toMinutes()
+        val trackTime = context?.resources?.getQuantityString(
+            R.plurals.track_time,
+            totalSecond.toInt(),
+            totalSecond.toInt()
+        )
 
-        return "$trackTime минут"
+        return trackTime
     }
 
     companion object {
         const val SAVE_ALBUM = "SAVE_ALBUM"
         fun createArgs(album: AlbumPlaylist): Bundle {
-            return bundleOf(SAVE_ALBUM to album)
+//            return bundleOf(SAVE_ALBUM to album)
+            return bundleOf()
         }
     }
 }

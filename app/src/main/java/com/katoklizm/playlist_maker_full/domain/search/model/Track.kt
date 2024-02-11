@@ -22,6 +22,9 @@ data class Track(
     val artworkUrl512
         get() = artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg")
 
+    val artworkUrl160
+        get() = artworkUrl100?.replaceAfterLast('/', "160x160bb.jpg")
+
     val trackTime
         get() = SimpleDateFormat("mm:ss", Locale.getDefault())
             .format(trackTimeMillis?.toLong())

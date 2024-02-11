@@ -1,0 +1,45 @@
+[33m6cd55ca[m[33m ([m[1;36mHEAD -> [m[1;32mMaks_job_3[m[33m, [m[1;31morigin/Maks_job_3[m[33m)[m HEAD@{0}: checkout: moving from sanek_job_3 to Maks_job_3
+[33mc33ea5c[m HEAD@{1}: checkout: moving from Maks_job_3 to sanek_job_3
+[33m6cd55ca[m[33m ([m[1;36mHEAD -> [m[1;32mMaks_job_3[m[33m, [m[1;31morigin/Maks_job_3[m[33m)[m HEAD@{2}: commit: nnn
+[33m5d22c92[m HEAD@{3}: commit: update list track
+[33mb0d5934[m HEAD@{4}: commit: gig update project
+[33m84de88e[m HEAD@{5}: commit: nns
+[33m806d803[m HEAD@{6}: commit: update
+[33md2ac671[m HEAD@{7}: commit: update error
+[33m48de1da[m HEAD@{8}: commit: update bottomSheet and text count track
+[33mb56bbe2[m HEAD@{9}: commit: ssadsa
+[33m271ac42[m HEAD@{10}: checkout: moving from Maks_job to Maks_job_3
+[33m48a433b[m[33m ([m[1;32mMaks_job[m[33m)[m HEAD@{11}: commit (merge): Merge branch 'Maks_job_3' into Maks_job
+[33m198e08d[m[33m ([m[1;31morigin/Maks_job[m[33m)[m HEAD@{12}: checkout: moving from Maks_job_3 to Maks_job
+[33m271ac42[m HEAD@{13}: commit: big update project
+[33mee4d6ad[m HEAD@{14}: commit: S
+[33m23581d2[m HEAD@{15}: checkout: moving from Maks_job_update_project to Maks_job_3
+[33m156c548[m[33m ([m[1;31morigin/Maks_job_update_project[m[33m, [m[1;32mMaks_job_update_project[m[33m)[m HEAD@{16}: checkout: moving from Maks_job_3 to Maks_job_update_project
+[33m23581d2[m HEAD@{17}: commit: s
+[33m139c652[m HEAD@{18}: checkout: moving from Maks_job to Maks_job_3
+[33m198e08d[m[33m ([m[1;31morigin/Maks_job[m[33m)[m HEAD@{19}: commit: s
+[33m7dc7e25[m HEAD@{20}: checkout: moving from SANSSEI_BRANCH to Maks_job
+[33m94ff7a9[m HEAD@{21}: commit: s
+[33m8bd5490[m HEAD@{22}: checkout: moving from Maks_job_3 to SANSSEI_BRANCH
+[33m139c652[m HEAD@{23}: commit: sdsa
+[33mccea07b[m HEAD@{24}: checkout: moving from Maks_job to Maks_job_3
+[33m7dc7e25[m HEAD@{25}: merge origin/Maks_job: Fast-forward
+[33m5bcd275[m[33m ([m[1;31morigin/Maks_home[m[33m, [m[1;32mMaks_home[m[33m)[m HEAD@{26}: merge Maks_home: Fast-forward
+[33md232c7f[m HEAD@{27}: checkout: moving from Maks_home to Maks_job
+[33m5bcd275[m[33m ([m[1;31morigin/Maks_home[m[33m, [m[1;32mMaks_home[m[33m)[m HEAD@{28}: checkout: moving from Maks_home to Maks_home
+[33m5bcd275[m[33m ([m[1;31morigin/Maks_home[m[33m, [m[1;32mMaks_home[m[33m)[m HEAD@{29}: branch: Reset to origin/Maks_home
+[33m5bcd275[m[33m ([m[1;31morigin/Maks_home[m[33m, [m[1;32mMaks_home[m[33m)[m HEAD@{30}: checkout: moving from Maks_home to Maks_home
+[33m5bcd275[m[33m ([m[1;31morigin/Maks_home[m[33m, [m[1;32mMaks_home[m[33m)[m HEAD@{31}: branch: Reset to origin/Maks_home
+[33m5bcd275[m[33m ([m[1;31morigin/Maks_home[m[33m, [m[1;32mMaks_home[m[33m)[m HEAD@{32}: commit: scs
+[33m046c047[m HEAD@{33}: commit: sdfs
+[33m4f6519b[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{34}: checkout: moving from master to Maks_home
+[33m4f6519b[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{35}: checkout: moving from Maks_home to master
+[33m7c6a418[m HEAD@{36}: rebase (finish): returning to refs/heads/Maks_home
+[33m7c6a418[m HEAD@{37}: rebase (pick): commit project
+[33mc860c78[m HEAD@{38}: rebase (pick): sdacx
+[33m6c17737[m HEAD@{39}: rebase (pick): MMns
+[33m1631ac0[m HEAD@{40}: rebase (continue): nn
+[33mc641bcd[m HEAD@{41}: rebase (continue): S
+[33m86ffdff[m HEAD@{42}: rebase (start): checkout origin/Maks_home
+[33m4f6519b[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{43}: checkout: moving from master to Maks_home
+[33m4f6519b[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{44}: clone: from https://github.com/Demonided/Playlist_Maker_Full.git

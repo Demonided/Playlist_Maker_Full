@@ -24,7 +24,8 @@ class PlaylistFragment : Fragment() {
 
     private val playlistViewModel: PlaylistViewModel by viewModel()
 
-    private lateinit var binding: FragmentPlaylistsBinding
+    private var _binding: FragmentPlaylistsBinding? = null
+    val binding get() = _binding!!
 
     lateinit var adapter: PlaylistAdapter
 
@@ -38,14 +39,14 @@ class PlaylistFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
+        _binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = PlaylistAdapter()
+        adapter = PlaylistAdapter(requireContext())
 
         recyclerView = binding.playlistRecyclerView
         linerLayout = binding.favoriteTrackEmpty
@@ -58,8 +59,9 @@ class PlaylistFragment : Fragment() {
 
         buttonCreate.setOnClickListener {
             findNavController().navigate(
-                R.id.action_mediaLibraryFragment_to_newPlaylistFragment
+                R.id.action_mediaLibraryFragment_to_newPlaylistFragment,
             )
+            playlistViewModel.onPlaylistClicked(null)
         }
 
         adapter.itemClickListener = { _, playlist ->
@@ -67,6 +69,7 @@ class PlaylistFragment : Fragment() {
                 R.id.action_mediaLibraryFragment_to_albumInfoFragment,
                 AlbumInfoFragment.createArgs(playlist)
             )
+            playlistViewModel.onPlaylistClicked(playlist)
         }
 
         playlistViewModel.fillData()
@@ -74,6 +77,11 @@ class PlaylistFragment : Fragment() {
         playlistViewModel.playlistState().observe(viewLifecycleOwner) {
             render(it)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     private fun render(state: PlaylistState) {

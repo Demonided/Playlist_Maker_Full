@@ -1,5 +1,6 @@
 package com.katoklizm.playlist_maker_full.ui.audioplayer
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -12,7 +13,10 @@ import com.katoklizm.playlist_maker_full.data.ConstTrack
 import com.katoklizm.playlist_maker_full.data.converters.AlbumDbConverters.getTrackQuantityString
 import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
 
-class AudioPlayerViewHolder(parent: ViewGroup):
+class AudioPlayerViewHolder(
+    parent: ViewGroup,
+    private val context: Context
+    ):
     RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context)
             .inflate(R.layout.list_album_playlist, parent, false)
@@ -24,8 +28,7 @@ class AudioPlayerViewHolder(parent: ViewGroup):
 
     fun bind(model: AlbumPlaylist) {
         albumName.text = model.name
-        albumQuantity.text = model.getTrackQuantityString()
-
+        albumQuantity.text = model.getTrackQuantityString(context)
         val imageUrl = model.image
 
         Glide.with(itemView)
