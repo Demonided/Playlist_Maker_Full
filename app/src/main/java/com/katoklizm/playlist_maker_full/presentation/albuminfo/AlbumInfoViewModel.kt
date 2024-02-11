@@ -26,21 +26,6 @@ class AlbumInfoViewModel(
     private val _stateAlbum = MutableLiveData<AlbumPlaylist?>()
     val stateAlbum: LiveData<AlbumPlaylist?> = _stateAlbum
 
-    init {
-//        fillData()
-    }
-
-    fun fillData() {
-        viewModelScope.launch {
-            albumPlaylistInteractor.getAllAlbumPlaylist()
-                .collect { album ->
-                    album.map {
-                        _stateAlbum.postValue(it)
-                    }
-                }
-        }
-    }
-
     fun loadTrackList(selectedAlbum: AlbumPlaylist?) {
         selectedAlbum?.track?.let { trackString ->
             val gson = Gson()
@@ -66,8 +51,9 @@ class AlbumInfoViewModel(
             )
             viewModelScope.launch(Dispatchers.IO) {
                 albumPlaylistInteractor.updateAlbumPlaylist(newPlaylist)
+                _stateAlbumTrack.postValue(tracks)
+                _stateAlbum.postValue(newPlaylist)
             }
-            _stateAlbumTrack.postValue(tracks)
         }
     }
 

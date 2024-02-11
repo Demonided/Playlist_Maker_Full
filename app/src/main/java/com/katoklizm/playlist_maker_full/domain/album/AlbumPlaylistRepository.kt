@@ -12,5 +12,7 @@ interface AlbumPlaylistRepository {
 
     fun getAllAlbumPlaylist(): Flow<List<AlbumPlaylist>>
 
+    fun getAlbumPlaylist(albumId: Int): Flow<AlbumPlaylist>
+
     suspend fun updateAlbumPlaylist(album: AlbumPlaylist)
 }

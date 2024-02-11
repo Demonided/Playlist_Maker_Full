@@ -20,6 +20,10 @@ class AlbumPlaylistInteractorImpl(
         return albumPlaylistRepository.getAllAlbumPlaylist()
     }
 
+    override fun getAlbumPlaylist(albumId: Int): Flow<AlbumPlaylist> {
+        return albumPlaylistRepository.getAlbumPlaylist(albumId)
+    }
+
     override suspend fun updateAlbumPlaylist(album: AlbumPlaylist) {
         albumPlaylistRepository.updateAlbumPlaylist(album)
     }

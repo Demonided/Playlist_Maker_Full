@@ -127,37 +127,6 @@ class AlbumInfoFragment : Fragment() {
             reliableDialog.show()
         }
 
-        viewModel.loadTrackList(selectedAlbum)
-        viewModel.loadAlbum(selectedAlbum)
-//        viewModel.fillData()
-
-        viewModel.stateAlbum.observe(viewLifecycleOwner) {
-            binding.albumInfoTitle.text = it?.name
-            binding.albumInfoDescription.text = it?.description
-            binding.albumInfoQuantity.text = it?.getTrackQuantityString(requireContext())
-            binding.albumInfoMenuQuantity.text = it?.getTrackQuantityString(requireContext())
-
-            Glide.with(this)
-                .load(it?.image)
-                .into(binding.albumInfoImage)
-
-            Glide.with(this)
-                .load(it?.image)
-                .into(binding.albumInfoMenuImage)
-        }
-
-        viewModel.stateAlbumTrack.observe(viewLifecycleOwner) { trackAlbum ->
-            binding.albumInfoTime.text = calculateTotalTime(trackAlbum)
-            binding.albumInfoMenuQuantity.text = calculateTotalTime(trackAlbum)
-            binding.albumInfoQuantity.text = selectedAlbum?.getTrackQuantityString(requireContext())
-            binding.albumInfoMenuQuantity.text = selectedAlbum?.getTrackQuantityString(requireContext())
-            adapter.tracksAlbum.clear()
-            if (trackAlbum != null) {
-                adapter.tracksAlbum.addAll(trackAlbum.reversed())
-            }
-            adapter.notifyDataSetChanged()
-        }
-
         binding.albumInfoShape.setOnClickListener {
             if (track.isNotEmpty()) {
                 viewModel.shareAlbum(selectedAlbum!!)

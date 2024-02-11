@@ -20,17 +20,17 @@ class AlbumInfoViewHolder(parent: ViewGroup):
     private val trackName: TextView = itemView.findViewById(R.id.track_name_song)
     private val artistName: TextView = itemView.findViewById(R.id.track_name_musician)
     private val trackTime: TextView = itemView.findViewById(R.id.track_time)
-    private val artworkUrl100: ImageView = itemView.findViewById(R.id.track_image)
+    private val artworkUrl160: ImageView = itemView.findViewById(R.id.track_image)
 
     fun bind(model: Track) {
         trackName.text = model.trackName
         artistName.text = model.artistName
         trackTime.text = model.trackTime
-        val imageUrl = model.artworkUrl100
+        val imageUrl = model.artworkUrl160
 
         Glide.with(itemView)
             .load(imageUrl)
             .transform(RoundedCorners(ConstTrack.ROUNDED_CORNERS_RADIUS))
-            .into(artworkUrl100)
+            .into(artworkUrl160)
     }
 }

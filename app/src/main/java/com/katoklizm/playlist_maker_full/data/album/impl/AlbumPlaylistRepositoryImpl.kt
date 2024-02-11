@@ -25,6 +25,11 @@ class AlbumPlaylistRepositoryImpl(
         emit(album.mapToAlbumPlaylist())
     }
 
+    override fun getAlbumPlaylist(albumId: Int): Flow<AlbumPlaylist> = flow {
+        val album = appDatabase.albumPlaylistDao().getAlbumPlaylist(albumId)
+        emit(album.mapToAlbumPlaylist())
+    }
+
     override suspend fun updateAlbumPlaylist(album: AlbumPlaylist) {
         val albums = album.mapToAlbumPlaylistEntity()
         appDatabase.albumPlaylistDao().updateAlbumPlaylist(albums)

@@ -67,16 +67,12 @@ class AudioPlayerFragment : Fragment() {
         selectedTrack?.let { audioPlayerViewModel.initState(it) }
 
         binding.audioPlayerNameSong.text = selectedTrack?.trackName
-
         binding.audioPlayerNameMusician.text = selectedTrack?.artistName
-
         binding.audioPlayerTextViewTrackNameRead.text = selectedTrack?.trackName
         binding.audioPlayerTextViewYearRead.text = selectedTrack?.releaseDate
         binding.audioPlayerTextViewGenreRead.text = selectedTrack?.primaryGenreName
         binding.audioPlayerTextViewCountryRead.text = selectedTrack?.country
-
         binding.audioPlayerTime.text = getString(R.string.start_time)
-
         binding.audioPlayerTextViewTimeRead.text = selectedTrack?.trackTime
 
         Glide.with(this)
