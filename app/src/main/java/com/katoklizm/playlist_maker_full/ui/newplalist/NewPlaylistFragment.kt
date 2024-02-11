@@ -106,8 +106,8 @@ class NewPlaylistFragment : Fragment() {
 
         viewModel.stateAlbumPlaylist.observe(viewLifecycleOwner) { albumPlaylist ->
             if (albumPlaylist != null) {
-                binding.newPlayerPlaylist.text = "Редактировать"
-                binding.newPlayerCreate.text = "Сохранить"
+                binding.newPlayerPlaylist.text = getString(R.string.new_playlist_edit)
+                binding.newPlayerCreate.text = getString(R.string.new_playlist_save)
                 val title = albumPlaylist.name
                 val description = albumPlaylist.description
 
@@ -171,11 +171,14 @@ class NewPlaylistFragment : Fragment() {
             pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
-
-
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             onBackPressed()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     fun onBackPressed() {

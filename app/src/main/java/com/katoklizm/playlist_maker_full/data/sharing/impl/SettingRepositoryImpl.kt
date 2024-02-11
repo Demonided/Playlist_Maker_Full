@@ -36,12 +36,15 @@ class SettingRepositoryImpl(
         val gson = Gson()
         val trackListType = object : TypeToken<List<Track>>() {}.type
         val track: List<Track> = gson.fromJson(album.track, trackListType)
-        var stringShareAlbum = "${album.name}\n${album.description}\n${album.getTrackQuantityString()}"
-        var count = 1
-        for (i in track) {
-            stringShareAlbum += "\n  $count. ${i.artistName} - ${i.trackName} (${i.trackTime})"
-            ++count
+        val stringBuilder = StringBuilder().apply {
+            append("${album.name}\n${album.description}\n${album.getTrackQuantityString(context)}\n")
+            var count = 1
+            for (i in track) {
+                append("  $count. ${i.artistName} - ${i.trackName} (${i.trackTime})\n")
+                ++count
+            }
         }
+        var stringShareAlbum = stringBuilder.toString()
         intent.type = "text/plain"
         intent.putExtra(Intent.EXTRA_TEXT, stringShareAlbum)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

@@ -205,6 +205,11 @@ class AudioPlayerFragment : Fragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     private fun render(state: PlayerStateAlbum) {
         when (state) {
             is PlayerStateAlbum.Content -> showContent(state.album)

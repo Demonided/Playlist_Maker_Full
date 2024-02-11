@@ -21,6 +21,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.data.converters.AlbumDbConverters.getTrackQuantityString
+import com.katoklizm.playlist_maker_full.data.converters.AlbumDbConverters.toMinutes
 import com.katoklizm.playlist_maker_full.databinding.FragmentAlbumInfoBinding
 import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
@@ -52,12 +53,6 @@ class AlbumInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-//        val selectedAlbum: AlbumPlaylist? = arguments?.getParcelable(SAVE_ALBUM)
-
-//        val gson = Gson()
-//        val trackListType = object : TypeToken<List<Track>>() {}.type
-//        val track: List<Track> = gson.fromJson(selectedAlbum?.track, trackListType) ?: emptyList()
 
         val bottomSheetContainer = binding.albumInfoBottomSheetAlbum
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
@@ -99,8 +94,6 @@ class AlbumInfoFragment : Fragment() {
             )
         }
 
-
-
         viewModel.stateAlbum.observe(viewLifecycleOwner) { albumPlaylist ->
             val gson = Gson()
             val trackListType = object : TypeToken<List<Track>>() {}.type
@@ -110,24 +103,31 @@ class AlbumInfoFragment : Fragment() {
                 albumInfoMenuTitle.text = albumPlaylist?.name
                 albumInfoDescription.text = albumPlaylist?.description
                 albumInfoTime.text = calculateTotalTime(tracks)
-                albumInfoQuantity.text = albumPlaylist?.getTrackQuantityString()
-                albumInfoMenuQuantity.text = albumPlaylist?.getTrackQuantityString()
+                albumInfoQuantity.text = albumPlaylist?.getTrackQuantityString(requireContext())
+                albumInfoMenuQuantity.text = albumPlaylist?.getTrackQuantityString(requireContext())
+
+                val radiusDp = 10 // значение радиуса в DP
+                val density = resources.displayMetrics.density // получаем плотность экрана в пикселях на дюйм
+                val radiusPx = (radiusDp * density + 0.5f).toInt() // конвертируем DP в пиксели с учетом плотности
 
                 Glide.with(requireContext())
                     .load(albumPlaylist?.image)
+                    .placeholder(R.drawable.vector_plug)
                     .into(albumInfoImage)
 
                 Glide.with(requireContext())
                     .load(albumPlaylist?.image)
+                    .placeholder(R.drawable.vector_plug)
+                    .transform(CenterCrop(), RoundedCorners(radiusPx))
                     .into(albumInfoMenuImage)
             }
 
             adapter.itemLongClickListener = { _, track ->
                 val reliableDialog = MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Хотите удалить трек?")
-                    .setNegativeButton("НЕТ") { dialog, which ->
+                    .setTitle(R.string.album_info_delete_track)
+                    .setNegativeButton(R.string.album_info_delete_no) { dialog, which ->
                         // Оставляем как есть
-                    }.setPositiveButton("ДА") { dialog, which ->
+                    }.setPositiveButton(R.string.album_info_delete_yes) { dialog, which ->
                         if (albumPlaylist != null) {
                             viewModel.deleteTrack(albumPlaylist, track)
                             adapter.tracksAlbum.clear()
@@ -143,7 +143,7 @@ class AlbumInfoFragment : Fragment() {
                 } else {
                     Toast.makeText(
                         requireContext(),
-                        "В этом плейлисте нет списка треков, которым можно поделиться",
+                        R.string.album_info_no_list_track,
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -155,7 +155,7 @@ class AlbumInfoFragment : Fragment() {
                 } else {
                     Toast.makeText(
                         requireContext(),
-                        "В этом плейлисте нет списка треков, которым можно поделиться",
+                        R.string.album_info_no_list_track,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -163,10 +163,10 @@ class AlbumInfoFragment : Fragment() {
 
             binding.albumInfoMenuDeleteAlbum.setOnClickListener {
                 val deleteAlbum = MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Хотите удалить плейлист ${albumPlaylist!!.name}?")
-                    .setNegativeButton("НЕТ") { dialog, which ->
+                    .setTitle("${getString(R.string.album_info_delete_album)} ${albumPlaylist!!.name}?")
+                    .setNegativeButton(R.string.album_info_delete_no) { dialog, which ->
                         // Оставляем как есть
-                    }.setPositiveButton("ДА") { dialog, which ->
+                    }.setPositiveButton(R.string.album_info_delete_yes) { dialog, which ->
                         viewModel.deleteAlbum(albumId = albumPlaylist.id)
                         findNavController().popBackStack()
                     }
@@ -203,7 +203,12 @@ class AlbumInfoFragment : Fragment() {
         }
     }
 
-    fun calculateTotalTime(tracks: List<Track>?): String {
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
+    fun calculateTotalTime(tracks: List<Track>?): String? {
         var totalMilliseconds = 0L
         if (tracks != null) {
             for (track in tracks) {
@@ -211,12 +216,14 @@ class AlbumInfoFragment : Fragment() {
             }
         }
 
-        val trackTime = SimpleDateFormat("m", Locale.getDefault())
-            .format(totalMilliseconds)
+        val totalSecond = totalMilliseconds.toMinutes()
+        val trackTime = context?.resources?.getQuantityString(
+            R.plurals.track_time,
+            totalSecond.toInt(),
+            totalSecond.toInt()
+        )
 
-        Log.d("TotalMillisecond", "Текущее время $totalMilliseconds")
-
-        return "$trackTime минут"
+        return trackTime
     }
 
     companion object {

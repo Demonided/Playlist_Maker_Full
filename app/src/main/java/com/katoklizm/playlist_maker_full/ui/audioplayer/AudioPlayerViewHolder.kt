@@ -28,8 +28,7 @@ class AudioPlayerViewHolder(
 
     fun bind(model: AlbumPlaylist) {
         albumName.text = model.name
-        albumQuantity.text = model.getTrackQuantityString()
-
+        albumQuantity.text = model.getTrackQuantityString(context)
         val imageUrl = model.image
 
         Glide.with(itemView)
