@@ -155,4 +155,8 @@
         <item name="android:textColor">@color/white_black</item>
     </style>
 
+    <style name="TabLayout_Colors">
+        <item name="tabIndicatorColor">@color/red</item>
+    </style>
+
 </resources>

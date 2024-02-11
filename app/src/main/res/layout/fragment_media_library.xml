@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/black_white_bottomNavBar"
     tools:context=".ui.medialibrary.MediaLibraryFragment">
 
     <LinearLayout
@@ -23,6 +24,7 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:background="@color/black_white_bottomNavBar"
         app:tabIndicator="@drawable/tab_indicator"
         app:tabIndicatorColor="@color/white_black"
         app:tabMode="fixed"
