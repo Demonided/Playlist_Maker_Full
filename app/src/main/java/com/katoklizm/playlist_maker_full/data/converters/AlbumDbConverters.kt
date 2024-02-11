@@ -38,10 +38,6 @@ object AlbumDbConverters {
         return context.resources.getQuantityString(R.plurals.track_quantity, quantity, quantity)
     }
 
-    fun Long?.toMinutes(): Long {
-        return this ?: 0 / 60000
-    }
-
     fun List<AlbumPlaylistEntity>.mapToAlbumPlaylist(): List<AlbumPlaylist> =
         map { it.mapToAlbumPlaylist() }
 

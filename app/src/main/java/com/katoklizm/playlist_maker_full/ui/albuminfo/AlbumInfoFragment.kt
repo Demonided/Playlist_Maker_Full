@@ -21,16 +21,12 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.data.converters.AlbumDbConverters.getTrackQuantityString
-import com.katoklizm.playlist_maker_full.data.converters.AlbumDbConverters.toMinutes
 import com.katoklizm.playlist_maker_full.databinding.FragmentAlbumInfoBinding
 import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.presentation.albuminfo.AlbumInfoViewModel
 import com.katoklizm.playlist_maker_full.ui.audioplayer.AudioPlayerFragment
-import com.katoklizm.playlist_maker_full.ui.newplalist.NewPlaylistFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class AlbumInfoFragment : Fragment() {
 
@@ -216,7 +212,7 @@ class AlbumInfoFragment : Fragment() {
             }
         }
 
-        val totalSecond = totalMilliseconds.toMinutes()
+        val totalSecond = totalMilliseconds / 60000
         val trackTime = context?.resources?.getQuantityString(
             R.plurals.track_time,
             totalSecond.toInt(),
