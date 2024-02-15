@@ -52,5 +52,17 @@
     <string name="new_playlist_complete">Завершить</string>
     <string name="new_playlist_playlist">Плейлист</string>
     <string name="new_playlist_created">создан</string>
+    <string name="new_playlist_edit">Редактировать</string>
+    <string name="new_playlist_save">Сохранить</string>
+
+    <string name="album_playlist_menu_share">Поделиться</string>
+    <string name="album_playlist_menu_edin_information">Редактировать информацию</string>
+    <string name="album_playlist_menu_delete_album">Удалить плейлист</string>
+
+    <string name="album_info_delete_track">Хотите удалить трек?</string>
+    <string name="album_info_delete_album">Хотите удалить плейлист</string>
+    <string name="album_info_no_list_track">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="album_info_delete_yes">ДА</string>
+    <string name="album_info_delete_no">НЕТ</string>
 
 </resources>

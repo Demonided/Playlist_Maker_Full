@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -20,8 +19,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.data.ConstTrack
-import com.katoklizm.playlist_maker_full.data.ConstTrack.SAVE_TRACK
-import com.katoklizm.playlist_maker_full.databinding.AudioPlayerBinding
+import com.katoklizm.playlist_maker_full.databinding.FragmentAudioPlayerBinding
 import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
 import com.katoklizm.playlist_maker_full.domain.search.model.Track
 import com.katoklizm.playlist_maker_full.presentation.audioplayer.AudioPlayerViewModel
@@ -38,7 +36,7 @@ class AudioPlayerFragment : Fragment() {
 
     private val audioPlayerViewModel by viewModel<AudioPlayerViewModel>()
 
-    private var _binding: AudioPlayerBinding? = null
+    private var _binding: FragmentAudioPlayerBinding? = null
     val binding get() = _binding!!
 
     private var mainThreadHandler: Handler? = null
@@ -58,7 +56,7 @@ class AudioPlayerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = AudioPlayerBinding.inflate(layoutInflater)
+        _binding = FragmentAudioPlayerBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -67,19 +65,14 @@ class AudioPlayerFragment : Fragment() {
 
         val selectedTrack: Track? = arguments?.getParcelable(SAVE_TRACK)
         selectedTrack?.let { audioPlayerViewModel.initState(it) }
-        Log.d("Selected_Track", "Текущий трек $selectedTrack")
 
         binding.audioPlayerNameSong.text = selectedTrack?.trackName
-
         binding.audioPlayerNameMusician.text = selectedTrack?.artistName
-
         binding.audioPlayerTextViewTrackNameRead.text = selectedTrack?.trackName
         binding.audioPlayerTextViewYearRead.text = selectedTrack?.releaseDate
         binding.audioPlayerTextViewGenreRead.text = selectedTrack?.primaryGenreName
         binding.audioPlayerTextViewCountryRead.text = selectedTrack?.country
-
         binding.audioPlayerTime.text = getString(R.string.start_time)
-
         binding.audioPlayerTextViewTimeRead.text = selectedTrack?.trackTime
 
         Glide.with(this)
@@ -95,7 +88,7 @@ class AudioPlayerFragment : Fragment() {
 
         playerStatus = audioPlayerViewModel.playerStateListener()
 
-        adapter = AudioPlayerAdapter()
+        adapter = AudioPlayerAdapter(requireContext())
 
         recyclerView = binding.audioPlayerRecyclerView
 
@@ -112,10 +105,6 @@ class AudioPlayerFragment : Fragment() {
                     }
                 }
             }
-//            if (selectedTrack != null) {
-//                audioPlayerViewModel.onPlaylistClicked(playlist, track = selectedTrack)
-//            }
-//            adapter.notifyDataSetChanged()
         }
 
         audioPlayerViewModel.messageTrack.observe(viewLifecycleOwner) { message ->
@@ -195,8 +184,7 @@ class AudioPlayerFragment : Fragment() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
             findNavController().navigate(
-                R.id.action_audioPlayerFragment_to_newPlaylistFragment,
-                NewPlaylistFragment.createArgs("")
+                R.id.action_audioPlayerFragment_to_newPlaylistFragment
             )
         }
 
@@ -217,6 +205,11 @@ class AudioPlayerFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun render(state: PlayerStateAlbum) {
         when (state) {
             is PlayerStateAlbum.Content -> showContent(state.album)
@@ -224,9 +217,9 @@ class AudioPlayerFragment : Fragment() {
     }
 
     private fun showContent(album: List<AlbumPlaylist>) {
-        adapter?.albumListPlaylist?.clear()
-        adapter?.albumListPlaylist?.addAll(album)
-        adapter?.notifyDataSetChanged()
+        adapter.albumListPlaylist.clear()
+        adapter.albumListPlaylist.addAll(album)
+        adapter.notifyDataSetChanged()
     }
 
     private fun renderState(state: PlayerScreenState) {
@@ -277,7 +270,7 @@ class AudioPlayerFragment : Fragment() {
         private const val SAVE_TRACK = "SAVE_TRACK"
 
         fun createArgs(track: Track): Bundle {
-            return bundleOf("SAVE_TRACK" to track)
+            return bundleOf(SAVE_TRACK to track)
         }
     }
 }

@@ -9,7 +9,7 @@ data class Track(
     val trackId: Int,
     val trackName: String?, // Название композиции
     val artistName: String?, // Имя исполнителя
-    val trackTimeMillis: String?, // Продолжительность трека
+    var trackTimeMillis: String?, // Продолжительность трека
     val artworkUrl100: String?, // Ссылка на изображение обложки
     val collectionName: String?, // Название альбома
     val releaseDate: String?, // Год релиза трека
@@ -21,6 +21,9 @@ data class Track(
 
     val artworkUrl512
         get() = artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg")
+
+    val artworkUrl160
+        get() = artworkUrl100?.replaceAfterLast('/', "160x160bb.jpg")
 
     val trackTime
         get() = SimpleDateFormat("mm:ss", Locale.getDefault())

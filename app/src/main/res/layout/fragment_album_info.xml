@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_grey">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/album_info_left_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="16dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/album_info_right_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="16dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/album_info_bottom_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_end="240dp" />
+
+            <ImageView
+                android:id="@+id/album_info_image"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintDimensionRatio="H, 1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:image="@drawable/visible_vector"/>
+
+            <ImageView
+                android:id="@+id/album_info_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/arrow_back"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="@id/album_info_left_guideline"
+                app:layout_constraintTop_toTopOf="parent"
+
+                />
+
+            <TextView
+                android:id="@+id/album_info_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/ys_display_medium"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="@id/album_info_right_guideline"
+                app:layout_constraintStart_toStartOf="@id/album_info_left_guideline"
+                app:layout_constraintTop_toBottomOf="@id/album_info_image"
+                tools:text="Title" />
+
+            <TextView
+                android:id="@+id/album_info_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/ys_display_regular"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="@id/album_info_right_guideline"
+                app:layout_constraintStart_toStartOf="@id/album_info_left_guideline"
+                app:layout_constraintTop_toBottomOf="@id/album_info_title"
+                tools:text="Description" />
+
+            <LinearLayout
+                android:id="@+id/album_info_liner_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+
+                app:layout_constraintEnd_toEndOf="@id/album_info_right_guideline"
+                app:layout_constraintStart_toStartOf="@id/album_info_left_guideline"
+                app:layout_constraintTop_toBottomOf="@id/album_info_description">
+
+                <TextView
+                    android:id="@+id/album_info_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:fontFamily="@font/ys_display_regular"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    tools:text="General time" />
+
+                <ImageView
+                    style="@style/SearchTrackColorBackground"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/dot_info" />
+
+                <TextView
+                    android:id="@+id/album_info_quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/ys_display_regular"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    tools:text="Quantity track" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/album_info_shape"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:background="@drawable/share_info"
+                app:layout_constraintEnd_toStartOf="@id/album_info_dots"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/album_info_liner_description"
+
+                />
+
+            <ImageView
+                android:id="@+id/album_info_dots"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/dots_info"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/album_info_shape"
+                app:layout_constraintTop_toBottomOf="@id/album_info_liner_description"
+                app:layout_constraintBottom_toBottomOf="@id/album_info_bottom_guideline"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <View
+        android:id="@+id/album_info_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/darkened_background"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/album_info_bottom_sheet_track"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_corners"
+        android:paddingHorizontal="16dp"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="240dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        >
+
+        <View
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:background="@color/grey"
+            android:layout_marginTop="10dp"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/album_info_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/search_track" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/album_info_bottom_sheet_album"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_corners"
+        android:paddingHorizontal="16dp"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="360dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        >
+
+        <View
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:background="@color/grey"
+            android:layout_marginTop="10dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            >
+
+            <ImageView
+                android:id="@+id/album_info_menu_image"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:scaleType="centerCrop"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                >
+
+                <TextView
+                    android:id="@+id/album_info_menu_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/white_black"
+                    android:fontFamily="@font/ys_display_regular"
+                    android:textSize="16sp"
+                    tools:text="Menu_title"
+                    />
+
+                <TextView
+                    android:id="@+id/album_info_menu_quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/grey_light"
+                    android:fontFamily="@font/ys_display_regular"
+                    android:textSize="12sp"
+                    tools:text="Menu_quantity"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/album_info_menu_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/album_playlist_menu_share"
+            style="@style/AlbumPlaylistMenu"
+            />
+
+        <TextView
+            android:id="@+id/album_info_menu_edin_information"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/album_playlist_menu_edin_information"
+            style="@style/AlbumPlaylistMenu"
+            />
+
+        <TextView
+            android:id="@+id/album_info_menu_delete_album"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/album_playlist_menu_delete_album"
+            style="@style/AlbumPlaylistMenu"
+            />
+    </LinearLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

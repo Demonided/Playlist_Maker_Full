@@ -4,6 +4,8 @@ import com.katoklizm.playlist_maker_full.domain.album.AlbumPlaylistInteractor
 import com.katoklizm.playlist_maker_full.domain.album.TrackAlbumPlaylistInteractor
 import com.katoklizm.playlist_maker_full.domain.album.impl.AlbumPlaylistInteractorImpl
 import com.katoklizm.playlist_maker_full.domain.album.impl.TrackAlbumPlaylistInteractorImpl
+import com.katoklizm.playlist_maker_full.domain.albuminfo.AlbumInfoInteractor
+import com.katoklizm.playlist_maker_full.domain.albuminfo.impl.AlbumInfoInteractorImpl
 import com.katoklizm.playlist_maker_full.domain.favorite.FavoriteTrackInteractor
 import com.katoklizm.playlist_maker_full.domain.favorite.impl.FavoriteTrackInteractorImpl
 import com.katoklizm.playlist_maker_full.domain.player.PlayerInteractor
@@ -40,6 +42,10 @@ val interactorModule = module {
 
     single<AlbumPlaylistInteractor> {
         AlbumPlaylistInteractorImpl(get())
+    }
+
+    single<AlbumInfoInteractor> {
+        AlbumInfoInteractorImpl(get())
     }
 
     single<TrackAlbumPlaylistInteractor> {

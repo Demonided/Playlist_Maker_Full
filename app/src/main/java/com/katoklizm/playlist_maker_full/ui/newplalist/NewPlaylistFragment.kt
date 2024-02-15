@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,12 +19,14 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.katoklizm.playlist_maker_full.R
 import com.katoklizm.playlist_maker_full.databinding.FragmentNewPlaylistBinding
 import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
 import com.katoklizm.playlist_maker_full.presentation.newplaylist.NewPlaylistViewModel
+import com.katoklizm.playlist_maker_full.ui.albuminfo.AlbumInfoFragment
 import com.markodevcic.peko.PermissionRequester
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -51,7 +52,7 @@ class NewPlaylistFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentNewPlaylistBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -80,6 +81,9 @@ class NewPlaylistFragment : Fragment() {
                 }
             }
 
+        val selectedAlbum: AlbumPlaylist? = arguments?.getParcelable(ALBUM)
+        viewModel.updateStateAlbum(selectedAlbum)
+
         binding.newPlayerBack.setOnClickListener {
             onBackPressed()
         }
@@ -98,35 +102,84 @@ class NewPlaylistFragment : Fragment() {
             }
         })
 
-        binding.newPlaylistImage.setOnClickListener {
-            pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        viewModel.fillData()
+
+        viewModel.stateAlbumPlaylist.observe(viewLifecycleOwner) { albumPlaylist ->
+            if (albumPlaylist != null) {
+                binding.newPlayerPlaylist.text = getString(R.string.new_playlist_edit)
+                binding.newPlayerCreate.text = getString(R.string.new_playlist_save)
+                val title = albumPlaylist.name
+                val description = albumPlaylist.description
+
+                binding.newPlaylistTitle.setText(title)
+                binding.newPlaylistDescription.setText(description)
+
+                Glide.with(requireContext())
+                    .load(albumPlaylist.image)
+                    .into(binding.newPlaylistImage)
+            }
+
+            binding.newPlayerCreate.setOnClickListener {
+                if (albumPlaylist != null) {
+                    val title = editTextTitle.text.toString()
+                    val description = editTextDescription.text.toString()
+
+                    val album = AlbumPlaylist(
+                        id = albumPlaylist.id,
+                        name = title,
+                        description = description,
+                        image = imageUri.toString(),
+                        quantity = albumPlaylist.quantity,
+                        track = albumPlaylist.track
+                    )
+
+                    lifecycleScope.launch {
+                        viewModel.updateAlbum(album)
+                        Snackbar.make(
+                            binding.root,
+                            "${getString(R.string.new_playlist_playlist)} $title отредактирован",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                        findNavController().popBackStack()
+                    }
+                } else {
+                    val title = editTextTitle.text.toString()
+                    val description = editTextDescription.text.toString()
+
+                    val album = AlbumPlaylist(
+                        name = title,
+                        description = description,
+                        image = imageUri.toString()
+                    )
+
+                    lifecycleScope.launch {
+                        viewModel.addAlbumPlaylist(album)
+                        Snackbar.make(
+                            binding.root,
+                            "${getString(R.string.new_playlist_playlist)} $title ${getString(R.string.new_playlist_created)}",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                        findNavController().popBackStack()
+                    }
+                }
+            }
         }
 
-        binding.newPlayerCreate.setOnClickListener {
 
-            val title = editTextTitle.text.toString()
-            val description = editTextDescription.text.toString()
 
-            val album = AlbumPlaylist(
-                name = title,
-                description = description,
-                image = imageUri.toString()
-            )
-
-            lifecycleScope.launch {
-                viewModel.addAlbumPlaylist(album)
-                Snackbar.make(
-                    binding.root,
-                    "${getString(R.string.new_playlist_playlist)} $title ${getString(R.string.new_playlist_created)}",
-                    Snackbar.LENGTH_SHORT
-                ).show()
-                findNavController().popBackStack()
-            }
+        binding.newPlaylistImage.setOnClickListener {
+            pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             onBackPressed()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+
     }
 
     fun onBackPressed() {
@@ -184,9 +237,9 @@ class NewPlaylistFragment : Fragment() {
 
     companion object {
 
-        private const val ARGS_TRACK_ID = "track_id"
+        private const val ALBUM = "album_playlist"
 
-        fun createArgs(movieId: String): Bundle =
-            bundleOf(ARGS_TRACK_ID to movieId)
+        fun createArgs(album: AlbumPlaylist?): Bundle =
+            bundleOf(ALBUM to album)
     }
 }

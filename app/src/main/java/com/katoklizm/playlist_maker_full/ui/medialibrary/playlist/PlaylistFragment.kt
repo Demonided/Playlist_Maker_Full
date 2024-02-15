@@ -16,6 +16,7 @@ import com.katoklizm.playlist_maker_full.databinding.FragmentPlaylistsBinding
 import com.katoklizm.playlist_maker_full.domain.album.model.AlbumPlaylist
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlaylistState
 import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.PlaylistViewModel
+import com.katoklizm.playlist_maker_full.ui.albuminfo.AlbumInfoFragment
 import com.katoklizm.playlist_maker_full.ui.newplalist.NewPlaylistFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -23,9 +24,10 @@ class PlaylistFragment : Fragment() {
 
     private val playlistViewModel: PlaylistViewModel by viewModel()
 
-    private lateinit var binding: FragmentPlaylistsBinding
+    private var _binding: FragmentPlaylistsBinding? = null
+    val binding get() = _binding!!
 
-    private var adapter: PlaylistAdapter? = null
+    lateinit var adapter: PlaylistAdapter
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var linerLayout: LinearLayout
@@ -37,14 +39,14 @@ class PlaylistFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
+        _binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = PlaylistAdapter()
+        adapter = PlaylistAdapter(requireContext())
 
         recyclerView = binding.playlistRecyclerView
         linerLayout = binding.favoriteTrackEmpty
@@ -58,10 +60,16 @@ class PlaylistFragment : Fragment() {
         buttonCreate.setOnClickListener {
             findNavController().navigate(
                 R.id.action_mediaLibraryFragment_to_newPlaylistFragment,
-                NewPlaylistFragment.createArgs(
-                    requireArguments().getString(ARGS_TRACK_ID).orEmpty()
-                )
             )
+            playlistViewModel.onPlaylistClicked(null)
+        }
+
+        adapter.itemClickListener = { _, playlist ->
+            findNavController().navigate(
+                R.id.action_mediaLibraryFragment_to_albumInfoFragment,
+                AlbumInfoFragment.createArgs(playlist)
+            )
+            playlistViewModel.onPlaylistClicked(playlist)
         }
 
         playlistViewModel.fillData()
@@ -69,6 +77,11 @@ class PlaylistFragment : Fragment() {
         playlistViewModel.playlistState().observe(viewLifecycleOwner) {
             render(it)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun render(state: PlaylistState) {
@@ -84,9 +97,9 @@ class PlaylistFragment : Fragment() {
         recyclerView.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
 
-        adapter?.albumPlaylist?.clear()
-        adapter?.albumPlaylist?.addAll(album)
-        adapter?.notifyDataSetChanged()
+        adapter.albumPlaylist.clear()
+        adapter.albumPlaylist.addAll(album)
+        adapter.notifyDataSetChanged()
     }
 
     private fun showEmpty() {
