@@ -20,7 +20,7 @@
 
 <h2 align="left">При написании приложения применялись библиотеки</h2>
 <h4 align="left">
-- Room
+<a- Room
 - Retrofit
 - Glide
 - Koin</h4>
