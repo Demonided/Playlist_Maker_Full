@@ -19,9 +19,11 @@
 "</h3>
 
 <h2 align="left">При написании приложения применялись библиотеки</h2>
-<h4 align="left">
-<a href=- Room ></a>
-  <a href=- Room ></a>
-- Retrofit 
+<h4 align="left"></h4>
+- Room
+
+- Retrofit
+  
 - Glide
+  
 - Koin</h4>
