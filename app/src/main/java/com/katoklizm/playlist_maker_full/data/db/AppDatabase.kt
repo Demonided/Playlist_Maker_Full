@@ -9,7 +9,7 @@ import com.katoklizm.playlist_maker_full.data.db.entity.AlbumPlaylistEntity
 import com.katoklizm.playlist_maker_full.data.db.entity.TrackAlbumPlaylistEntity
 import com.katoklizm.playlist_maker_full.data.db.entity.TrackEntity
 
-@Database(version = 1, entities = [TrackEntity::class, AlbumPlaylistEntity::class, TrackAlbumPlaylistEntity::class])
+@Database(version = 1, entities = [TrackEntity::class, AlbumPlaylistEntity::class, TrackAlbumPlaylistEntity::class], exportSchema = false)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun trackDao(): TrackDao
