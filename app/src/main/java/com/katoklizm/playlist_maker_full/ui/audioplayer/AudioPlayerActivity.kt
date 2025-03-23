@@ -85,8 +85,6 @@ class AudioPlayerActivity : AppCompatActivity() {
             audioPlayerViewModel.playbackControl()
         }
 
-
-
         binding?.audioPlayerLikeMusicTrack?.setOnClickListener {
             prepareFavoriteTrack()
         }

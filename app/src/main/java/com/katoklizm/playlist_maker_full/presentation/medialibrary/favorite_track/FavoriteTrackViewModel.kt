@@ -17,7 +17,7 @@ class FavoriteTrackViewModel(
     fun favoriteTrackState(): LiveData<FavoriteTrackState> = _favoriteTrackState
 
     fun fillData() {
-renderState(FavoriteTrackState.Loading)
+        renderState(FavoriteTrackState.Loading)
         viewModelScope.launch {
             favoriteTrackInteractor.getTrackFavorite()
                 .collect { track ->

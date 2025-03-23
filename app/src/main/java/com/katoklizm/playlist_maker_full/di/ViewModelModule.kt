@@ -8,13 +8,12 @@ import com.katoklizm.playlist_maker_full.presentation.medialibrary.playlist.Play
 import com.katoklizm.playlist_maker_full.presentation.search.SearchViewModel
 import com.katoklizm.playlist_maker_full.presentation.setting.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
 val viewModelModule = module {
 
-    viewModel {
-        SearchViewModel(get())
-    }
+    viewModelOf(::SearchViewModel)
 
     viewModel {
         AudioPlayerViewModel(get(), get())
